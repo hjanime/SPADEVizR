@@ -5,7 +5,7 @@
 \title{title Internal - Create a list of elements allowing to build a heatmap}
 \usage{
 ggheatmap(mat, dendrogram.type = "rectangle", num = 5,
-  dists = c("eucledian", "eucledian"))
+  clustering.markers = NULL)
 }
 \arguments{
 \item{mat}{a matrix}
@@ -13,6 +13,8 @@ ggheatmap(mat, dendrogram.type = "rectangle", num = 5,
 \item{dendrogram.type}{a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)}
 
 \item{num}{xxx}
+
+\item{clustering.markers}{a character vector of clustering markers}
 }
 \value{
 a list of 3 plots (top dendrogram, right dendrogram, heatmap)

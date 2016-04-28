@@ -23,18 +23,10 @@ abundantClustersViewer <- function(AC,
     if (!all.label){
         data.text <- subset(AC@result, AC@result$significance)
     }
-    
+
     plot <-  ggplot2::ggplot(data = AC@result) +
              ggplot2::ggtitle(ifelse(AC@use.percentages,"Relative cells abundance of clusters (% of cells)","Cells abundance of clusters (# of cells)"))
-    
-    if (cluster.size > 0){
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean",color = "significance", size = "cluster.size"))
-    }
-    else {
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean",color = "significance"))
-    }
-    x.breaks <- round(-log10(c(AC@th.pvalue,1,0.1,0.01,0.001)),2)
-    x.max    <- ceiling(max(x.breaks))
+
     plot <- plot + ggplot2::geom_hline(yintercept = AC@th.mean,
                                        linetype   = "dashed",
                                        alpha      = 0.3,
@@ -44,18 +36,31 @@ abundantClustersViewer <- function(AC,
                                        linetype   = "dashed",
                                        alpha      = 0.3,
                                        color      = "red",
-                                       size       = 1) +  
-            ggrepel::geom_text_repel(data = data.text, 
+                                       size       = 1)
+    if (cluster.size > 0){
+       plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean",color = "significance", size = "cluster.size"))
+    }
+    else {
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean",color = "significance"))
+    }                  
+    
+    x.max <- ceiling(max(-log10(AC@th.pvalue),-log10(AC@result$pvalue)))
+    x.breaks <- seq(0, x.max, by = 1)
+    
+    y.max <- ceiling(max(AC@th.mean,AC@result$mean))
+    y.breaks <- seq(0, y.max, by = 1)
+
+    plot <- plot +  ggrepel::geom_text_repel(data = data.text, 
                     ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", label = "cluster"),
                     size          = 3,
                     box.padding   = grid::unit(0.35, "lines"),
                     point.padding = grid::unit(0.3, "lines")) +
-            ggplot2::scale_color_manual(values = c("grey","red")) +
-            ggplot2::scale_y_continuous(minor_breaks = NULL, breaks = c(AC@th.mean,seq(0, ceiling(max(AC@result$mean))))) +
-            ggplot2::scale_x_continuous(limits = c(0, x.max), minor_breaks = NULL, breaks = x.breaks) + 
-            ggplot2::xlab(ifelse(AC@use.percentages,"mean percent","mean number of cells")) +                  
-            ggplot2::xlab("-log10(p-value)") +
-            ggplot2::theme_bw()
+                    ggplot2::scale_color_manual(values = c("grey","red")) +
+                    ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
+                    ggplot2::scale_x_continuous(limits = c(0, x.max), minor_breaks = NULL, breaks = x.breaks) + 
+                    ggplot2::xlab(ifelse(AC@use.percentages,"mean percent","mean number of cells")) +                  
+                    ggplot2::xlab("-log10(p-value)") +
+                    ggplot2::theme_bw()
     
     return(plot)
 }
@@ -99,31 +104,32 @@ volcanoViewer <- function(DEC          = NULL,
     if (!all.label){
         data.text <- subset(DEC@result, DEC@result$significance)
     }
+    min           <- floor(min(DEC@result$fold.change))
+    max           <- ceiling(max(DEC@result$fold.change))
+    max           <- max(max,abs(min))
+    x.breaks      <- c(round(c(-th.fc, th.fc),2), seq(-max, max, by = 1))
+    title.details <- ifelse(DEC@use.percentages,"(with % of cells)","(with # of cells)")
     
     plot <- ggplot2::ggplot(data = DEC@result, ggplot2::aes_string(x = "fold.change", y = "-log10(pvalue)")) +
-            ggplot2::ggtitle(paste0("Volcano plot showing differentially enriched clusters",ifelse(DEC@use.percentages,"(with % of cells)","(with # of cells)")))
-    
+            ggplot2::ggtitle(paste0("Volcano plot showing differentially enriched clusters ",title.details)) +
+            ggplot2::geom_vline(xintercept = c(th.fc,-th.fc),
+                                       linetype   = "dashed",
+                                       alpha      = 0.3,
+                                       color      = "red",
+                                       size       = 1) +  
+            ggplot2::geom_hline(yintercept = -log10(DEC@th.pvalue),
+                                       linetype   = "dashed",
+                                       alpha      = 0.3,
+                                       color      = "red",
+                                       size       = 1)
     if (cluster.size > 0){
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(color = "significance", size = "cluster.size"))
     }
     else {
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(color = "significance"))
     }
-    min <- floor(min(DEC@result$fold.change))
-    max <- ceiling(max(DEC@result$fold.change))
-    max <- max(max,abs(min))
-    x.breaks <- c(round(c(-th.fc, th.fc),2), seq(-max, max, by = 1))
-    plot <- plot + ggplot2::geom_vline(xintercept = c(th.fc,-th.fc),
-                                       linetype   = "dashed",
-                                       alpha      = 0.3,
-                                       color      = "red",
-                                       size       = 1) +  
-                   ggplot2::geom_hline(yintercept = -log10(DEC@th.pvalue),
-                                       linetype   = "dashed",
-                                       alpha      = 0.3,
-                                       color      = "red",
-                                       size       = 1) +  
-                   ggrepel::geom_text_repel(data     = data.text,
+                 
+    plot <- plot + ggrepel::geom_text_repel(data     = data.text,
                                             ggplot2::aes_string(label = "cluster"),
                                             size          = 3,
                                             box.padding   = grid::unit(0.35, "lines"),
@@ -165,35 +171,38 @@ correlatedClustersViewer <- function(CC,
     }
     title.details <- ifelse(CC@use.percentages,"(in # of cells)","(in % of cells")
     plot <- ggplot2::ggplot(data = CC@result) +
-            ggplot2::ggtitle(paste0("Correlation of clusters kinetics", title.details," with variables provided"))
-    
+            ggplot2::ggtitle(paste0("Correlation of clusters kinetics", title.details," with variables provided")) +
+            ggplot2::geom_hline(yintercept = -log10(CC@th.pvalue),
+                                linetype   = "dashed",
+                                alpha      = 0.3,
+                                color      = "red",
+                                size       = 1) +  
+            ggplot2::geom_vline(xintercept = c(-CC@th.correlation,CC@th.correlation),
+                                linetype   = "dashed",
+                                alpha      = 0.3,
+                                color      = "red",
+                                size       = 1)
     if (cluster.size > 0){
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)",color = "significance", size = "cluster.size"))
     }
     else {
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)",color = "significance"))
-    }        
-    plot <- plot + ggplot2::geom_hline(yintercept = -log10(CC@th.pvalue),
-                    linetype   = "dashed",
-                    alpha      = 0.3,
-                    color      = "red",
-                    size       = 1) +  
-            ggplot2::geom_vline(xintercept = c(-CC@th.correlation,CC@th.correlation),
-                    linetype   = "dashed",
-                    alpha      = 0.3,
-                    color      = "red",
-                    size       = 1) +  
-            ggrepel::geom_text_repel(data = data.text, 
+    }
+    
+    y.max <- ceiling(max(-log10(CC@th.pvalue),-log10(CC@result$pvalue)))
+    y.breaks <- seq(0, y.max, by = 1)
+    
+    plot <- plot +  ggrepel::geom_text_repel(data = data.text, 
                     ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", label = "cluster"),
                     size          = 3,
                     box.padding   = grid::unit(0.35, "lines"),
                     point.padding = grid::unit(0.3, "lines")) +
-            ggplot2::scale_color_manual(values = c("grey","red")) +
-            ggplot2::scale_y_continuous(minor_breaks = NULL, breaks = round(-log10(c(CC@th.pvalue,1,0.1,0.01,0.001)),2)) +
-            ggplot2::scale_x_continuous(minor_breaks = NULL, limits = c(-1,1),
-                                        breaks = c(-CC@th.correlation,CC@th.correlation,seq(-1, 1, by = 0.1))) +
-            ggplot2::ylab("-log10(p-value)") +
-            ggplot2::theme_bw()
+                    ggplot2::scale_color_manual(values = c("grey","red")) +
+                    ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
+                    ggplot2::scale_x_continuous(minor_breaks = NULL, limits = c(-1,1),
+                                                breaks = c(-CC@th.correlation,CC@th.correlation,seq(-1, 1, by = 0.1))) +
+                    ggplot2::ylab("-log10(p-value)") +
+                    ggplot2::theme_bw()
     return(plot)
 }
 
@@ -485,7 +494,6 @@ clusterViewer <- function(Results,
         clusters <- data[,"cluster"]
     }
     
-    
     if(!is.null(markers)){
         data.keys <- data[,c("sample","cluster")]
         data <- cbind(data.keys,data[,markers])
@@ -520,8 +528,8 @@ clusterViewer <- function(Results,
             min.value <- min(c(data.temp$value))
         }
         
-        max.value <- max.value + 0.1*max.value
-        min.value <- min.value + 0.1*min.value
+        max.value <- max.value + 0.1 * max.value
+        min.value <- min.value + 0.1 * min.value
          
         i <- length(plots) + 1
         
@@ -554,7 +562,7 @@ clusterViewer <- function(Results,
                                    ggplot2::theme_bw()         
   
         if (names(Results) == "SPADEResults"){
-            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1, face = bold.markers ),
+            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1, face = bold.markers),
                                                       legend.text = ggplot2::element_text(size = 6))                 
         }else{
             plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1),
@@ -593,17 +601,19 @@ phenoViewer <- function(SPADEResults,
     }                
                     
     if(is.null(pheno.table)){
-        pheno.table <- computePhenoTable(SPADEResults,num)
+        pheno.table <- computePhenoTable(SPADEResults, num)
     }
     
-    pheno.table <- reshape2::dcast(pheno.table,cluster ~ marker)
+    pheno.table <- reshape2::dcast(pheno.table, cluster ~ marker)
     pheno.table <- pheno.table[,2:ncol(pheno.table)]
     pheno.table <- t(pheno.table)
     pheno.table <- as.matrix(pheno.table)
+
+    plot.elements <- ggheatmap(pheno.table, num = num, clustering.markers = SPADEResults@marker.names[SPADEResults@marker.clustering])
+
+    heatmap <- ggheatmap.plot(plot.elements)
     
-    plot <- ggheatmap(pheno.table,num = num)
-    
-    return(plot)
+    return(heatmap)
     
 }
 
@@ -1235,20 +1245,27 @@ distogramViewer <- function(Results){
     
     melted.cormat <- reshape2::melt(cormat)#TODO maybe use a data.frame
     
+    bold.markers <- "plain"
+    if (names(Results) == "SPADEResults"){
+        clustering.markers <- is.element(markers, Results@marker.names[Results@marker.clustering])
+        bold.markers <- ifelse(clustering.markers,"bold","plain")
+    }
+    
     plot <- ggplot2::ggplot(data = melted.cormat, ggplot2::aes_string(x = "Var1", y = "Var2", fill = "value")) + 
             ggplot2::ggtitle("Distogram of marker phenotypes correlations") +
             ggplot2::geom_tile(color = "white", ) +
             ggplot2::scale_fill_gradient2(low = "green", high = "red", mid = "black", 
                                           midpoint = 0, limit = c(-1,1), na.value = 'white',
                                           name = "Pearson\nCorrelation") +
-            ggplot2::annotate(geom  = "text",
-                              x     = 1:length(markers),
-                              y     = 1:length(markers),
-                              color = "blue",
-                              angle = -45,
-                              size  = 4,
-                              label = markers,
-                              hjust = 1) +
+            ggplot2::annotate(geom     = "text",
+                              x        = 1:length(markers),
+                              y        = 1:length(markers),
+                              color    = "blue",
+                              angle    = -45,
+                              size     = 4,
+                              label    = markers,
+                              hjust    = 1,
+                              fontface = bold.markers) +
             ggplot2::coord_fixed() +
             ggplot2::theme(axis.line        = ggplot2::element_blank(),
                            axis.text.x      = ggplot2::element_blank(),

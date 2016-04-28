@@ -9,7 +9,7 @@
 #' @details We advice to use quantile.heuristic = TRUE because it is faster and much more efficient in term of memory with a low impact on precision. 
 #' 
 #' @param path the a character specify the path of SPADE results folder
-#' @param dictionary a two column data.frame providing the correspondance between the original marker names (first column) and the new marker names (second column)
+#' @param dict a two column data.frame providing the correspondance between the original marker names (first column) and the new marker names (second column)
 #' @param exclude.markers a list of markers to exclude 
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles. First is the lower bound and second is the lower bound.
 #' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use (FALSE by default)
@@ -21,7 +21,7 @@
 #' 
 #' @export 
 importSPADEResults <- function(path,
-                               dictionary         = data.frame(),
+                               dict               = data.frame(),
                                exclude.markers    = NULL,
                                probs              = c(0.05,0.95),
                                use.raw.medians    = FALSE,
@@ -38,7 +38,7 @@ importSPADEResults <- function(path,
     flowset           <- flowCore::read.flowSet(fcs.files,emptyValue = TRUE)
     flowCore::sampleNames(flowset) <- samples.names
 
-    if(nrow(dictionary)>0){
+    if(nrow(dict)>0){
         flowset@colnames <- rename.markers(flowset@colnames,dict)
         flowset    <- flowset[,1:length(flowset@colnames)]
     }
@@ -114,8 +114,8 @@ importSPADEResults <- function(path,
     clustering.markers.indices <- grep("_clust",marker.expressions.header)
     marker.expressions.header  <- gsub("_clust","",marker.expressions.header)
 
-    if(nrow(dictionary)>0){           
-        colnames(marker.expressions)  <- rename.markers(marker.expressions.header,dictionary)    
+    if(nrow(dict)>0){           
+        colnames(marker.expressions)  <- rename.markers(marker.expressions.header,dict)    
     }
     
     clustering.markers <- colnames(marker.expressions)[clustering.markers.indices]
@@ -133,7 +133,7 @@ importSPADEResults <- function(path,
     res <- new("SPADEResults", 
                marker.expressions  = marker.expressions,
                use.raw.medians     = use.raw.medians,
-               dictionary          = dictionary,
+               dictionary          = dict,
                cells.count         = cells.count,
                sample.names        = samples.names,
                marker.names        = markers.names,

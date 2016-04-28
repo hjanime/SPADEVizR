@@ -54,10 +54,11 @@ computePhenoTable <- function(SPADEResults, num = 5){
 #' @param mat a matrix
 #' @param dendrogram.type a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)
 #' @param num xxx
+#' @param clustering.markers a character vector of clustering markers
 #' @return a list of 3 plots (top dendrogram, right dendrogram, heatmap)
 #'
 #' @import ggplot2 reshape2 grDevices
-ggheatmap <- function(mat, dendrogram.type = "rectangle", num = 5, dists = c("eucledian","eucledian")) {
+ggheatmap <- function(mat, dendrogram.type = "rectangle", num = 5, clustering.markers = NULL ) {#TO ADD, dists = c("euclidian","euclidian")
 
     colnames(mat) <- 1:ncol(mat)
     
@@ -88,13 +89,24 @@ ggheatmap <- function(mat, dendrogram.type = "rectangle", num = 5, dists = c("eu
     
     centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable",y = "markers")) + 
                    ggplot2::geom_tile(ggplot2::aes_string(fill = "value"), colour = "black") +
-                   ggplot2::scale_fill_manual(values = colfunc(num), guide = ggplot2::guide_legend(direction = "horizontal", ncol = 10, byrow = TRUE, label.theme = ggplot2::element_text(size = 10, angle = 0), label.position="bottom", label.hjust = 0.5, title.position = "top")) + #low = "white", mid = "yellow", high = "#4d2f00",# #4d2f00 -> dark brown    midpoint = round( (num + 1) / 2 ) , limit = c(1,num+1), na.value = "red"
-                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0),                                  
-                                  legend.text = ggplot2::element_text(size = 4),
-                                  panel.background = ggplot2::element_rect("white"))
-           
-    ret <- list(col=col.plot,row=row.plot,centre=centre.plot)
-    invisible(ret)
+                   ggplot2::scale_fill_manual(values = colfunc(num), guide = ggplot2::guide_legend(direction = "horizontal",
+                                                                                                   ncol = 10,
+                                                                                                   byrow = TRUE,
+                                                                                                   label.theme = ggplot2::element_text(size = 10, angle = 0), 
+                                                                                                   label.position="bottom",
+                                                                                                   label.hjust = 0.5,
+                                                                                                   title.position = "top")) + 
+                   ggplot2::theme(legend.text      = ggplot2::element_text(size = 4),
+                                  panel.background = ggplot2::element_rect("white"),
+                                  axis.text.x      = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1))
+    if (!is.null(clustering.markers)){
+        clustering.markers <- is.element(data.frame$markers, clustering.markers)
+        bold.markers <- ifelse(clustering.markers,"bold","plain")
+        centre.plot <- centre.plot + ggplot2::theme(axis.text.y = ggplot2::element_text(face = bold.markers))#bold.markers
+    }
+
+    ret <- list(col = col.plot, row = row.plot, centre = centre.plot)
+    return(ret)
     
 }
 
@@ -178,10 +190,10 @@ g_legend<-function(a.gplot){
 #' @import ggplot2 gtable
 g_axis<-function(a.gplot, x =! y, y =! x ){
     if (x){
-        name <- "axis-l"
+        name <- "axis-b"
     }
     else {
-        name <- "axis-b"
+        name <- "axis-l"
     }
     
     tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(a.gplot))
@@ -208,6 +220,10 @@ ggheatmap.plot <- function(L, col.width=0.15, row.width=0.15) {
                     c(5,3,4),
                     c(NA,6,NA))
     
+    x.axis <- g_axis(L$centre, x = TRUE)        
+    y.axis <- g_axis(L$centre, y = TRUE)
+    legend <- g_legend(L$centre)
+    
     center.withoutlegend = L$centre + ggplot2::theme(axis.line        = ggplot2::element_blank(),
                                                      axis.text.x      = ggplot2::element_blank(),
                                                      axis.text.y      = ggplot2::element_blank(),
@@ -222,10 +238,13 @@ ggheatmap.plot <- function(L, col.width=0.15, row.width=0.15) {
                                                      plot.background  = ggplot2::element_blank(),
                                                      plot.margin      = grid::unit(c(0,0,0,0), "cm"),
                                                      panel.margin     = grid::unit(c(0,0,0,0), "cm"))
-    
-    ret <- gridExtra::grid.arrange(L$col,g_legend(L$centre),center.withoutlegend,L$row,
-                                   g_axis(L$centre, x = TRUE ),
-                                   g_axis(L$centre, y = TRUE ),
+                                             
+    ret <- gridExtra::grid.arrange(L$col, #1 on the layout
+                                   legend, #2 on the layout
+                                   center.withoutlegend, #3 on the layout
+                                   L$row, #4 on the layout
+                                   y.axis, #5 on the layout
+                                   x.axis, #6 on the layout
                                    layout_matrix = layout,
                                    widths = grid::unit(c(col.width,1-(2*col.width),col.width), "null"),
                                    heights = grid::unit(c(row.width,1-(2*row.width),row.width), "null"))

@@ -4,14 +4,14 @@
 \alias{importSPADEResults}
 \title{importSPADEResults}
 \usage{
-importSPADEResults(path, dictionary = data.frame(), exclude.markers = NULL,
+importSPADEResults(path, dict = data.frame(), exclude.markers = NULL,
   probs = c(0.05, 0.95), use.raw.medians = FALSE,
   quantile.heuristic = FALSE)
 }
 \arguments{
 \item{path}{the a character specify the path of SPADE results folder}
 
-\item{dictionary}{a two column data.frame providing the correspondance between the original marker names (first column) and the new marker names (second column)}
+\item{dict}{a two column data.frame providing the correspondance between the original marker names (first column) and the new marker names (second column)}
 
 \item{exclude.markers}{a list of markers to exclude}
 
