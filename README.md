@@ -208,7 +208,11 @@ The `SPADEResults` object is a S4 object containing the clustering results from 
 Different slots are available for a given `SPADEResults` object:
 
 Slot          | Description            | Inherited
+<<<<<<< HEAD
 --------------|-------------------------------------------------------|--------
+=======
+--------------|------------------------|----------
+>>>>>>> 7772a92c5202c701a0487ecf7d3d1ed73cc3e048
 cells.count        | a dataframe containing the number of cells for each cluster of each sample                 | &#9745;
 marker.expressions | a numerical dataframe containing marker median expressions for each cluster of each sample | &#9745;
 sample.names       | a character vector containing the sample names                                             | &#9745;
