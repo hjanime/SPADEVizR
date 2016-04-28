@@ -208,18 +208,18 @@ The `SPADEResults` object is a S4 object containing the clustering results from 
 Different slots are available for a given `SPADEResults` object:
 
 Slot          | Description            | Inherited
---------------|-------------------------------------------------------|-
+--------------|------------------------|----------
 cells.count        | a dataframe containing the number of cells for each cluster of each sample                 | &#9745;
 marker.expressions | a numerical dataframe containing marker median expressions for each cluster of each sample | &#9745;
 sample.names       | a character vector containing the sample names                                             | &#9745;
 marker.names       | a character vector containing the markers names                                            | &#9745;
 cluster.number     | a numeric specyfing the number of clusters                                                 | &#9745;
-use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data   |
-marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure    |
-fcs.files          | a character vector containing the absolute path of the original FCS files                  |
-quantiles          | a numeric matrix containing the quantiles for each marker of each cluster                  |
-graph              | an igraph object containing the SPADE tree                                                 |
-graph.layout       | a numeric matrix containing the layout of the SPADE tree                                   |
+use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data   | &#9746;
+marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure    | &#9746;
+fcs.files          | a character vector containing the absolute path of the original FCS files                  | &#9746;
+quantiles          | a numeric matrix containing the quantiles for each marker of each cluster                  | &#9746;
+graph              | an igraph object containing the SPADE tree                                                 | &#9746;
+graph.layout       | a numeric matrix containing the layout of the SPADE tree                                   | &#9746;
 
 ## <a name="object_structure_AC"/> 4.3 Abundant Clusters (AC object)
 The `AC` object is a S4 object containing the main information related to the abundant clusters, that is to say xxx, identify by the [`computeAC`](#stat_function_computeAC) function.  
