@@ -17,8 +17,8 @@ Guillaume Gautreau, David Pejoski, Ludovic Platon, Brice Targat, Roger Le Grand,
 	3. [Abundant clusters (AC)](#object_structure_AC)
 	4. [Differentially enriched clusters (CC)](#object_structure_DEC)
 	5. [Computation of correlated clusters (computeCC function)](#object_structure_CC)
-	6. [PhenoProfiles](#object_structure_PhenoProfiles)
-	7. [EnrichmentProfiles](#object_structure_EnrichmentProfiles)
+	6. [Classification of clusters based on their phenotype profiles (PhenoProfiles object)](#object_structure_PhenoProfiles)
+	7. [Classification of clusters based on their enrichment profiles (EnrichmentProfiles object)](#object_structure_EnrichmentProfiles)
 5. [Statistical analyses](#stat_functions)
 	1. [Computation of abundant clusters (computeAC function)](#stat_function_computeAC)
 	2. [Computation of differentially enriched clusters (computeDEC function)](#stat_function_computeDEC)
@@ -142,7 +142,7 @@ Once a dictionary has been defined, SPADE cell clustering results can be loaded 
 
 ```r
 results  <- importSPADEResults("C:/Users/gg248485/Desktop/SPADEVizR.data/HuMa-MAC",
-							   dictionary         = dict,
+							   dict               = dict,
 							   quantile.heuristic = TRUE,
 							   exclude.markers    = c("empty-Rh103"))
 ## [START] - extracting SPADE results
@@ -203,23 +203,23 @@ marker.names       | a character vector containing the markers names
 cluster.number     | a numeric specifying the number of cell clusters
 
 ## <a name="object_structure_SPADE_results"/> 4.2 SPADEResults object 
-The `SPADEResults` object is a S4 object containing the clustering results from SPADE. It is to note that this object extend the `Results` object and contrains additional slots related to SPADE data.
+The `SPADEResults` object is a S4 object containing the clustering results from SPADE. It is to note that this object extend the `Results` object and contains additional slots related to SPADE data.
 
 Different slots are available for a given `SPADEResults` object:
 
 Slot          | Description            | Inherited
---------------|-------------------------------------------------------|-
+--------------|-------------------------------------------------------|--------
 cells.count        | a dataframe containing the number of cells for each cluster of each sample                 | &#9745;
 marker.expressions | a numerical dataframe containing marker median expressions for each cluster of each sample | &#9745;
 sample.names       | a character vector containing the sample names                                             | &#9745;
 marker.names       | a character vector containing the markers names                                            | &#9745;
 cluster.number     | a numeric specyfing the number of clusters                                                 | &#9745;
-use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data   |
-marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure    |
-fcs.files          | a character vector containing the absolute path of the original FCS files                  |
-quantiles          | a numeric matrix containing the quantiles for each marker of each cluster                  |
-graph              | an igraph object containing the SPADE tree                                                 |
-graph.layout       | a numeric matrix containing the layout of the SPADE tree                                   |
+use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data   | &#9746;
+marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure    | &#9746;
+fcs.files          | a character vector containing the absolute path of the original FCS files                  | &#9746;
+quantiles          | a numeric matrix containing the quantiles for each marker of each cluster                  | &#9746;
+graph              | an igraph object containing the SPADE tree                                                 | &#9746;
+graph.layout       | a numeric matrix containing the layout of the SPADE tree                                   | &#9746;
 
 ## <a name="object_structure_AC"/> 4.3 Abundant Clusters (AC object)
 The `AC` object is a S4 object containing the main information related to the abundant clusters, that is to say xxx, identify by the [`computeAC`](#stat_function_computeAC) function.  
@@ -272,7 +272,7 @@ th.correlation     | a numeric value specifying the correlation threshold (R)
 th.pvalue          | a numeric value specifying the p-value threshold
 result             | a data.frame containing for each cluster (first column): the coefficiant of correlation R (second column) , the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.
 
-## <a name="object_structure_PhenoProfiles"/> 4.6 PhenoProfiles
+## <a name="object_structure_PhenoProfiles"/> 4.6 Classification of clusters based on their phenotype profiles (PhenoProfiles object)
 The `PhenoProfiles` object is a S4 object containing the main information related of the cluster classification obtained by the [`classifyPhenoProfiles`](#stat_function_classifyPhenoProfiles)
 
 Different slots are available for a given `PhenoProfiles` object:
@@ -286,7 +286,7 @@ cluster.size       | a numeric vector containing the number of cells associated 
 ( XXX) cluster.number| a numeric value specifying the number of clusters
 classes            | a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
 
-## <a name="object_structure_EnrichmentProfiles"/> 4.7 EnrichmentProfiles
+## <a name="object_structure_EnrichmentProfiles"/> 4.7 Classification of clusters based on their enrichment profiles (EnrichmentProfiles object)
 The `EnrichmentProfiles` object is a S4 object containing the main information related of the cluster classification obtained by the [`classifyEnrichmentProfiles`](#stat_function_classifyEnrichmentProfiles)  
 
 Different slots are available for a given `PhenoProfiles` object:

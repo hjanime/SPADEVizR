@@ -6,22 +6,28 @@
 \alias{Results-class}
 \title{Results class definition}
 \description{
-Results is a S4 object containing cytometric results.
+The Results object is a S4 object containing results of automatic gating. This object store mainly the count matrix and the cluster phenotypes. It is to note that Results is a super classe of the SPADEResult
 }
 \details{
-Results is the core (super classe) of SPADEResults object but allow importation of data comming from other software than SPADE. It aims to store the data comming from the importResults() function.
+The Results object is the core (super classe) of SPADEResults object.
+
+This object is allows to store automatic gating results from other algorithms. 
+The importX() function return a Result Object.
+
+The cells.count dataframe have in the first column the cluster names or numeric ID and some columns with number of cells for each sample (with the sample names in colnames)
+The marker.expressions dataframe have .. to continue
 }
 \section{Slots}{
 
 \describe{
-\item{\code{marker.expressions}}{a dataframe containing the number of cells for each cluster of each sample}
+\item{\code{cells.count}}{a dataframe containing the number of cells for each cluster of each sample}
 
-\item{\code{cells.count}}{a numerical dataframe containing marker median expressions for each cluster of each sample}
+\item{\code{marker.expressions}}{a numerical dataframe containing marker median expressions for each cluster of each sample}
 
 \item{\code{sample.names}}{a character vector containing the sample names}
 
 \item{\code{marker.names}}{a character vector containing the markers names}
 
-\item{\code{cluster.number}}{a numeric specyfing the number of clusters}
+\item{\code{cluster.number}}{a numeric specifying the number of cell clusters}
 }}
 

@@ -169,6 +169,12 @@ importSPADEResults <- function(path,
 #' @export 
 importResults <- function(marker.expressions,
                           cells.count){
+                      
+    colnames(marker.expressions)[1] <- "sample"                 
+    colnames(marker.expressions)[2] <- "cluster"
+    
+    colnames(cells.count)[1]        <- "cluster"
+    
     res <- new("Results", 
                marker.expressions  = marker.expressions,
                cells.count         = cells.count,
