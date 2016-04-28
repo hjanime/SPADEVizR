@@ -15,7 +15,7 @@
 #' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use (FALSE by default)
 #' @param quantile.heuristic a logicial specifying if quantile are compute for with all cells (FALSE), or is the means of the quantile of each samples (TRUE)
 #' 
-#' @import Flowcore
+#' @import flowCore
 #' 
 #' @return SPADEResults a SPADE result object
 #' 
@@ -267,10 +267,10 @@ filter.medians <- function(data,use.raw.medians = FALSE){
 #' 
 #' @details xxx
 #' 
-#' @param flowset a Flowcore flowset
+#' @param flowset a flowCore flowset
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles
 #' 
-#' @import Flowcore
+#' @import flowCore
 #' 
 #' @return a numeric matrix with bounds
 computeQuantile <- function(flowset,probs = c(0.05,0.95)){
@@ -302,10 +302,10 @@ computeQuantile <- function(flowset,probs = c(0.05,0.95)){
 #'
 #' @description This function is used internally, it provide the mean of quantiles from each sample to seed up computation
 #' 
-#' @param flowset a Flowcore flowset 
+#' @param flowset a flowCore flowset 
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles
 #' 
-#' @import Flowcore
+#' @import flowCore
 #' 
 #' @return a numeric matrix with bounds
 computeQuantile.heuristic <- function(flowset,probs = c(0.05,0.95)){

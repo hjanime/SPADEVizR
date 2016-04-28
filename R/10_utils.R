@@ -51,8 +51,6 @@ computePhenoTable <- function(SPADEResults, num = 5){
 #'
 #' @details 
 #'
-#' @importFrom ggplot2 reshape2
-#' 
 #' @param mat a matrix
 #' @param dendrogram.type a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)
 #' @param num xxx

@@ -428,7 +428,6 @@ classifyEnrichmentProfiles <- function(Results,
 #' 
 #' @return a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
 #' 
-#' @import 
 computeHierarchicalClustering <- function (data,
                                            class.number                = NULL,
                                            hierarchical.correlation.th = 0.8){
@@ -466,7 +465,6 @@ computeHierarchicalClustering <- function (data,
 #' 
 #' @return a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
 #' 
-#' @import 
 computeKMeans <- function(data,
                           k){
     kmeans <- kmeans(data, centers = k)    
@@ -487,7 +485,6 @@ computeKMeans <- function(data,
 #' 
 #' @return a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
 #' 
-#' @import 
 computeEigenCellClusters <- function(data, 
                                      eigencell.correlation.th = 0.80){
     
@@ -528,7 +525,6 @@ computeEigenCellClusters <- function(data,
 #' 
 #' @return a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
 #' 
-#' @import 
 computeClique <- function(data,
                           clique.correlation.th = 0.7){
     

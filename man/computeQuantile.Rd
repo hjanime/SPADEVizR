@@ -7,7 +7,7 @@
 computeQuantile(flowset, probs = c(0.05, 0.95))
 }
 \arguments{
-\item{flowset}{a Flowcore flowset}
+\item{flowset}{a flowCore flowset}
 
 \item{probs}{a vector of probabilities with 2 values in [0,1] to compute quantiles}
 }

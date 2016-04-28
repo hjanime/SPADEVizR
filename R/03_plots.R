@@ -311,7 +311,7 @@ correlatedClustersViewer <- function(CC,
 #' 
 #' @return a ggplot object
 #' 
-#' @import ggplot2 ggnetwork intergraph
+#' @import ggplot2 ggnetwork
 #' 
 #' @export
 #' 
