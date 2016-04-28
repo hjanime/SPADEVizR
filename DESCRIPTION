@@ -1,0 +1,22 @@
+Package: SPADEVizR
+Type: Package
+Title: Visualization and analysis of SPADE clustering results.
+Version: 1.0-0
+Author: Guillaume GAUTREAU, Ludovic PLATON and Nicolas TCHITCHEK
+Maintainer: Nicolas TCHITCHEK <nicolas.tchitchek@gmail.com>, Guillaume GAUTREAU
+    <guillaume.gautreau@free.fr> and Ludovic PLATON <platon.ludovic@gmail.com>
+Description: The Spanning tree Progression of Density normalized Events (SPADE) algorithm is powerful for mining flow and mass cytometry data. SPADE xxx. SPADEVizR is an R package dedicated to post-clustering analysis based on the . SPADEVizR is able to identify aboundant clusters (AC), differentially enriched clusters (DEC), and cluster correlating with phenotypical variables (CC). Moreover, SPADEVizR provides a large panel of visual representations such as parallel coordinates, phenotypical heatmap, stream graph representation, volcano plot representations. Through all these methods SPADEVizR constitutes a powerful pipeline for the analysis of cell clustering results provided by SPADE.
+License: GPL-3
+Imports:
+    flowCore,
+    ggplot2,
+    igraph,
+	MASS,
+	gtools,
+	reshape2,
+	plyr
+LazyData: true
+Suggests:
+    knitr
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1

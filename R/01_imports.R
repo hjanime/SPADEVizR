@@ -1,0 +1,327 @@
+#' @title importSPADEResults
+#'
+#' @description Import the SPADE results from a specified path to a SPADEResult object.
+#'
+#' Generate a SPADEresults object based on SPADE results.
+#'
+#' The tables are loaded, the SPADE tree is loaded as well as the layout
+#' 
+#' @details We advice to use quantile.heuristic = TRUE because it is faster and much more efficient in term of memory with a low impact on precision. 
+#' 
+#' @param path the a character specify the path of SPADE results folder
+#' @param dictionary a two column data.frame providing the correspondance between the original marker names (first column) and the new marker names (second column)
+#' @param exclude.markers a list of markers to exclude 
+#' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles. First is the lower bound and second is the lower bound.
+#' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use (FALSE by default)
+#' @param quantile.heuristic a logicial specifying if quantile are compute for with all cells (FALSE), or is the means of the quantile of each samples (TRUE)
+#' 
+#' @import Flowcore
+#' 
+#' @return SPADEResults a SPADE result object
+#' 
+#' @export 
+importSPADEResults <- function(path,
+                               dictionary         = data.frame(),
+                               exclude.markers    = NULL,
+                               probs              = c(0.05,0.95),
+                               use.raw.medians    = FALSE,
+                               quantile.heuristic = FALSE){
+    
+    message("[START] - extracting SPADE results")
+    message(paste0(basename(path),"\n"))
+    path <- normalizePath(path,"/")
+    
+    message("FCS files import:")
+    fcs.files         <- dir(path,full.names = TRUE,pattern = ".fcs.density.fcs.cluster.fcs$")
+    samples.names     <- gsub(".fcs.density.fcs.cluster.fcs","",basename(fcs.files))
+    fcs.files         <- dir(path,full.names = TRUE,pattern = ".fcs.density.fcs.cluster.fcs$")
+    flowset           <- flowCore::read.flowSet(fcs.files,emptyValue = TRUE)
+    flowCore::sampleNames(flowset) <- samples.names
+
+    if(nrow(dictionary)>0){
+        flowset@colnames <- rename.markers(flowset@colnames,dict)
+        flowset    <- flowset[,1:length(flowset@colnames)]
+    }
+
+    if (!is.null(exclude.markers)){
+        flowset <- exclude.markers(flowset,exclude.markers, colnames.FCS = flowset@colnames)
+    }
+    message("\tarchsin transform...")
+    
+    transform.arcsinh <- flowCore::arcsinhTransform(a=0, b=0.2) #a and b match SPADE a and b
+    marker.toTransform <- setdiff(flowset@colnames, c("time","cell_length","cluster","FileNum","density"))
+    transformations <- flowCore::transformList(marker.toTransform, transform.arcsinh)
+    flowset <- flowCore::transform(flowset, transformations)
+
+    message("\tcompute quantiles...")
+    
+    if(quantile.heuristic){
+        quantiles <- computeQuantile.heuristic(flowset,probs)
+    }
+    else{
+        quantiles <- computeQuantile(flowset,probs)
+    }
+    gc()    
+    message("\treading SPADE results...")
+
+    files <- dir(paste(path,"/tables/bySample/",sep=""),full.names = TRUE)
+    
+    path.clusters.table   <- paste(path,"clusters.table",sep = "/")
+    header.clusters.table <- readLines(path.clusters.table,n = 1)
+    header.clusters.table <- gsub("\\\"","",header.clusters.table)
+    cluster               <- unlist(strsplit(header.clusters.table," "))
+    
+    marker.expressions <- data.frame(stringsAsFactors = FALSE)
+    cells.count        <- data.frame()
+    cells.percent      <- data.frame()
+
+    for(file in files){
+        
+        SPADES.matrix        <- read.table(file,sep = ",",header = TRUE,stringsAsFactors = FALSE,check.names = FALSE)
+        
+        cells.count.sample    <- SPADES.matrix [,"count"]
+        
+        name <- gsub('.fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$','',basename(file))
+        
+        if(nrow(cells.count)){
+            cells.count     <- cbind(cells.count, cells.count.sample)
+            samples.headers <- append(samples.headers,name)
+        }else{
+            cells.count     <- data.frame(cluster = SPADES.matrix [,"ID"], cells.count.sample)
+            samples.headers <- c("cluster",name)
+        }
+        
+        SPADES.matrix <- SPADES.matrix[, grep ("count|percenttotal",colnames(SPADES.matrix), invert = TRUE)]
+        
+        SPADES.matrix      <- cbind(name = rep(name,nrow(SPADES.matrix)),SPADES.matrix)
+        marker.expressions <- rbind(marker.expressions,SPADES.matrix)
+
+    }
+    
+    nb.cluster <- nrow(cells.count)
+    dimnames(cells.count)   <- list(1:nb.cluster,samples.headers)
+
+    marker.expressions.header <- colnames(marker.expressions)
+    marker.expressions.header <- gsub("X.","(",marker.expressions.header,fixed = TRUE)
+    marker.expressions.header <- gsub(".",")",marker.expressions.header,fixed = TRUE)
+    marker.expressions.header[1] <- "sample"
+    marker.expressions.header[2] <- "cluster"
+    colnames(marker.expressions) <- marker.expressions.header
+    
+    marker.expressions <- filter.medians(marker.expressions,use.raw.medians)
+    
+    marker.expressions.header  <- colnames(marker.expressions)
+    clustering.markers.indices <- grep("_clust",marker.expressions.header)
+    marker.expressions.header  <- gsub("_clust","",marker.expressions.header)
+
+    if(nrow(dictionary)>0){           
+        colnames(marker.expressions)  <- rename.markers(marker.expressions.header,dictionary)    
+    }
+    
+    clustering.markers <- colnames(marker.expressions)[clustering.markers.indices]
+    
+    if(!is.null(exclude.markers)){
+        marker.expressions <- exclude.markers(marker.expressions,exclude.markers)
+        clustering.markers <- setdiff(clustering.markers,exclude.markers)
+    }
+
+    graph        <- igraph::read.graph(paste(path,"./mst.gml",sep = ""),format = "gml")
+    graph.layout <- as.matrix(read.table(paste0(path,"/layout.table"),sep = " ",quote = "",stringsAsFactors = FALSE))
+
+    markers.names <- colnames(marker.expressions[, grep ("cluster|sample",colnames(marker.expressions), invert = TRUE)])
+    
+    res <- new("SPADEResults", 
+               marker.expressions  = marker.expressions,
+               use.raw.medians     = use.raw.medians,
+               dictionary          = dictionary,
+               cells.count         = cells.count,
+               sample.names        = samples.names,
+               marker.names        = markers.names,
+               marker.clustering   = markers.names %in% clustering.markers,
+               cluster.number      = nrow(cells.count),
+               flowset             = flowset,
+               fcs.files           = fcs.files,
+               quantiles           = quantiles,
+               graph.layout        = graph.layout,
+               graph               = graph)
+    
+    message("[END] - extracting SPADE results")
+    
+    return(res)
+    
+}
+
+#' @title importSPADEResults
+#'
+#' @description Import the SPADE results from a specified path to a SPADEResult object.
+#'
+#' Generate a SPADEresults object based on SPADE results.
+#'
+#' The tables are loaded, the SPADE tree is loaded as well as the layout
+#' 
+#' @details We advice to use quantile.heuristic = TRUE because it is faster and much more efficient in term of memory with a low impact on precision. 
+#' 
+#' @param marker.expressions a numerical dataframe containing median expression values for each marker of each sample, in additions of markers, the 2 two first columns are "cluster" and "sample" 
+#' @param cells.count a matrix of cells abondances with clusters in row and samples in column 
+#' 
+#' @return Results a result object
+#' 
+#' @export 
+importResults <- function(marker.expressions,
+                          cells.count){
+    res <- new("Results", 
+               marker.expressions  = marker.expressions,
+               cells.count         = cells.count,
+               sample.names        = as.character(setdiff(unique(results@marker.expressions$sample),"cluster")),
+               marker.names        = colnames(marker.expressions)[3:length(marker.expressions)],
+               cluster.number      = length(unique(marker.expressions$cluster)))    
+}
+
+#' @title Internal - Renaming cell markers
+#' 
+#' @description This function is used internally to rename the cell markers based on a dictionary.
+#'
+#' @details dictionary is a data.frame used to rename the marker names. The first column must correspond to the original marker names, the second column must correspond to the new marker names. 
+#'
+#' @param header a character vector containing the original maker names
+#' @param dictionary a character vector containing a correspondence between the original and the new marker names
+#' 
+#' @return a character vector containing the renamed marker names
+rename.markers <- function(header,dictionary){
+      
+    dictionary[,1] <- as.vector(dictionary[,1])
+    dictionary[,2] <- as.vector(dictionary[,2])
+    
+    if(length(unique(dictionary[,1]))!=length(dictionary[,1])){
+        stop("Duplicate in dictionary 'original marker names'")
+    }
+    if(length(unique(dictionary[,2]))!=length(dictionary[,2])){
+        stop("Duplicate in dictionary 'new marker names'")
+    }
+    header.old <- header
+    for(i in 1:nrow(dictionary)){
+        header[which(header==dictionary[i,1])[1]] <- dictionary[i,2]
+    }
+    
+    return(header)
+}
+
+
+#' @title Internal - Removing of cell markers to exclude from a matrix
+#'
+#' @description This function is used internally to remove one or several cell markers.
+#' 
+#' @details xxx
+#' 
+#' @param data a numeric matrix or flowset
+#' @param exclude a character vector containing the cell markers to be excluded 
+#' @param colnames.FCS a character vector containing colnames if data is a FCS flowset
+#' @return a numeric matrix without the cell markers to exclude
+exclude.markers <- function(data,exclude, colnames.FCS = NULL){
+    
+    if(!is.null(colnames.FCS)){
+        column <- colnames.FCS
+    }else{
+        column <- colnames(data) 
+    }
+
+    exclude.flags <- toupper(exclude) %in% toupper(column)
+    
+    if(any(!(exclude.flags))){
+       stop(paste0("Unknown marker to exclude: ",paste(exclude[!exclude.flags],collapse=", ")))
+    }
+
+    data    <- data[ , -which(toupper(column) %in% toupper(exclude))]
+
+	return(data)
+}
+
+#' @title Internal - filter medians to exclude from a matrix
+#'
+#' @description This function is used internally to remove raw or transform medians from SPADE matrix. CVS medians are always remove
+#' 
+#' @details xxx
+#' 
+#' @param data a SPADE matrix
+#' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use (FALSE by default)
+#' 
+#' @return a numeric matrix without the cell markers to exclude
+filter.medians <- function(data,use.raw.medians = FALSE){
+
+    if(use.raw.medians){
+        exclude <- "^medians|^cvs"
+    }else{
+        exclude <- "^raw_medians|^cvs"
+    }
+    
+    data    <- data[,grep(exclude,colnames(data),invert=TRUE, ignore.case = TRUE)]
+    colnames(data) <- gsub("^medians|^cvs|^raw_medians","",colnames(data))
+    
+    return(data)
+    
+}
+
+#' @title Internal - Compute quantile with FCS flowset marker by marker 
+#'
+#' @description This function is used internally
+#' 
+#' @details xxx
+#' 
+#' @param flowset a Flowcore flowset
+#' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles
+#' 
+#' @import Flowcore
+#' 
+#' @return a numeric matrix with bounds
+computeQuantile <- function(flowset,probs = c(0.05,0.95)){
+
+    bounds <- data.frame ()
+    markers <- flowset@colnames
+    markers <- setdiff(markers,"cluster")
+    
+    for(marker in markers){
+        temp <- c()
+        for (j in 1:length(flowset)){    
+            frame <- flowset[[j]]@exprs
+            temp <- c(temp, frame[,marker])
+        }
+        if(nrow(bounds) > 0){
+            bounds     <- cbind(bounds, t(t(quantile(temp, probs = probs))))# WARNING 
+        }else{
+            bounds     <- as.data.frame(t(t(quantile(temp, probs = probs))))# WARNING 
+        }
+    }
+
+    colnames(bounds) <- markers
+    rownames(bounds) <- probs
+    
+    return(bounds)
+}
+
+#' @title Internal - Compute quantile with FCS flowset sample by sample
+#'
+#' @description This function is used internally, it provide the mean of quantiles from each sample to seed up computation
+#' 
+#' @param flowset a Flowcore flowset 
+#' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles
+#' 
+#' @import Flowcore
+#' 
+#' @return a numeric matrix with bounds
+computeQuantile.heuristic <- function(flowset,probs = c(0.05,0.95)){
+    
+    bounds.by.sample <- flowCore::fsApply(flowset[,flowset@colnames != "cluster"], flowCore::each_col, stats::quantile, probs = probs)
+
+    lower.bounds <- bounds.by.sample[seq(from = 1,to = nrow(bounds.by.sample), by = 2),]
+    upper.bounds <- bounds.by.sample[seq(from = 2,to = nrow(bounds.by.sample), by = 2),]
+    
+    lower.bounds <- apply (lower.bounds,2,mean)
+    upper.bounds <- apply (upper.bounds,2,mean)
+    
+    bounds <- rbind(lower.bounds,upper.bounds)
+    
+    rownames(bounds) <- probs
+    
+    return (as.data.frame(bounds))
+    
+}
