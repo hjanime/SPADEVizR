@@ -397,20 +397,20 @@ profilesViewer <- function (profile.object,
     
 }
 
-#' @title xxx
-#'
-#' @description xxx
-#'
-#' @details xxx
-#'
-#' @param xxx
-#'
-#' @return xxx
-#' 
-#' @name plot
-#' @rdname plot-methods
-#' @export 
-setGeneric("plot", function(x,...){ standardGeneric("plot") })
+##' @title xxx
+##'
+##' @description xxx
+##'
+##' @details xxx
+##'
+##' @param xxx
+##'
+##' @return xxx
+##' 
+##' @name plot
+##' @rdname plot-methods
+##' @export 
+#setGeneric("plot", function(x,...){ standardGeneric("plot") })
 
 #' @rdname plot-methods
 #' @export
@@ -484,7 +484,7 @@ clusterViewer <- function(Results,
     if(is.null(samples)){ 
         data  <- Results@marker.expressions
     }else{
-        data  <- subset(Results@marker.expressions, sample %in% names(samples[ samples == TRUE]) )
+        data  <- subset(Results@marker.expressions, sample %in% names(samples[ samples == TRUE]), drop = FALSE)
     }
 
     if(!is.null(clusters)){
@@ -645,7 +645,7 @@ treeViewer <- function(SPADEResults,
     data.filtered   <- SPADEResults@cells.count[, colnames(SPADEResults@cells.count) != "cluster"]
     
     if(!is.null(samples)){ 
-        data.filtered   <- data.filtered[names(samples[ samples == TRUE ])]
+        data.filtered   <- data.filtered[names(samples[ samples == TRUE ]), drop = FALSE]
     }else{
         data            <- data.filtered
     }
@@ -824,8 +824,7 @@ boxplotViewer <- function(Results,
      if(use.percentages){
          data.percent <- prop.table(as.matrix(data[,colnames(data) != "cluster"],2)) * 100
          data         <- data.frame(cluster = data[,"cluster"],data.percent)
-
-        legendy = "% of cells relative to parent"
+         legendy = "% of cells relative to parent"
     }else{
         legendy = "# of cells"
     } 
@@ -1486,6 +1485,79 @@ MDSViewer <- function(Results,
     return(plot)
 }
 
+#' @title CountViewer
+#'
+#' @description Generate a two dimensional vizualisation showing the number of cells (sum of selected samples) of each cluster.
+#' 
+#' @details xxx
+#' 
+#' @param Results a SPADEResults or Results object
+#' @param samples a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)
+#' @param clusters a character vector containing the clusters to use for the representation
+#' @param min.cells a numeric specifying the minimun number of cell (sum of all selected samples) to display a cluster
+#' @param sort a logical specifying if clusters will be to be sorted (descending) based on the sum of all selected samples for each cluster.
+#' @param show.samples a logical specifying if the number of cells for all selected samples will be displayed.
+#' 
+#' @return a ggplot object
+#' 
+#' @import ggplot2 reshape2
+#' 
+#' @export
+CountViewer <- function(Results,
+                        samples      = NULL,
+                        clusters     = NULL,
+                        min.cells    = 0,
+                        sort         = TRUE,
+                        show.samples = TRUE){
+
+    if(is.null(samples)){ 
+        data <- Results@cells.count
+    }else{
+        data  <- Results@cells.count[, c("cluster", names(samples[ samples == TRUE]))]
+    }
+   
+    if(!is.null(clusters)){
+        clusters.select <- data[,"cluster"] %in% clusters
+        data            <- data[clusters.select,]
+    }
+    
+    count <- data[,colnames(data) != "cluster", drop = FALSE]
+    print(dim(count))
+    data  <- cbind(data, sum.of.samples = apply(count,1,sum))
+    data  <- data[data$sum.of.samples > min.cells,]
+    
+    if (sort){
+        data <- transform(data, cluster = reorder(cluster, -sum.of.samples))
+    }else{
+        data$cluster <- as.factor(data$cluster)
+    }
+    
+    data.melted <- reshape2::melt(data, id = c("cluster"))  
+    colnames(data.melted) <- c("cluster","sample","value")
+    
+    data.melted$total <- ifelse(data.melted[,"sample"] == "sum.of.samples","sum of selected samples","")
+    
+    plot <- ggplot2::ggplot(data = data.melted) +
+            ggplot2::ggtitle("CountViewer showing the number of cells for each cluster") +
+            ggplot2::geom_point(data = subset(data.melted, sample == "sum.of.samples"),
+                                ggplot2::aes_string(x = "cluster", y = "value", size = "value", shape = "total"),
+                                fill = "grey40") +
+            ggplot2::scale_shape_manual(values = 21)        
+    if(show.samples){                
+            plot <- plot + ggplot2::geom_jitter(data = subset(data.melted, sample != "sum.of.samples"),
+                                                height = 0,
+                                                width = 0.5,
+                                                ggplot2::aes_string(x = "cluster", y = "value", size = "value", fill = "sample"),
+                                                shape = 21,
+                                                alpha = 0.4)
+    }
+    plot <- plot + ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0,1.1*max(data.melted$value))) +
+                   ggplot2::ylab("# of cells") +
+                   ggplot2::theme_bw() +
+                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1))
+           
+    return(plot)
+}
 
 ##' @title ClusterViewer
 ##' 

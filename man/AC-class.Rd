@@ -6,7 +6,8 @@
 \alias{AC-class}
 \title{Abundant Clusters (AC) class definition}
 \description{
-AC is a S4 object containing the result of computeAC function.
+The Results object is a S4 object containing the results identification of abundant cluster. 
+It also contains all informations about statistical parameters used to performs this test.
 }
 \details{
 AC is a printable and a plotable object calling the abundantClustersViewer() fonction.

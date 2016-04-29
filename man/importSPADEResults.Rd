@@ -13,7 +13,7 @@ importSPADEResults(path, dict = data.frame(), exclude.markers = NULL,
 
 \item{dict}{a two column data.frame providing the correspondance between the original marker names (first column) and the new marker names (second column)}
 
-\item{exclude.markers}{a list of markers to exclude}
+\item{exclude.markers}{a vector of markers to exclude}
 
 \item{probs}{a vector of probabilities with 2 values in [0,1] to compute quantiles. First is the lower bound and second is the lower bound.}
 

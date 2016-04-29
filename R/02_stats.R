@@ -27,7 +27,7 @@ computeAC <- function(Results,
     
     data.filtered   <- Results@cells.count[, colnames(Results@cells.count) != "cluster"]
 
-    data.filtered   <- data.filtered[,names(condition[ condition == TRUE ])]
+    data.filtered   <- data.filtered[,names(condition[ condition == TRUE ]), drop = FALSE]
     
     if(use.percentages){
         data   <- prop.table(as.matrix(data.filtered),2)
@@ -106,8 +106,8 @@ computeDEC <- function(Results,
     
     data.filtered   <- Results@cells.count[, colnames(Results@cells.count) != "cluster"]
     
-    data.cond1   <- data.filtered[,names(conditions[(!is.na(conditions) & conditions == 1)])]
-    data.cond2   <- data.filtered[,names(conditions[(!is.na(conditions) & conditions == 2)])]
+    data.cond1   <- data.filtered[,names(conditions[(!is.na(conditions) & conditions == 1)]), drop = FALSE]
+    data.cond2   <- data.filtered[,names(conditions[(!is.na(conditions) & conditions == 2)]), drop = FALSE]
     
     data.filtered         <- cbind(data.cond1,data.cond2) 
     
@@ -206,7 +206,7 @@ computeCC <- function(Results,
 
     data.filtered <- Results@cells.count[, colnames(Results@cells.count) != "cluster"]
     variable      <- na.omit(variable) 
-    data.filtered <- data.filtered[,names(variable)]
+    data.filtered <- data.filtered[,names(variable), drop = FALSE]
     
     if(use.percentages){
         data   <- prop.table(as.matrix(data.filtered),2)

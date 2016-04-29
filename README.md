@@ -217,7 +217,7 @@ cluster.number     | a numeric specyfing the number of clusters                 
 use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data   | &#9746;
 marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure    | &#9746;
 fcs.files          | a character vector containing the absolute path of the original FCS files                  | &#9746;
-quantiles          | a numeric matrix containing the quantiles for each marker of each cluster                  | &#9746;
+quantiles          | a numeric data.frame containing the quantiles for each marker of each cluster              | &#9746;
 graph              | an igraph object containing the SPADE tree                                                 | &#9746;
 graph.layout       | a numeric matrix containing the layout of the SPADE tree                                   | &#9746;
 
@@ -330,7 +330,6 @@ print(resultsAC)
 ## mean threshold :  2
 ## see @result slot to get further informations...
 ```
-
 ## <a name="stat_function_computeDEC"/> 5.2 Computation of differentially enriched clusters (computeDEC function)
 The `computeDEC` function identify clusters with a number of associated cells statistically different between two biological conditions. 
 
@@ -363,7 +362,6 @@ print(resultsDEC)
 ## foldchange threshold :  3
 ## see @result slot to get further informations...
 ```
-
 ## <a name="stat_function_computecc"/> 5.3 Computation of correlated clusters (computeCC function)
 The `computeCC` function identify clusters correlated with an external biological variable. 
 
@@ -390,7 +388,6 @@ print(resultsCC)
 ##  0.7
 ## see @result slot to get further informations...
 ```
-
 ## <a name="stat_function_classifyPhenoProfiles"/> 5.4 Classification of clusters based on their phenotype profiles (classifyPhenoProfiles function)
 The `classifyPhenoProfiles` function classifies each cluster in different classes based on their marker expressions. Differents clustering methods are available among hierarchical clustering, kmeans, eigen vector decomposition, clique clustering. This function can only handle `SPADEResults` objects (but not a `Results` object). 
 
@@ -409,7 +406,6 @@ For instance, a classification of cell clusters based on their phenotypes can be
 #print(PhenoProfiles)
 ```
 The `classifyPhenoProfiles` function returns a `PhenoProfiles` object containing mainly the cluster associations.
-
 ## <a name="stat_function_classifyEnrichmentProfiles"/> 5.5 Classification of clusters based on enrichment profiles (classifyEnrichmentProfiles function)
 The `classifyEnrichmentProfiles` function classifies each cluster in different classes based on their the number of cells associated with each sample (enrichment profiles). Differents clustering methods are available among hierarchical clustering, kmeans, eigen vector decomposition, clique clustering.
 
@@ -441,7 +437,6 @@ plot(resultsAC)
 ```
 
 <img src="README.figures/AbundantClusters-1.png" title="" alt="" style="display: block; margin: auto;" />
-
 ## <a name="volcano_viewer_function"/> 6.2 Volcano Viewer
 The `volcanoViewer` function is used to visualize identifed differentially enriched clusters, that is to say results contained in a [DEC objet](#object_structure_DEC). The volcano plot [9] representation displays the p-value (shown as -log10(p-value) in Y-axis) and the foldchange (in X-axis) of abundance cells in a two dimensional visualization. By default, the foldchange is represented with a log2 transformation (which can be change using the `fc.log2` parameter). Each dot represents a cluster and differentially enriched clusters are shown in red. The size of dots is proportional to the number of associated cells (--all samples are considered--).
 
@@ -452,7 +447,6 @@ plot(resultsDEC, fc.log2 = FALSE)
 ```
 
 <img src="README.figures/VolcanoViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-
 ## <a name="correlated_clusters_viewer_function"/> 6.3 Correlated Clusters Viewer
 The `correlatedClustersViewer` function is used to visualize identifed correlated clusters, that is to say results contained in a [CC objet](#object_structure_CC). This representation show the p-value (shown as -log10(p-value) in Y-axis) and the correlation coefficient (shown in X-axis) of correlated clusters in a two dimensional visualization. Each dot represents a cluster and correlated clusters are shown in red. The size of dots is proportional to the number of associated cells (--all samples are considered--).
 
@@ -463,7 +457,6 @@ plot(resultsCC)
 ```
 
 <img src="README.figures/CorrelatedClusters-1.png" title="" alt="" style="display: block; margin: auto;" />
-
 ## <a name="profile_viewer_function"/> 6.4 Profile Viewer
 The `Profile Viewer` function is used to visualize classification results. This function can be used either on `EnrichmentProfiles` object or `PhenoProfiles` object and show classes of as a graph. In this graph, nodes represent clusters and edges connect clusters sharing the same class. The size of nodes is proportional to the number of associated cells.
 
@@ -534,7 +527,6 @@ gridExtra::grid.arrange(grobs = kineticsViewer(results, assignments = assignment
 ```
 
 <img src="README.figures/KineticViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-
 ## <a name="boxplot_viewer_function"/> 7.5 Boxplot Viewer
 The `boxplotViewer` function aims to compare cell enrichment of a cluster across several biological conditions. Biological `conditions` are encoded in a named vector with samples in rownames providing correspondence with a biological condition (numeric or character are allowed). 
 
@@ -548,7 +540,6 @@ gridExtra::grid.arrange(grobs = boxplotViewer(results, label = TRUE, conditions 
 ```
 
 <img src="README.figures/BoxplotViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-
 ## <a name="biplot_viewer_function"/> 7.6 Biplot Viewer
 The `biplot` function can be use to visualize a two dimensions plot with an x-axis marker (`x.marker1`) and a y axis marker (`y.marker2`). It allows to filter cells point by clusters and samples with `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or with a facet for each sample.
 When too cells dots are displayed, it can require heavy computation, to resolve this issue, you can resample your data to show less points with the `resample.ratio` parameter.
@@ -568,7 +559,6 @@ distogramViewer(results)
 ```
 
 <img src="README.figures/DistogramViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-
 ## <a name="streamgraph_viewer_function"/> 7.8 Streamgraph Viewer
 The `streamgraphViewer` function aims to represent the evolution of cells abundance of all clusters selected using `clusters` parameter. To select and order sample, you should provide to `order` parameter, a named vector with samples in rownames providing correspondence with a position (integer) or NA to exclude a sample. 
 
@@ -582,7 +572,6 @@ streamgraphViewer(results,order = order, clusters = c(1,2,3,14,5))
 ```
 
 <img src="README.figures/StreamgraphViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-
 ## <a name="MDS_viewer_function"/> 7.9 MDS Viewer (Multidimensional Scaling)
 MDS methods aim to represent the similarities and differences among high dimensionality objects into a space of a lower dimensions, generally in two or three dimensions for visualization purposes [8]. In MDS representations, the Kruskal Stress (KS) indicates the amount of information lost during the dimensionality reduction process.
 
@@ -609,7 +598,19 @@ MDSViewer(results, space = "samples", assignments = assignments, clusters = c(2,
 ```
 
 <img src="README.figures/MDSViewer_samples-1.png" title="" alt="" style="display: block; margin: auto;" />
+## <a name="count_viewer_function"/> X.X Count Viewer
 
+The `CountViewer` function aims to vizualize the number of cells in each cluster. This representation displays the clusters (in X-axis) and the number of cells (Y-axis) in a two dimensional visualization. The function computes the sum of all samples by default but allows to select the samples (using `samples` parameter) which are used to calculate the number of cells in each cluster. By default, all clusters will be displayed but a vector of cluster can be provided to select desired cluster (using `clusters` parameter).
+
+For instance, the following command describe select samples and clusters and then vizualize the number of cells in each cluster :
+
+```r
+samples <- c(TRUE,TRUE,FALSE,FALSE,TRUE)
+names(samples) <- results@sample.names
+CountViewer(results,samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"))
+```
+
+<img src="README.figures/CountViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 # <a name="license"/> 9. Export 
 The `export()` function is available for all objects of this package. Use this function to export an object to a tab separated file able to be open with Microsoft Excel&copy; or with Libre Office Calc.
 

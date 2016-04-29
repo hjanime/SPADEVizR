@@ -6,26 +6,28 @@
 \alias{SPADEResults-class}
 \title{SPADEResults class definition}
 \description{
-SPADEResults is a S4 object containing SPADE results.
+The Results object is a S4 object containing results of SPADE automatic gating. 
+This object inherits from the Result object and consequently store the count matrix and the cluster phenotypes.
+In addition, SPADEResults object contains the informations about SPADE cell clustering results, such as makers used to identify clusters, FCS files and the SPADE Tree.
 }
 \details{
-SPADEResults extend Results object adding specific SPADE data. SPADEResults object is the central element used by the most of SPADEViR functions, it aims to store the SPADE data comming from the importSPADEResults() function.
+SPADEResults object is the central element used by the main SPADEViR functions, it is return by the The importSPADEResult() function.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{use.raw.medians}}{a logical specifying if the marker expressions are obtained from "raw_median" or "transformed" columns}
+\item{\code{use.raw.medians}}{a logical specifying if the marker expressions correspond to the raw or transformed data}
 
-\item{\code{dictionary}}{a two column data.frame providing the correspondence between the original marker names (first column) and the new marker names (second column)}
+\item{\code{dictionary}}{a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)}
 
 \item{\code{marker.clustering}}{a logical vector specifying marker that have been used during the clustering precedure}
 
 \item{\code{fcs.files}}{a character vector containing the absolute path of the original FCS files}
 
-\item{\code{quantiles}}{a numerical matrix containing the quantiles for each each markers of cluster}
+\item{\code{quantiles}}{a numeric data.frame containing the quantiles for each each markers of cluster}
 
 \item{\code{graph}}{a igraph object containing the SPADE tree}
 
-\item{\code{graph.layout}}{a numerical matrix containing the layout of the SPADE tree}
+\item{\code{graph.layout}}{a numeric matrix containing the layout of the SPADE tree}
 }}
 

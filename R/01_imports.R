@@ -10,7 +10,7 @@
 #' 
 #' @param path the a character specify the path of SPADE results folder
 #' @param dict a two column data.frame providing the correspondance between the original marker names (first column) and the new marker names (second column)
-#' @param exclude.markers a list of markers to exclude 
+#' @param exclude.markers a vector of markers to exclude 
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles. First is the lower bound and second is the lower bound.
 #' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use (FALSE by default)
 #' @param quantile.heuristic a logicial specifying if quantile are compute for with all cells (FALSE), or is the means of the quantile of each samples (TRUE)

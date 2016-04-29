@@ -3,24 +3,21 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,AC-method}
-\alias{plot,CC-method}
-\alias{plot,DEC-method}
-\alias{plot,EnrichmentProfiles-method}
-\alias{plot,PhenoProfiles-method}
+\alias{plot,AC,ANY-method}
+\alias{plot,CC,ANY-method}
+\alias{plot,EnrichmentProfiles,ANY-method}
+\alias{plot,PhenoProfiles,ANY-method}
 \title{xxx}
 \usage{
-plot(x, ...)
+\S4method{plot}{DEC,ANY}(x, y, ...)
 
-\S4method{plot}{DEC}(x, ...)
+\S4method{plot}{AC,ANY}(x, y, ...)
 
-\S4method{plot}{AC}(x, ...)
+\S4method{plot}{CC,ANY}(x, y, ...)
 
-\S4method{plot}{CC}(x, ...)
+\S4method{plot}{PhenoProfiles,ANY}(x, y, ...)
 
-\S4method{plot}{PhenoProfiles}(x, ...)
-
-\S4method{plot}{EnrichmentProfiles}(x, ...)
+\S4method{plot}{EnrichmentProfiles,ANY}(x, y, ...)
 }
 \arguments{
 \item{xxx}{}

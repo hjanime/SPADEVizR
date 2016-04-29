@@ -2,15 +2,20 @@ setOldClass("igraph") # give access to igraph class
 
 #' @title Results class definition
 #' 
-#' @description The Results object is a S4 object containing results of automatic gating. This object store mainly the count matrix and the cluster phenotypes. It is to note that Results is a super classe of the SPADEResult
+#' @description The Results object is a S4 object containing results of automatic gating. 
+#' This object store mainly the count matrix and the cluster phenotypes. 
+#' It is to note that Results is a super classe of the SPADEResult
 #' 
 #' @details The Results object is the core (super classe) of SPADEResults object.
-#' 
-#' This object is allows to store automatic gating results from other algorithms. 
-#' The importX() function return a Result Object.
+#' This object could store automatic gating results from other algorithms. 
+#' The importX() function returns a Result Object.
 #' 
 #' The cells.count dataframe have in the first column the cluster names or numeric ID and some columns with number of cells for each sample (with the sample names in colnames)
 #' The marker.expressions dataframe have .. to continue
+#' 
+#' The Results object owns methods to summuries main informations with print and show methods
+#' Moreover this object could be exported as a tab separated file using the export method
+#' 
 #' @slot cells.count a dataframe containing the number of cells for each cluster of each sample
 #' @slot marker.expressions a numerical dataframe containing marker median expressions for each cluster of each sample
 #' @slot sample.names a character vector containing the sample names
@@ -44,17 +49,20 @@ Results <- setClass("Results",
             
 #' @title SPADEResults class definition
 #' 
-#' @description SPADEResults is a S4 object containing SPADE results.
+#' @description The Results object is a S4 object containing results of SPADE automatic gating. 
+#' This object inherits from the Result object and consequently store the count matrix and the cluster phenotypes.
+#' In addition, SPADEResults object contains the informations about SPADE cell clustering results, such as makers used to identify clusters, FCS files and the SPADE Tree.
+#' @details 
+#' SPADEResults object is the central element used by the main SPADEViR functions, it is return by the The importSPADEResult() function. 
 #' 
-#' @details SPADEResults extend Results object adding specific SPADE data. SPADEResults object is the central element used by the most of SPADEViR functions, it aims to store the SPADE data comming from the importSPADEResults() function. 
-#' 
-#' @slot use.raw.medians a logical specifying if the marker expressions are obtained from "raw_median" or "transformed" columns
-#' @slot dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the new marker names (second column)
+#' @slot use.raw.medians a logical specifying if the marker expressions correspond to the raw or transformed data
+#' @slot dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
 #' @slot marker.clustering a logical vector specifying marker that have been used during the clustering precedure
 #' @slot fcs.files a character vector containing the absolute path of the original FCS files
-#' @slot quantiles a numerical matrix containing the quantiles for each each markers of cluster
+#' @slot quantiles a numeric data.frame containing the quantiles for each each markers of cluster
 #' @slot graph a igraph object containing the SPADE tree
-#' @slot graph.layout a numerical matrix containing the layout of the SPADE tree
+#' @slot graph.layout a numeric matrix containing the layout of the SPADE tree
+#' 
 #' 
 #' @import igraph
 #' 
@@ -139,7 +147,8 @@ SPADEResults <- setClass("SPADEResults",
 
 #' @title Abundant Clusters (AC) class definition
 #' 
-#' @description AC is a S4 object containing the result of computeAC function. 
+#' @description The Results object is a S4 object containing the results identification of abundant cluster. 
+#' It also contains all informations about statistical parameters used to performs this test.  
 #' 
 #' @details AC is a printable and a plotable object calling the abundantClustersViewer() fonction.
 #' 
