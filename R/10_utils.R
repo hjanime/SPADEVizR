@@ -82,9 +82,7 @@ ggheatmap <- function(mat, dendrogram.type = "rectangle", num = 5, clustering.ma
     melted.data.frame    <- reshape2::melt(data.frame, id.vars="markers")
         
     colfunc <- grDevices::colorRampPalette(c("#FFFFFF","#ECE822","#F9A22B","#EE302D","#A32D33"))#white -> yellow -> orange -> red -> brown
-    
-    print(head(melted.data.frame))
-    
+
     melted.data.frame$value <- as.factor(melted.data.frame$value)
     
     centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable",y = "markers")) + 

@@ -14,21 +14,21 @@ Guillaume Gautreau, David Pejoski, Ludovic Platon, Brice Targat, Roger Le Grand,
 4. [Object structures](#object_structures)
 	1. [Results object](#object_structure_results)
 	2. [SPADEResults object](#object_structure_SPADE_results)
-	3. [Abundant clusters (AC)](#object_structure_AC)
-	4. [Differentially enriched clusters (CC)](#object_structure_DEC)
-	5. [Computation of correlated clusters (computeCC function)](#object_structure_CC)
+	3. [Abundant clusters (AC object)](#object_structure_AC)
+	4. [Differentially enriched clusters (DEC object)](#object_structure_DEC)
+	5. [Correlated clusters (CC object)](#object_structure_CC)
 	6. [Classification of clusters based on their phenotype profiles (PhenoProfiles object)](#object_structure_PhenoProfiles)
 	7. [Classification of clusters based on their enrichment profiles (EnrichmentProfiles object)](#object_structure_EnrichmentProfiles)
 5. [Statistical analyses](#stat_functions)
-	1. [Computation of abundant clusters (computeAC function)](#stat_function_computeAC)
-	2. [Computation of differentially enriched clusters (computeDEC function)](#stat_function_computeDEC)
-	3. [computeCC (Correlated Clusters)](#stat_function_computecc)
-	4. [Classification of phenotype profiles (classifyPhenoProfiles function)](#stat_function_classifyPhenoProfiles)
-	5. [Classification of enrichment profiles (classifyEnrichmentProfiles function)](#stat_function_classifyEnrichmentProfiles)
+	1. [Computation of abundant clusters](#stat_function_computeAC)
+	2. [Computation of differentially enriched clusters](#stat_function_computeDEC)
+	3. [Computation of correlated Clusters](#stat_function_computecc)
+	4. [Classification of phenotype profiles](#stat_function_classifyPhenoProfiles)
+	5. [Classification of enrichment profiles](#stat_function_classifyEnrichmentProfiles)
 6. [Vizualisation of statistical results](#viewer_functions)
-	1. [Abundant Clusters Viewer (AC plot)](#abundant_clusters_viewer_function)
-	2. [Volcano Viewer (DEC plot)](#volcano_viewer_function)
-	3. [Correlated Clusters Viewer (CC plot)](#correlated_clusters_viewer_function)
+	1. [Abundant Clusters Viewer](#abundant_clusters_viewer_function)
+	2. [Volcano Viewer](#volcano_viewer_function)
+	3. [Correlated Clusters Viewer](#correlated_clusters_viewer_function)
 	4. [Profile Viewer](#profile_viewer_function)
 7. [Miscellaneous vizualisations](#viewer_functions)
 	1. [Cluster Viewer](#cluster_viewer_function)
@@ -59,9 +59,11 @@ Beyond representations, SPADEVizR allows to automatically:
 * Classify clusters by their similar phenotypes or their similar enrichments profiles.
 
 # <a name="package_installation"/> 2. Package installation
-The `ggplot2`, `ggrepel`, `grid`, `gridExtra`, `igraph`, `MASS`, `reshape2`, `gtools`, `ggdendro` R packages as well as the `flowCore` [7] Bioconductor packages are required for running SPADEVizR. These packages can be installed using the following commands:
+The `data.table`, `ggdendro`, `ggnetwork`, `ggplot2`, `ggrepel`, `grid`, `gridExtra`, `gtools`, `igraph`, `MASS`, `reshape2`,  R packages as well as the `flowCore` [7] Bioconductor packages are required for running SPADEVizR. These packages can be installed using the following commands:
 
 ```r
+install.packages('data.table')
+install.packages('ggnetwork')
 install.packages('ggplot2')
 install.packages('ggrepel')
 install.packages('ggtools')
@@ -602,7 +604,7 @@ MDSViewer(results, space = "samples", assignments = assignments, clusters = c(2,
 
 The `CountViewer` function aims to vizualize the number of cells in each cluster. This representation displays the clusters (in X-axis) and the number of cells (Y-axis) in a two dimensional visualization. The function computes the sum of all samples by default but allows to select the samples (using `samples` parameter) which are used to calculate the number of cells in each cluster. By default, all clusters will be displayed but a vector of cluster can be provided to select desired cluster (using `clusters` parameter).
 
-For instance, the following command describe select samples and clusters and then vizualize the number of cells in each cluster :
+For instance, the following command describe how to select samples and clusters and then vizualize the number of cells in each cluster :
 
 ```r
 samples <- c(TRUE,TRUE,FALSE,FALSE,TRUE)

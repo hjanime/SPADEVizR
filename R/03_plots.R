@@ -339,7 +339,7 @@ profilesViewer <- function (profile.object,
         
         same.classes <- classes[classes$classe == i,]
         
-        print(same.classes)
+        #print(same.classes)
         if (nrow(same.classes) > 1){
             x      <- c()
             y      <- c()
@@ -354,8 +354,8 @@ profilesViewer <- function (profile.object,
                 
             }
             y[1] <- previous 
-            print(paste0("classe :",i))
-            print(data.frame(x = x, y = y))
+            #print(paste0("classe :",i))
+            #print(data.frame(x = x, y = y))
             
             if (nrow(edges) > 0){
                 edges <- rbind(edges,data.frame(x = x, y = y))
@@ -374,10 +374,10 @@ profilesViewer <- function (profile.object,
     if (cluster.size){
         network::set.vertex.attribute(x = graph, attrname = "size", value = profile.object@cluster.size, v = classes$ID.node)
     }
-    print(graph)
+    #print(graph)
     graph <- ggnetwork::ggnetwork(graph, layout = "kamadakawai")
     
-    print(graph)
+    #print(graph)
     plot <- ggplot2::ggplot(graph, ggplot2::aes_string(x = "x", y = "y", xend = "xend", yend = "yend")) +
             ggnetwork::geom_edges(linetype = "twodash", color = "grey90", size = 1)
     
@@ -512,7 +512,7 @@ clusterViewer <- function(Results,
     
     if (names(Results) == "SPADEResults"){
         for(i in 1:nrow(data)){
-            print(paste0(i,data[i,"marker"]))
+            #print(paste0(i,data[i,"marker"]))
             data[i,"lower.bound"] <- Results@quantiles[1,as.character(data[i,"marker"])]
             data[i,"upper.bound"] <- Results@quantiles[2,as.character(data[i,"marker"])]
         }
@@ -598,7 +598,7 @@ clusterViewer <- function(Results,
 phenoViewer <- function(SPADEResults,
                         pheno.table = NULL,
                         num         = 5){
-    print(SPADEResults)
+    #print(SPADEResults)
     if (names(SPADEResults) == "Results"){
        stop("Error : phenoViewer required a SPADEResults object")
     }                
@@ -749,13 +749,13 @@ kineticsViewer <- function(Results,
     data.melted$individuals <- assignments[data.melted$sample,'individuals']
     data.melted$timepoints  <- assignments[data.melted$sample,'timepoints']
 
-    print(data.melted)
+    #print(data.melted)
     
 
     
     plots <- list()
     for(current.cluster in clusters){
-        print(clusters)
+        #print(clusters)
         data.temp  <- data.melted[data.melted$cluster == current.cluster,]
         
         max.value  <- max(data.temp$value)
@@ -842,11 +842,11 @@ boxplotViewer <- function(Results,
                     
     data.melted$cond <- conditions[data.melted$sample]
     data.melted <- data.melted[!is.na(data.melted$cond),]
-    print(data.melted)
+    #print(data.melted)
     plots <- list()
     for(current.cluster in clusters){
         data.temp  <- data.melted[data.melted$cluster == current.cluster,]
-        print(data.temp$value)
+        #print(data.temp$value)
         max.value <- max(data.temp$value)
         max.value <- max.value + 0.1*max.value + 1
         
@@ -1529,7 +1529,7 @@ CountViewer <- function(Results,
     }
     
     count <- data[,colnames(data) != "cluster", drop = FALSE]
-    print(dim(count))
+    #print(dim(count))
     data  <- cbind(data, sum.of.samples = apply(count,1,sum))
     data  <- data[data$sum.of.samples > min.cells,]
     

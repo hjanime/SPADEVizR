@@ -168,8 +168,8 @@ computeDEC <- function(Results,
                 method          = method,
                 method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust), #TODO think about another way
                 method.paired   = method.paired,
-                th.pvalue       = th.pvalue,
                 th.fc           = th.fc,
+                th.pvalue       = th.pvalue,
                 result          = result)
     
     message("[END] - computing DECs")
@@ -282,7 +282,7 @@ classifyPhenoProfiles <- function (Results,
     
     table <- computePhenoTable(Results)
     
-    print(table)
+    #print(table)
     
     table.wide <- reshape2::dcast(table, cluster~marker)
     table.wide <- table.wide[, colnames(table.wide) != "cluster"]
@@ -292,7 +292,7 @@ classifyPhenoProfiles <- function (Results,
 
     method.parameter <- list()
     
-    print(table.wide)
+    #print(table.wide)
     
     switch(method,
             hierarchical_h = {
@@ -310,7 +310,7 @@ classifyPhenoProfiles <- function (Results,
             kmeans = {
                 if (!is.null(class.number)){
                     classes <- computeKMeans(table.wide, k = class.number)
-                    print(classes)
+                    #print(classes)
                     method.parameter <- list(class.number = class.number)
                 }else{
                     Stop("Error, class.number can't be null with KMeans")
@@ -433,7 +433,7 @@ computeHierarchicalClustering <- function (data,
                                            hierarchical.correlation.th = 0.8){
 
     cor.data <- cor(t(data))
-    print(head(cor.data))
+    #print(head(cor.data))
     
     cor.data[cor.data < 0] <- 0
     cor.data               <- 1 - cor.data

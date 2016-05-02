@@ -12,30 +12,30 @@ It contains all informations about statistical parameters used to performs this 
 \details{
 A cluster is considered as a significant differentially enriched cluster if the 2 thresholds (foldchange and p-value) are reached.  
 The DEC object is returned by the computeDEC() fonction.
-The AC object owns methods to summuries main informations using print and show methods
+The DEC object owns methods to summuries main informations using print and show methods
 Moreover this object could be exported as a tab separated file using the export method
 }
 \section{Slots}{
 
 \describe{
-\item{\code{sample.cond1}}{a character specifying the names of the samples corresponding the first condition}
+\item{\code{sample.cond1}}{a character specifying the names of the samples of the first biological condition}
 
-\item{\code{sample.cond2}}{a character specifying the names of the samples corresponding the second condition}
+\item{\code{sample.cond2}}{a character specifying the names of the samples of the second biological condition}
 
-\item{\code{cluster.size}}{a numeric vector containing number of cells ( sum of all samples ) for each cluster}
+\item{\code{cluster.size}}{a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster}
 
-\item{\code{use.percentages}}{a logical specifying if computations was performed on percentage of cell abondance}
+\item{\code{use.percentages}}{a logical specifying if computation was performed on percentage of cell abundance}
 
 \item{\code{method}}{a character containing the name of the statistical test used to identify the DEC}
 
-\item{\code{method.adjust}}{a character containing the name of the multiple correction method used}
+\item{\code{method.adjust}}{a character containing the name of the multiple correction method used (if any)}
 
-\item{\code{method.paired}}{a logical indicating if the test has beeen performed in a paired manner}
+\item{\code{method.paired}}{a logical indicating if the statistical test have been performed in a paired manner}
 
-\item{\code{th.pvalue}}{a numeric vector with pvalue threshold}
+\item{\code{th.fc}}{a numeric value specifying the foldchange threshold}
 
-\item{\code{th.fc}}{a numeric vector with foldchange threshold}
+\item{\code{th.pvalue}}{a numeric value specifying the p-value threshold}
 
-\item{\code{result}}{a dataframe with clusters in row. The first and second colunm contain the mean and the standard deviation for the first condition, the third and fourth the mean and standard deviation for the second condition, the sixth the fold-change and the seventh the pvalue and finnaly the significance according to pvalue threshold and fold change threshold}
+\item{\code{result}}{a data.frame containing for each cluster (first column): the fold change (second column) and the standard deviation (third column) for the first biological condition, the fold change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially enriched.}
 }}
 

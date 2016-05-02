@@ -28,7 +28,7 @@ generateReport <- function(Results,
     
     message("[BEGIN]-report")
 
-    print(Results)
+    #print(Results)
     
     plots  <- list()
 
@@ -38,7 +38,7 @@ generateReport <- function(Results,
     
     for(i in 1:length(reports)){
 
-        print(reports[i])
+        #print(reports[i])
         switch(reports[i],
                MDS             = {
                   plots <- c(plots, list(MDSViewer(Results, space = "clusters", clusters = clusters)))
@@ -74,7 +74,7 @@ generateReport <- function(Results,
                })
        
     }
-    print(length(stat.objects))
+    #print(length(stat.objects))
     for(stat.object in stat.objects){
         plots <- c(plots, list(plot(stat.object)))
     }
@@ -82,7 +82,7 @@ generateReport <- function(Results,
         plots <- c(plots, list(plot(profile.object)))
     }
     
-    print(length(plots))
+    #print(length(plots))
     pages.plots <- gridExtra::marrangeGrob(grobs = plots, nrow = 1, ncol=1)
 
     ggplot2::ggsave(PDFfile, pages.plots, width = width, height = height)

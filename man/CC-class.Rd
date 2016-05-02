@@ -6,7 +6,8 @@
 \alias{CC-class}
 \title{Correlated Clusters (CC) class definition}
 \description{
-CC is a S4 object containing the result of computeCC function.
+The CC object is a S4 object containing the identified correlated clusters with a numeric vector of phenotypic data. 
+It contains all informations about statistical parameters used to performs this test.
 }
 \details{
 CC is a printable and a plotable object calling the correlatedClustersViewer() fonction
