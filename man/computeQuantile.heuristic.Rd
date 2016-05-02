@@ -15,6 +15,9 @@ computeQuantile.heuristic(flowset, probs = c(0.05, 0.95))
 a numeric matrix with bounds
 }
 \description{
-This function is used internally, it provide the mean of quantiles from each sample to seed up computation
+This function is used internally, it provide the mean of quantiles from each sample to seed up computation.
+}
+\details{
+This function performs an approximate calculation of quantiles using less memory than computeQuantile.
 }
 

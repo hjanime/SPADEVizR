@@ -15,9 +15,9 @@ computeQuantile(flowset, probs = c(0.05, 0.95))
 a numeric matrix with bounds
 }
 \description{
-This function is used internally
+This function is used internally to compute the maker range quantiles.
 }
 \details{
-xxx
+This function performs the exact calculation of quantiles with all cells but needs more memory than computeQuantile.heuristic.
 }
 

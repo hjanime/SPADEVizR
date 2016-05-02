@@ -1,8 +1,8 @@
-#' @title Textual preview for Results objects
+#' @title Textual previews for all SPADEVizR objects
 #'
-#' @description Prints a preview for a Results object.
+#' @description Prints a previews for a SPADEVizR object.
 #'
-#' @param x a Results object
+#' @param x a SPADEVizR object
 #' 
 #' @return none
 #'  
@@ -26,9 +26,9 @@ setMethod("print","Results",
 )
 
 
-#' @title Textual preview for SPADEResults objects
+#' @title Textual previews for SPADEResults objects
 #'
-#' @description Prints a preview for a SPADEResults object.
+#' @description Prints a previews for a SPADEResults object.
 #'
 #' @param x a SPADEResults object
 #' 
@@ -56,18 +56,6 @@ setMethod("print","SPADEResults",
 	}
 )
 
-#' @title Textual preview for Abundant Clusters (AC) object
-#'
-#' @description Prints a preview for a Abundant Clusters (AC) object.
-#'
-#' @param x a Abundant Clusters (AC) object
-#' 
-#' @return none
-#'  
-#' @name print
-#' @rdname print-methods
-NULL
-
 #' @rdname print-methods
 #' @export
 setMethod("print","AC",
@@ -92,19 +80,6 @@ setMethod("print","AC",
             cat("\n")     
         }
 )
-
-
-#' @title Textual preview for Differentially Enriched Clusters (DEC) object
-#'
-#' @description Prints a preview for a Differentially Enriched Clusters (DEC) object.
-#'
-#' @param x a Differentially Enriched Clusters (DEC) object
-#' 
-#' @return none
-#'  
-#' @name print
-#' @rdname print-methods
-NULL
 
 #' @rdname print-methods
 #' @export
@@ -136,18 +111,6 @@ setMethod("print","DEC",
         }
 )
 
-#' @title Textual preview for Correlated Clusters (CC) objects
-#'
-#' @description Prints a preview for a Correlated Clusters (CC) object.
-#'
-#' @param x a Correlated Clusters (CC) object
-#' 
-#' @return none
-#'  
-#' @name print
-#' @rdname print-methods
-NULL
-
 #' @rdname print-methods
 #' @export
 setMethod("print","CC",
@@ -178,18 +141,6 @@ setMethod("print","CC",
         }
 )
 
-#' @title Textual preview for PhenoProfiles objects
-#'
-#' @description Prints a preview for a PhenoProfiles object.
-#'
-#' @param x a PhenoProfiles object
-#' 
-#' @return none
-#'  
-#' @name print
-#' @rdname print-methods
-NULL
-
 #' @rdname print-methods
 #' @export
 setMethod("print","PhenoProfiles",
@@ -211,7 +162,6 @@ setMethod("print","PhenoProfiles",
             cat("\n")
         }
 )
-
 
 #' @title Textual preview for EnrichmentProfiles objects
 #'
@@ -249,11 +199,11 @@ setMethod("print","EnrichmentProfiles",
 
 
 
-#' @title Textual preview for Results objects
+#' @title Textual previews for SPADEVizR objects
 #'
-#' @description Show a preview a Results object.
+#' @description Show a previews for a SPADEVizR objects.
 #'
-#' @param x a Results object
+#' @param x a SPADEVizR object
 #' 
 #' @return none
 #'  
@@ -267,35 +217,12 @@ setMethod("show","Results",
         definition = function(object){print(object)}
 )
 
-#' @title Textual preview for SPADEResults objects
-#'
-#' @description Show a preview a SPADEResults object.
-#'
-#' @param x a SPADEResults object
-#' 
-#' @return none
-#'  
-#' @name show
-#' @rdname show-methods
-NULL
-
 #' @rdname show-methods
 #' @export
 setMethod("show","SPADEResults",
         definition = function(object){print(object)}
 )
 
-#' @title Textual preview for Abundant Clusters (AC) object
-#'
-#' @description Show a preview a for Abundant Clusters (AC) object
-#'
-#' @param x a Abundant Clusters (AC) object
-#' 
-#' @return none
-#'  
-#' @name show
-#' @rdname show-methods
-NULL
 
 #' @rdname show-methods
 #' @export

@@ -6,7 +6,7 @@
 \usage{
 classifyPhenoProfiles(Results, method = "hierarchical_h",
   class.number = NULL, eigencell.correlation.th = 0.8,
-  clique.correlation.th = 0.7, hierarchical.correlation.th = 0.8)
+  clique.correlation.th = 0.7, hierarchical.correlation.th = 0.7)
 }
 \arguments{
 \item{Results}{a Results or SPADEResults object}

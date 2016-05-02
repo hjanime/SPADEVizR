@@ -4,22 +4,23 @@
 \alias{abundantClustersViewer}
 \title{abundantClustersViewer}
 \usage{
-abundantClustersViewer(AC, cluster.size = TRUE, all.label = FALSE)
+abundantClustersViewer(AC, show.cluster.sizes = TRUE,
+  show.all.labels = FALSE)
 }
 \arguments{
-\item{AC}{the AC object}
+\item{AC}{an object of class AC (object returned by the 'computeAC()' function)}
 
-\item{cluster.size}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
 
-\item{all.label}{a logicial specifing if all cluster label must be show or just significant cluster}
+\item{show.all.labels}{a logicial specifing if all cluster label must be show or just significant cluster}
 }
 \value{
 a ggplot object
 }
 \description{
-Generate a barplot representation to compare cluster abondances
+Generate a scatter plot representation displaying for each cluster its m
 }
 \details{
-By default, only abundant clusters are labeled, set parameter `all.label = TRUE` to visualize all labels.
+By default, only significant abundant clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/10_utils.R
 \name{dendro}
 \alias{dendro}
-\title{title Internal - Build a dendrograms plot}
+\title{Internal - Build a dendrograms plot}
 \usage{
 dendro(ddata, row = !col, col = !row)
 }

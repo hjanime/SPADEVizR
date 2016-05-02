@@ -4,17 +4,17 @@
 \alias{volcanoViewer}
 \title{Volcano Plot Viewer}
 \usage{
-volcanoViewer(DEC = NULL, fc.log2 = TRUE, cluster.size = TRUE,
-  all.label = FALSE)
+volcanoViewer(DEC = NULL, fc.log2 = TRUE, show.cluster.sizes = TRUE,
+  show.all.labels = FALSE)
 }
 \arguments{
-\item{DEC}{object DEC provided by the function computeDEC}
+\item{DEC}{an object of class DEC (object returned by the 'computeDEC()' function)}
 
-\item{fc.log2}{a logicial specifing if foldchange or log2(foldchange) is use}
+\item{fc.log2}{a logicial specifing if fold-change or log2(fold-change) is use}
 
-\item{cluster.size}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
 
-\item{all.label}{a logicial specifing if all cluster labels must be show or just significant cluster}
+\item{show.all.labels}{a logicial specifing if all cluster labels must be show or just significant cluster}
 
 \item{SPADEResults}{the SPADEViewer result object}
 }
@@ -25,6 +25,6 @@ a ggplot object
 Generate a Volcano plot representation based on Differentially Enriched Clusters (DEC) of The SPADE result object.
 }
 \details{
-xxx
+By default, only significant differentially enriched clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.
 }
 

@@ -15,9 +15,6 @@ filter.medians(data, use.raw.medians = FALSE)
 a numeric matrix without the cell markers to exclude
 }
 \description{
-This function is used internally to remove raw or transform medians from SPADE matrix. CVS medians are always remove
-}
-\details{
-xxx
+This function is used internally to remove raw or transform medians from SPADE matrix. CVS medians are always removed.
 }
 

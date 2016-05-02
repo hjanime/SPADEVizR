@@ -18,6 +18,6 @@ a character vector containing the renamed marker names
 This function is used internally to rename the cell markers based on a dictionary.
 }
 \details{
-dictionary is a data.frame used to rename the marker names. The first column must correspond to the original marker names, the second column must correspond to the new marker names.
+Dictionary is a data.frame used to rename the marker names. The first column must correspond to the original marker names, the second column must correspond to the new marker names.
 }
 

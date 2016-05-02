@@ -2,13 +2,13 @@
 % Please edit documentation in R/10_utils.R
 \name{ggheatmap}
 \alias{ggheatmap}
-\title{title Internal - Create a list of elements allowing to build a heatmap}
+\title{Internal - Create a list of elements allowing to build a heatmap}
 \usage{
-ggheatmap(mat, dendrogram.type = "rectangle", num = 5,
+ggheatmap(matrix, dendrogram.type = "rectangle", num = 5,
   clustering.markers = NULL)
 }
 \arguments{
-\item{mat}{a matrix}
+\item{matrix}{a matrix}
 
 \item{dendrogram.type}{a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)}
 
@@ -20,9 +20,6 @@ ggheatmap(mat, dendrogram.type = "rectangle", num = 5,
 a list of 3 plots (top dendrogram, right dendrogram, heatmap)
 }
 \description{
-Use the function ggheatmap.plot to display this heatmap
-}
-\details{
-
+This function is used internally to build the element needed for an heatmap
 }
 

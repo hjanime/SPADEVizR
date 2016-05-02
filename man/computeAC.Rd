@@ -16,9 +16,9 @@ computeAC(Results, condition, use.percentages = TRUE, method = "t.test",
 
 \item{method}{a character containing the statistical method to use for the ACs detection. The parameter can take the values "t.test" or "wilcox.test"}
 
-\item{method.adjust}{a character specifying if the pvalues should be corrected using the argument "method" available for function p.adjust, among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr"}
+\item{method.adjust}{a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method)}
 
-\item{th.pvalue}{a numeric specifying the pvalue threshold (0.05 by default)}
+\item{th.pvalue}{a numeric specifying the p-value threshold (0.05 by default)}
 
 \item{th.mean}{a numeric specifying the mean threshold (0 by default)}
 }
@@ -26,9 +26,6 @@ computeAC(Results, condition, use.percentages = TRUE, method = "t.test",
 a AC object
 }
 \description{
-Abundant Clusters are clusters wich have an enrichement significatyvely different of zeor
-}
-\details{
 xxx
 }
 

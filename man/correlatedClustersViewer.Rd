@@ -4,22 +4,23 @@
 \alias{correlatedClustersViewer}
 \title{correlatedClustersViewer}
 \usage{
-correlatedClustersViewer(CC, cluster.size = TRUE, all.label = FALSE)
+correlatedClustersViewer(CC, show.cluster.sizes = TRUE,
+  show.all.labels = FALSE)
 }
 \arguments{
-\item{CC}{the CC object}
+\item{CC}{an object of class CC (object returned by the 'computeCC()' function)}
 
-\item{cluster.size}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
 
-\item{all.label}{a logicial specifing if all cluster label must be show or just significant cluster}
+\item{show.all.labels}{a logicial specifing if all cluster label must be show or just significant cluster}
 }
 \value{
 a ggplot object
 }
 \description{
-Generate a representation to compare cluster abondances
+
 }
 \details{
-xxx
+By default, only significant correlated clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.
 }
 

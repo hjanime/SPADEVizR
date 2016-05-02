@@ -4,31 +4,38 @@
 \name{CC-class}
 \alias{CC}
 \alias{CC-class}
-\title{Correlated Clusters (CC) class definition}
+\title{Correlated Clusters (CC class)  definition}
 \description{
-The CC object is a S4 object containing the identified correlated clusters with a numeric vector of phenotypic data. 
-It contains all informations about statistical parameters used to performs this test.
+The 'CC' object is a S4 object containing the information related to the clusters correlated with a phenotypic variable. 
+
+
+This object contains all information about the statistical parameters used.
 }
 \details{
-CC is a printable and a plotable object calling the correlatedClustersViewer() fonction
+A cluster is considered as a significant correlated cluster if its associated p-value and correlation threshold are below the specific thresholds 'th.pvalue' and 'th.correlation'.  
+
+The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'computeCC()' function.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{cluster.size}}{a numeric vector containing number of cells ( sum of all samples ) for each cluster}
+\item{\code{sample.names}}{a character vector containing the samples used to compute correlated clusters}
 
-\item{\code{variable}}{a numeric vector containing the expression values of the variable}
+\item{\code{variable}}{a numeric vector containing the expression values of the associated variable}
 
-\item{\code{use.percentages}}{a logical specifying if computations was performed on percentage of cell abondance}
+\item{\code{cluster.size}}{a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster}
+
+\item{\code{use.percentages}}{a logical specifying if computation was performed on percentage of cell abundance}
 
 \item{\code{method}}{a character containing the name of the statistical test used to identify the CC}
 
-\item{\code{method.adjust}}{a character containing the name of the multiple correction method used}
+\item{\code{method.adjust}}{a character containing the name of the multiple correction method used (if any)}
 
-\item{\code{th.pvalue}}{a numeric vector with pvalue threshold}
+\item{\code{th.correlation}}{a numeric value specifying the correlation threshold (R)}
 
-\item{\code{th.correlation}}{a numeric vector with correlation threshold (r)}
+\item{\code{th.pvalue}}{a numeric value specifying the p-value threshold}
 
-\item{\code{result}}{a three colmuns dataframe with clusters in row. The first colunm contains the coefficiant of correlation (r), the second contains the associated pvalue and the third a logical (significance) specifying if the two thresholds was reached or not.}
+\item{\code{result}}{a data.frame containing for each cluster (first column): the coefficiant of correlation R (second column) , the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.}
 }}
 

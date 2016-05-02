@@ -4,16 +4,18 @@
 \name{DEC-class}
 \alias{DEC}
 \alias{DEC-class}
-\title{Differentially Enriched Clusters (DEC) class definition}
+\title{Differentially Enriched Clusters (DEC class) definition}
 \description{
-The DEC object is a S4 object containing the identified differentially enriched clusters beetween the selected conditions. 
-It contains all informations about statistical parameters used to performs this test.
+The 'DEC' object is a S4 object containing the information related to the differentially enriched clusters between two given biological conditions. 
+
+
+This object contains all information about the statistical parameters used.
 }
 \details{
-A cluster is considered as a significant differentially enriched cluster if the 2 thresholds (foldchange and p-value) are reached.  
-The DEC object is returned by the computeDEC() fonction.
-The DEC object owns methods to summuries main informations using print and show methods
-Moreover this object could be exported as a tab separated file using the export method
+A cluster is considered as a differentially enriched cluster if its associated p-value and fold-change are below the specific thresholds 'th.pvalue' and 'th.fc'.  
+
+The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'computeDEC()' function.
 }
 \section{Slots}{
 
@@ -32,10 +34,10 @@ Moreover this object could be exported as a tab separated file using the export 
 
 \item{\code{method.paired}}{a logical indicating if the statistical test have been performed in a paired manner}
 
-\item{\code{th.fc}}{a numeric value specifying the foldchange threshold}
+\item{\code{th.fc}}{a numeric value specifying the fold-change threshold}
 
 \item{\code{th.pvalue}}{a numeric value specifying the p-value threshold}
 
-\item{\code{result}}{a data.frame containing for each cluster (first column): the fold change (second column) and the standard deviation (third column) for the first biological condition, the fold change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially enriched.}
+\item{\code{result}}{a data.frame containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially enriched.}
 }}
 

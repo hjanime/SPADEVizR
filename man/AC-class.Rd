@@ -4,16 +4,18 @@
 \name{AC-class}
 \alias{AC}
 \alias{AC-class}
-\title{Abundant Clusters (AC) class definition}
+\title{Abundant Clusters (AC class) definition}
 \description{
-The AC object is a S4 object containing the identified of abundant cluster. 
-It contains all informations about statistical parameters used to performs this test.
+The 'AC' object is a S4 object containing the information related to the abundant clusters in a given biological condition. 
+
+
+This object contains all information about the statistical parameters used.
 }
 \details{
-A cluster is considered as a significant abundant cluster if the 2 thresholds (mean and p-value) are reached.  
-The AC object is returned by the computeAC() fonction.
-The AC object owns methods to summuries main informations using print and show methods
-Moreover this object could be exported as a tab separated file using the export method
+A cluster is considered as a significant abundant cluster if its associated p-value and mean are below the specific thresholds 'th.pvalue' and 'th.mean'.  
+
+The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'computeAC()' function.
 }
 \section{Slots}{
 

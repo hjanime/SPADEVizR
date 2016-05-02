@@ -2,19 +2,20 @@ setOldClass("igraph") # give access to igraph class
 
 #' @title Results class definition
 #' 
-#' @description The Results object is a S4 object containing results of automatic gating. 
-#' This object store mainly the count matrix and the cluster phenotypes. 
-#' It is to note that Results is a super classe of the SPADEResult
+#' @description 
+#' The Results object is a S4 object containing cell clustering results obtained from various automatic gating algorithms. 
 #' 
-#' @details The Results object is the core (super classe) of SPADEResults object.
-#' This object could store automatic gating results from other algorithms. 
-#' The importX() function returns a Result Object.
 #' 
-#' The cells.count dataframe have in the first column the cluster names or numeric ID and some columns with number of cells for each sample (with the sample names in colnames)
-#' The marker.expressions dataframe have .. to continue
+#' This object mainly stores the count matrix (i.e. the number of cells associated with each cluster of each sample) and the cell cluster phenotypes (i.e. the marker median expressions for each cluster). 
+#' It is to note that the Results object is a super class of the SPADEResult object.
 #' 
-#' The Results object owns methods to summuries main informations using print and show methods
-#' Moreover this object could be exported as a tab separated file using the export method
+#' @details 
+#' The 'cells.count' dataframe stores the number of cells associated with each cluster of each sample. This dataframe has in row the clusters and in column the samples.
+#' 
+#' The 'marker.expressions' dataframe stores the marker median expressions for each cluster. This dataframe has in the first the sample names, in the second column the cluster names, and the maker median expressions in the others columns.
+#' 
+#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' This object is returned by the 'importX()' function.
 #' 
 #' @slot cells.count a dataframe containing the number of cells for each cluster of each sample
 #' @slot marker.expressions a numerical dataframe containing marker median expressions for each cluster of each sample
@@ -49,13 +50,16 @@ Results <- setClass("Results",
             
 #' @title SPADEResults class definition
 #' 
-#' @description The Results object is a S4 object containing results of SPADE automatic gating. 
-#' This object inherits from the Result object and consequently store the count matrix and the cluster phenotypes.
-#' In addition, SPADEResults object contains the informations about SPADE cell clustering results, such as makers used to identify clusters, FCS files and the SPADE Tree.
+#' @description 
+#' The 'SPADEResults' object is a S4 object containing cell clustering results obtained from SPADE.
+#' 
+#' 
+#' This object inherits from the 'Result' object and stores the count matrix (i.e. the number of cells associated with each cluster of each sample) and the cell cluster phenotypes (i.e. the marker median expressions for each cluster). 
+#' In addition to the 'Result' object, the 'SPADEResults' object contains information about SPADE clustering results, such as the SPADE tree, the clustering makers and the FCS files.
+#' 
 #' @details 
-#' SPADEResults object is the central element used by SPADEViR functions, it is returned by the importSPADEResult() function. 
-#' The SPADEResults object owns methods to summuries main informations using print and show methods
-#' Moreover this object could be exported as a tab separated file using the export method
+#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' This object is returned by the 'importSPADEResult()' function. 
 #' 
 #' @slot use.raw.medians a logical specifying if the marker expressions correspond to the raw or transformed data
 #' @slot dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
@@ -64,8 +68,7 @@ Results <- setClass("Results",
 #' @slot quantiles a numeric data.frame containing the quantiles for each each markers of cluster
 #' @slot graph a igraph object containing the SPADE tree
 #' @slot graph.layout a numeric matrix containing the layout of the SPADE tree
-#' 
-#' 
+#'  
 #' @import igraph
 #' 
 #' @name SPADEResults-class
@@ -147,17 +150,19 @@ SPADEResults <- setClass("SPADEResults",
                          }
 )
 
-#' @title Abundant Clusters (AC) class definition
+#' @title Abundant Clusters (AC class) definition
 #' 
 #' @description 
-#' The AC object is a S4 object containing the identified of abundant cluster. 
-#' It contains all informations about statistical parameters used to performs this test.  
+#' The 'AC' object is a S4 object containing the information related to the abundant clusters in a given biological condition. 
+#' 
+#' 
+#' This object contains all information about the statistical parameters used.
 #' 
 #' @details 
-#' A cluster is considered as a significant abundant cluster if the 2 thresholds (mean and p-value) are reached.  
-#' The AC object is returned by the computeAC() fonction.
-#' The AC object owns methods to summuries main informations using print and show methods
-#' Moreover this object could be exported as a tab separated file using the export method
+#' A cluster is considered as a significant abundant cluster if its associated p-value and mean are below the specific thresholds 'th.pvalue' and 'th.mean'.  
+#' 
+#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' This object is returned by the 'computeAC()' function. 
 #' 
 #' @slot sample.names a character vector containing the samples used to compute the abundant clusters
 #' @slot cluster.size a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster
@@ -215,17 +220,19 @@ AC <- setClass("AC",
                }
 )
 
-#' @title Differentially Enriched Clusters (DEC) class definition
+#' @title Differentially Enriched Clusters (DEC class) definition
 #' 
 #' @description 
-#' The DEC object is a S4 object containing the identified differentially enriched clusters beetween the selected conditions. 
-#' It contains all informations about statistical parameters used to performs this test.  
+#' The 'DEC' object is a S4 object containing the information related to the differentially enriched clusters between two given biological conditions. 
+#' 
+#' 
+#' This object contains all information about the statistical parameters used. 
 #' 
 #' @details 
-#' A cluster is considered as a significant differentially enriched cluster if the 2 thresholds (foldchange and p-value) are reached.  
-#' The DEC object is returned by the computeDEC() fonction.
-#' The DEC object owns methods to summuries main informations using print and show methods
-#' Moreover this object could be exported as a tab separated file using the export method
+#' A cluster is considered as a differentially enriched cluster if its associated p-value and fold-change are below the specific thresholds 'th.pvalue' and 'th.fc'.  
+#' 
+#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' This object is returned by the 'computeDEC()' function. 
 #' 
 #' @slot sample.cond1 a character specifying the names of the samples of the first biological condition
 #' @slot sample.cond2 a character specifying the names of the samples of the second biological condition
@@ -234,9 +241,9 @@ AC <- setClass("AC",
 #' @slot method a character containing the name of the statistical test used to identify the DEC
 #' @slot method.adjust a character containing the name of the multiple correction method used (if any)
 #' @slot method.paired a logical indicating if the statistical test have been performed in a paired manner
-#' @slot th.fc a numeric value specifying the foldchange threshold
+#' @slot th.fc a numeric value specifying the fold-change threshold
 #' @slot th.pvalue a numeric value specifying the p-value threshold
-#' @slot result a data.frame containing for each cluster (first column): the fold change (second column) and the standard deviation (third column) for the first biological condition, the fold change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially enriched.
+#' @slot result a data.frame containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially enriched.
 #'
 #' @name DEC-class
 #' @rdname DEC-class
@@ -295,22 +302,29 @@ DEC <- setClass("DEC",
 )
 
 
-#' @title Correlated Clusters (CC) class definition
+#' @title Correlated Clusters (CC class)  definition
 #' 
 #' @description 
-#' The CC object is a S4 object containing the identified correlated clusters with a numeric vector of phenotypic data. 
-#' It contains all informations about statistical parameters used to performs this test.  
-
-#' @details CC is a printable and a plotable object calling the correlatedClustersViewer() fonction 
+#' The 'CC' object is a S4 object containing the information related to the clusters correlated with a phenotypic variable. 
 #' 
-#' @slot cluster.size a numeric vector containing number of cells ( sum of all samples ) for each cluster
-#' @slot variable a numeric vector containing the expression values of the variable
-#' @slot use.percentages a logical specifying if computations was performed on percentage of cell abondance
+#' 
+#' This object contains all information about the statistical parameters used. 
+#' 
+#' @details 
+#' A cluster is considered as a significant correlated cluster if its associated p-value and correlation threshold are below the specific thresholds 'th.pvalue' and 'th.correlation'.  
+#' 
+#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' This object is returned by the 'computeCC()' function. 
+#' 
+#' @slot sample.names a character vector containing the samples used to compute correlated clusters
+#' @slot variable a numeric vector containing the expression values of the associated variable
+#' @slot cluster.size a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster
+#' @slot use.percentages a logical specifying if computation was performed on percentage of cell abundance
 #' @slot method a character containing the name of the statistical test used to identify the CC
-#' @slot method.adjust a character containing the name of the multiple correction method used 
-#' @slot th.pvalue a numeric vector with pvalue threshold
-#' @slot th.correlation a numeric vector with correlation threshold (r)
-#' @slot result a three colmuns dataframe with clusters in row. The first colunm contains the coefficiant of correlation (r), the second contains the associated pvalue and the third a logical (significance) specifying if the two thresholds was reached or not.
+#' @slot method.adjust a character containing the name of the multiple correction method used (if any)
+#' @slot th.correlation a numeric value specifying the correlation threshold (R)
+#' @slot th.pvalue a numeric value specifying the p-value threshold
+#' @slot result a data.frame containing for each cluster (first column): the coefficiant of correlation R (second column) , the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.
 #' 
 #' @name CC-class
 #' @rdname CC-class
@@ -322,8 +336,8 @@ CC <- setClass("CC",
                        use.percentages = "logical",
                        method          = "character",
                        method.adjust   = "character",
-                       th.pvalue       = "numeric",
                        th.correlation  = "numeric",
+                       th.pvalue       = "numeric",
                        result          = "data.frame"),
                validity = function(object){#TODO complete this
 
@@ -371,42 +385,57 @@ CC <- setClass("CC",
 )
 
 
-#' @title PhenoProfiles class definition
+#' @title Classification of clusters based on their phenotype profiles (PhenoProfiles class) definition
 #' 
-#' @description PhenoProfiles is a S4 object containing the result of classifyPhenoProfiles() function.
-#' It classify clusters by their markers properties provided by the fonction computePhenoTable()
+#' @description 
+#' The 'PhenoProfiles' is a S4 object containing the information related to the cluster classification based on theirs marker expressions.
+#' 
+#' 
+#' This object contains all information about the classification method and parameters used.  
 #' 	
-#' @details PhenoProfiles is a printable and a plotable object calling the xxx() fonction 
+#' @details 
+#' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can paramaterized using the 'method.parameter' parameter.
+#'  
+#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' This object is returned by the 'classifyPhenoProfiles()' function. 
 #' 
-#' @slot method a character specifying the method used to classify cluster
-#' @slot method.parameter a list of parameters used by the selected method
-#' @slot cluster.size a numeric vector with the number of cell in each cluster (sum of all samples)
 #' @slot cluster.number a numeric providing the number of cluster
-#' @slot class.number a numeric providing the number of classes
-#' @slot classes a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm 
+#' @slot method a character specifying the method used to classify cluster
+#' @slot method.parameter a named list of parameters used by the classification method
+#' @slot cluster.size a numeric vector containing the number of cells associated with each cluster (-- sum of all samples --)
+
+#' @slot class.number a numeric value specifying the number of clusters
+#' @slot classes a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
 #' 
 #' @name PhenoProfiles-class
 #' @rdname PhenoProfiles-class
 #' @exportClass PhenoProfiles
 PhenoProfiles <- setClass("PhenoProfiles",
-                          slots=c(method              = "character",
-                                  method.parameter         = "list",
-                                  cluster.size             = "numeric",
-                                  cluster.number           = "numeric",
-                                  class.number             = "numeric",
-                                  classes                  = "data.frame"),
+                          slots=c(method           = "character",
+                                  method.parameter = "list",
+                                  cluster.size     = "numeric",
+                                  cluster.number   = "numeric",
+                                  class.number     = "numeric",
+                                  classes          = "data.frame"),
                           validity = function(object){#TODO complete this
                                 
                              return(TRUE)
                          }
 )
 
-#' @title EnrichmentProfiles class definition
+#' @title Classification of clusters based on their enrichment profiles (EnrichmentProfiles class) definition
 #' 
-#' @description EnrichmentProfiles is a S4 object containing the result of classifyEnrichmentProfiles() function.
-#' It classify clusters by their cells enrichment properties across the samples.
-#'  
-#' @details EnrichmentProfiles is a printable and a plotable object calling the profileViewer() fonction 
+#' @description 
+#' The 'EnrichmentProfiles' is a S4 object containing the information related to the cluster classification based on theirs enrichment profiles.
+#' 
+#' 
+#' This object contains all information about the classification method and parameters used.   
+#' 
+#' @details
+#' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can paramaterized using the 'method.parameter' parameter.
+#' 
+#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' This object is returned by the 'classifyEnrichmentProfiles()' function. 
 #' 
 #' @slot method a character specifying the method used to classify cluster
 #' @slot method.parameter a list of parameters used by the selected method
@@ -432,13 +461,13 @@ EnrichmentProfiles <- setClass("EnrichmentProfiles",
                                }
 )
 
-#' @title Results object's name
+#' @title Class name 
 #'
-#' @description Named a Results object.
+#' @description Provides the name of each SPADEVizR object
 #'
-#' @param x a Results object
+#' @param x a SPADEVizR object
 #' 
-#' @return none
+#' @return a character specifying the name of the object
 #'  
 #' @name names
 #' @rdname names-methods

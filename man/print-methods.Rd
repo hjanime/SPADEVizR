@@ -10,7 +10,7 @@
 \alias{print,PhenoProfiles-method}
 \alias{print,Results-method}
 \alias{print,SPADEResults-method}
-\title{Textual preview for Results objects}
+\title{Textual previews for all SPADEVizR objects}
 \usage{
 \S4method{print}{Results}(x)
 
@@ -27,17 +27,9 @@
 \S4method{print}{EnrichmentProfiles}(x)
 }
 \arguments{
-\item{x}{a Results object}
+\item{x}{a SPADEVizR object}
 
 \item{x}{a SPADEResults object}
-
-\item{x}{a Abundant Clusters (AC) object}
-
-\item{x}{a Differentially Enriched Clusters (DEC) object}
-
-\item{x}{a Correlated Clusters (CC) object}
-
-\item{x}{a PhenoProfiles object}
 
 \item{x}{a EnrichmentProfiles object}
 }
@@ -47,27 +39,11 @@ none
 none
 
 none
-
-none
-
-none
-
-none
-
-none
 }
 \description{
-Prints a preview for a Results object.
+Prints a previews for a SPADEVizR object.
 
-Prints a preview for a SPADEResults object.
-
-Prints a preview for a Abundant Clusters (AC) object.
-
-Prints a preview for a Differentially Enriched Clusters (DEC) object.
-
-Prints a preview for a Correlated Clusters (CC) object.
-
-Prints a preview for a PhenoProfiles object.
+Prints a previews for a SPADEResults object.
 
 Prints a preview for a EnrichmentProfiles object.
 }

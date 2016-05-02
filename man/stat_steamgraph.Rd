@@ -2,7 +2,7 @@
 % Please edit documentation in R/10_utils.R
 \name{stat_steamgraph}
 \alias{stat_steamgraph}
-\title{title Internal - Plot a steamgraph (from by ggTimeSeries : https://github.com/Ather-Energy/ggTimeSeries)}
+\title{Internal - Plot a steamgraph (from by ggTimeSeries : https://github.com/Ather-Energy/ggTimeSeries)}
 \usage{
 stat_steamgraph(mapping = NULL, data = NULL, show.legend = NA,
   inherit.aes = TRUE, na.rm = TRUE, ...)

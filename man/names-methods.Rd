@@ -10,7 +10,7 @@
 \alias{names,PhenoProfiles-method}
 \alias{names,Results-method}
 \alias{names,SPADEResults-method}
-\title{Results object's name}
+\title{Class name}
 \usage{
 \S4method{names}{Results}(x)
 
@@ -27,7 +27,7 @@
 \S4method{names}{EnrichmentProfiles}(x)
 }
 \arguments{
-\item{x}{a Results object}
+\item{x}{a SPADEVizR object}
 
 \item{x}{a SPADEResults object}
 
@@ -42,7 +42,7 @@
 \item{x}{a EnrichmentProfiles object}
 }
 \value{
-none
+a character specifying the name of the object
 
 none
 
@@ -57,7 +57,7 @@ none
 none
 }
 \description{
-Named a Results object.
+Provides the name of each SPADEVizR object
 
 Named a SPADEResults object.
 

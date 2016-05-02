@@ -5,7 +5,7 @@
 \title{Compute the correlation of SPADE cluster with a cynetics phenotype}
 \usage{
 computeCC(Results, variable, use.percentages = TRUE, method = "pearson",
-  method.adjust = NULL, th.pvalue = 0.05, th.correlation = 0.5)
+  method.adjust = NULL, th.pvalue = 0.05, th.correlation = 0.75)
 }
 \arguments{
 \item{Results}{a Results or SPADEResults object}
@@ -16,19 +16,16 @@ computeCC(Results, variable, use.percentages = TRUE, method = "pearson",
 
 \item{method}{a character indicating the correlation method to use : "pearson", "spearman"}
 
-\item{method.adjust}{a character specifying if the pvalues should be corrected using the argument "method" available for function p.adjust, among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr"}
+\item{method.adjust}{a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method)}
 
-\item{th.pvalue}{a numeric specifying the pvalue threshold (0.05 by default)}
+\item{th.pvalue}{a numeric specifying the p-value threshold (0.05 by default)}
 
-\item{th.correlation}{a numeric specifying the r two sided threshold (0.5 by default) in [0,1]}
+\item{th.correlation}{a numeric specifying the absolute value of the correlation coefficient threshold (0.75 by default)}
 }
 \value{
 a CC object
 }
 \description{
-Correlated Clusters are clusters with count or % correlated with a specific phenotipical variable (such as titer)
-}
-\details{
 xxx
 }
 

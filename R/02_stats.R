@@ -1,15 +1,13 @@
 #' @title Compute the Abundant Clusters
 #' 
-#' @description Abundant Clusters are clusters wich have an enrichement significatyvely different of zeor
-#'  
-#' @details xxx
-#' 
+#' @description 
+#' xxx
 #' @param Results a Results or SPADEResults object
 #' @param condition a named vector providing the correspondence between a sample name (in rowname) and the logical value TRUE to test abondance for this sample or FALSE otherwise
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character containing the statistical method to use for the ACs detection. The parameter can take the values "t.test" or "wilcox.test"
-#' @param method.adjust a character specifying if the pvalues should be corrected using the argument "method" available for function p.adjust, among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr"
-#' @param th.pvalue a numeric specifying the pvalue threshold (0.05 by default)
+#' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
+#' @param th.pvalue a numeric specifying the p-value threshold (0.05 by default)
 #' @param th.mean a numeric specifying the mean threshold (0 by default)
 #' 
 #' @return a AC object
@@ -43,7 +41,7 @@ computeAC <- function(Results,
                                           return(do.call(method,
                                                          args = list(x           = x,
                                                                      alternative = "greater",
-                                                                     mu          = 0
+                                                                     mu          = th.mean
                                                          ))$p.value
                                                  )
                                     })
@@ -77,18 +75,17 @@ computeAC <- function(Results,
 
 #' @title Compute the Differentially Enriched Clusters
 #' 
-#' @description Differentially Enriched Clusters are clusters for which the means of cell number are significantly different between two conditions.
-#'
-#' @details xxx
+#' @description
+#' xxx
 #' 
-#' @param result a Results or SPADEResults object
+#' @param Results a Results or SPADEResults object
 #' @param conditions a named vector providing the correspondence between a sample name (in rownames) and the condition of this sample : NA to exclude a sample from tests, 1 or 2 to attribute this sample, respectively to the first or second condition
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character specifying the name of the statistical test to use "t.test" or "wilcox.test"
-#' @param method.adjust a character specifying if the pvalues should be corrected using the argument "method" available for function p.adjust, among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr"
-#' @param method.paired a logical indicating whether data measurement are paired (by default FALSE)
-#' @param th.pvalue a numeric specifying the pvalue threshold (0.05 by default)
-#' @param th.fc a numeric specifying the foldchange threshold (1 by default)
+#' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
+#' @param method.paired a logical indicating if the statistical test must be performed in a paired manner
+#' @param th.pvalue a numeric specifying the p-value threshold (0.05 by default)
+#' @param th.fc a numeric specifying the fold-change threshold (1 by default)
 #'
 #' @return a DEC object
 #' 
@@ -179,17 +176,16 @@ computeDEC <- function(Results,
 
 #' @title Compute the correlation of SPADE cluster with a cynetics phenotype
 #' 
-#' @description Correlated Clusters are clusters with count or % correlated with a specific phenotipical variable (such as titer)
-#' 
-#' @details xxx
+#' @description 
+#' xxx
 #' 
 #' @param Results a Results or SPADEResults object
 #' @param variable a numerical named vector providing the correspondence between a sample name (in rowname) and the specific phenotype or NA to ignore a sample
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character indicating the correlation method to use : "pearson", "spearman"
-#' @param method.adjust a character specifying if the pvalues should be corrected using the argument "method" available for function p.adjust, among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr"
-#' @param th.pvalue a numeric specifying the pvalue threshold (0.05 by default)
-#' @param th.correlation a numeric specifying the r two sided threshold (0.5 by default) in [0,1]
+#' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
+#' @param th.pvalue a numeric specifying the p-value threshold (0.05 by default)
+#' @param th.correlation a numeric specifying the absolute value of the correlation coefficient threshold (0.75 by default)
 #' 
 #' @return a CC object
 #'
@@ -197,10 +193,10 @@ computeDEC <- function(Results,
 computeCC <- function(Results,
                       variable,
                       use.percentages = TRUE,
-                      method     = "pearson",
+                      method          = "pearson",
                       method.adjust   = NULL,
                       th.pvalue       = 0.05,
-                      th.correlation  = 0.5){
+                      th.correlation  = 0.75){
                   
     message("[START] - computing CCs")
 
@@ -243,8 +239,8 @@ computeCC <- function(Results,
               use.percentages = use.percentages,
               method          = method,
               method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust),#TODO think about another way
-              th.pvalue       = th.pvalue,
               th.correlation  = th.correlation,
+              th.pvalue       = th.pvalue,
               result          = result)
               
     message("[END] - computing CCs")
@@ -273,7 +269,7 @@ classifyPhenoProfiles <- function (Results,
                                    class.number                = NULL,
                                    eigencell.correlation.th    = 0.8,
                                    clique.correlation.th       = 0.7,
-                                   hierarchical.correlation.th = 0.8){
+                                   hierarchical.correlation.th = 0.7){
     message("[START] - computing classifyPhenoProfiles")
     
     if (!is.element(method,c("hierarchical_h", "hierarchical_k", "kmeans", "eigencell", "clique"))){
@@ -348,7 +344,7 @@ classifyPhenoProfiles <- function (Results,
 #' @details xxx
 #' 
 #' @param Results a Results or SPADEResults object
-#' @param method a character specifying the clustering method among one of those : 'hierarchical','kmeans','eigencell','clique'
+#' @param method a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','kmeans','eigencell','clique' (hierarchical_h by default)
 #' @param class.number a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'kmeans'
 #' @param eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
 #' @param clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
@@ -362,7 +358,7 @@ classifyEnrichmentProfiles <- function(Results,
                                        class.number                = NULL,
                                        eigencell.correlation.th    = 0.8,
                                        clique.correlation.th       = 0.7,
-                                       hierarchical.correlation.th = 0.8){ # think about select sample ?
+                                       hierarchical.correlation.th = 0.7){ # think about select sample ?
     message("[START] - computing classifyEnrichmentProfiles")
     
     if (!is.element(method,c("hierarchical_h", "hierarchical_k", "kmeans", "eigencell", "clique"))){

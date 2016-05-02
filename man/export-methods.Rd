@@ -11,20 +11,19 @@
 \alias{export,Results-method}
 \title{Exportation of SPADEVizR objects}
 \usage{
-export(object, filename)
+export(object, filename = "export.txt")
 
-\S4method{export}{Results}(object, filename = "Results.txt")
+\S4method{export}{Results}(object, filename = "export.txt")
 
-\S4method{export}{AC}(object, filename = "AC.txt")
+\S4method{export}{AC}(object, filename = "export.txt")
 
-\S4method{export}{DEC}(object, filename = "DEC.txt")
+\S4method{export}{DEC}(object, filename = "export.txt")
 
-\S4method{export}{CC}(object, filename = "CC.txt")
+\S4method{export}{CC}(object, filename = "export.txt")
 
-\S4method{export}{PhenoProfiles}(object, filename = "PhenoProfiles.txt")
+\S4method{export}{PhenoProfiles}(object, filename = "export.txt")
 
-\S4method{export}{EnrichmentProfiles}(object,
-  filename = "EnrichmentProfiles.txt")
+\S4method{export}{EnrichmentProfiles}(object, filename = "export.txt")
 }
 \arguments{
 \item{object}{a SPADEVizR object}
@@ -35,6 +34,6 @@ export(object, filename)
 none
 }
 \description{
-Exports an object into a TAB delimeted file with parameters in header (begining with a sharp '#')
+Exports a SPADEVizR object into a tab separated file.
 }
 

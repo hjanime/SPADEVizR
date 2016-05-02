@@ -4,13 +4,18 @@
 \name{EnrichmentProfiles-class}
 \alias{EnrichmentProfiles}
 \alias{EnrichmentProfiles-class}
-\title{EnrichmentProfiles class definition}
+\title{Classification of clusters based on their enrichment profiles (EnrichmentProfiles class) definition}
 \description{
-EnrichmentProfiles is a S4 object containing the result of classifyEnrichmentProfiles() function.
-It classify clusters by their cells enrichment properties across the samples.
+The 'EnrichmentProfiles' is a S4 object containing the information related to the cluster classification based on theirs enrichment profiles.
+
+
+This object contains all information about the classification method and parameters used.
 }
 \details{
-EnrichmentProfiles is a printable and a plotable object calling the profileViewer() fonction
+Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can paramaterized using the 'method.parameter' parameter.
+
+The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'classifyEnrichmentProfiles()' function.
 }
 \section{Slots}{
 

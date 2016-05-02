@@ -45,25 +45,24 @@ computePhenoTable <- function(SPADEResults, num = 5){
 }
 
 
-#' title Internal - Create a list of elements allowing to build a heatmap   
+#' @title Internal - Create a list of elements allowing to build a heatmap   
 #'
-#' @description Use the function ggheatmap.plot to display this heatmap
-#'
-#' @details 
-#'
-#' @param mat a matrix
+#' @description 
+#' This function is used internally to build the element needed for an heatmap
+#' 
+#' @param matrix a matrix
 #' @param dendrogram.type a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)
 #' @param num xxx
 #' @param clustering.markers a character vector of clustering markers
 #' @return a list of 3 plots (top dendrogram, right dendrogram, heatmap)
 #'
 #' @import ggplot2 reshape2 grDevices
-ggheatmap <- function(mat, dendrogram.type = "rectangle", num = 5, clustering.markers = NULL ) {#TO ADD, dists = c("euclidian","euclidian")
+ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering.markers = NULL ) {#TO ADD, dists = c("euclidian","euclidian")
 
-    colnames(mat) <- 1:ncol(mat)
+    colnames(matrix) <- 1:ncol(matrix)
     
-    row.hc <- hclust(dist(mat), "ward.D")# change to eucledian or correlation
-    col.hc <- hclust(dist(t(mat)), "ward.D")# change to eucledian or correlation
+    row.hc <- hclust(dist(matrix), "ward.D")# change to eucledian or correlation
+    col.hc <- hclust(dist(t(matrix)), "ward.D")# change to eucledian or correlation
     
     row.dendro <- ggdendro::dendro_data(as.dendrogram(row.hc),type = dendrogram.type)
     col.dendro <- ggdendro::dendro_data(as.dendrogram(col.hc),type = dendrogram.type)
@@ -71,10 +70,10 @@ ggheatmap <- function(mat, dendrogram.type = "rectangle", num = 5, clustering.ma
     col.plot <- dendro(col.dendro, col=TRUE)
     row.plot <- dendro(row.dendro, row=TRUE)
     
-    col.ord <- match(col.dendro$labels$label, colnames(mat))
-    row.ord <- match(row.dendro$labels$label, rownames(mat))
+    col.ord <- match(col.dendro$labels$label, colnames(matrix))
+    row.ord <- match(row.dendro$labels$label, rownames(matrix))
     
-    mat.ordered  <- mat[row.ord,col.ord]
+    mat.ordered  <- matrix[row.ord,col.ord]
 
     data.frame           <- as.data.frame(mat.ordered)
     data.frame$markers   <- rownames(mat.ordered)
@@ -87,12 +86,12 @@ ggheatmap <- function(mat, dendrogram.type = "rectangle", num = 5, clustering.ma
     
     centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable",y = "markers")) + 
                    ggplot2::geom_tile(ggplot2::aes_string(fill = "value"), colour = "black") +
-                   ggplot2::scale_fill_manual(values = colfunc(num), guide = ggplot2::guide_legend(direction = "horizontal",
-                                                                                                   ncol = 10,
-                                                                                                   byrow = TRUE,
-                                                                                                   label.theme = ggplot2::element_text(size = 10, angle = 0), 
-                                                                                                   label.position="bottom",
-                                                                                                   label.hjust = 0.5,
+                   ggplot2::scale_fill_manual(values = colfunc(num), guide = ggplot2::guide_legend(direction      = "horizontal",
+                                                                                                   ncol           = 10,
+                                                                                                   byrow          = TRUE,
+                                                                                                   label.theme    = ggplot2::element_text(size = 10, angle = 0), 
+                                                                                                   label.position = "bottom",
+                                                                                                   label.hjust    = 0.5,
                                                                                                    title.position = "top")) + 
                    ggplot2::theme(legend.text      = ggplot2::element_text(size = 4),
                                   panel.background = ggplot2::element_rect("white"),
@@ -108,7 +107,7 @@ ggheatmap <- function(mat, dendrogram.type = "rectangle", num = 5, clustering.ma
     
 }
 
-#' title Internal - Build a dendrograms plot
+#' @title Internal - Build a dendrograms plot
 #'
 #' @description xxx
 #'
@@ -155,38 +154,39 @@ dendro <- function(ddata, row=!col, col=!row) {
     return(p)
 }
 
-#' title Internal - g_legend 
+#' @title Internal - Extraction of ggplot legend
 #'
-#' @description Extract legend from a plot
-#'
-#' @details xxx
+#' @description 
+#' This function is used internally to extract the legend from a 'ggplot' objet.
 #'
 #' @param a.gplot a ggplot2 plot
 #' 
 #' @return a ggplot2 legend
 #'
 #' @import ggplot2 gtable
-g_legend<-function(a.gplot){
-    tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(a.gplot))
+g_legend<-function(gplot){
+    tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(gplot))
     tmp <- gtable::gtable_filter(tmp, "guide-box")
     
     return(tmp$grobs[[TRUE]])
 }
 
-#' title Internal - g_axis
+#' @title Internal - Extraction of ggplot axes
 #'
-#' @description Extract axis from a plot
+#' @description 
+#' This function is used internally to extract axes from a 'ggplot' objet.
 #'
-#' @details x and y are mutuality excluded (both can't be TRUE) with priority to x
+#' @details 
+#' It is to note that x and y are mutuality excluded (both cannot be both TRUE) with priority to x.
 #'
 #' @param a.gplot a ggplot2 plot
 #' @param x a logical, TRUE to extract x axis
 #' @param y a logical, TRUE to extract y axis
 #' 
-#' @return a ggplot2 axis
+#' @return an object of class xxx
 #'
 #' @import ggplot2 gtable
-g_axis<-function(a.gplot, x =! y, y =! x ){
+g_axis<-function(gplot, x =! y, y =! x ){
     if (x){
         name <- "axis-b"
     }
@@ -194,35 +194,35 @@ g_axis<-function(a.gplot, x =! y, y =! x ){
         name <- "axis-l"
     }
     
-    tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(a.gplot))
+    tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(gplot))
     tmp <- gtable::gtable_filter(tmp, name)
     return(tmp$grobs[[TRUE]])
 }
 
-#' title Internal - ggheatmap.plot
+#' @title Internal - ggheatmap.plot
 #'
 #' @description ggheatmap.plot display the heatmap build by ggheatmap
 #'
 #' @details xxx
 #'
-#' @param L the list of ggplot object provided by ggheatmap
+#' @param list the list of ggplot object provided by ggheatmap
 #' @param col.width size of horizontal dendrogram
 #' @param row.width size of vertical dendrogram
 #' 
 #' @return a ggplot2 axis
 #'
 #' @import ggplot2 gridExtra grid
-ggheatmap.plot <- function(L, col.width=0.15, row.width=0.15) {
+ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
 
     layout <- rbind(c(2,1,NA),
                     c(5,3,4),
                     c(NA,6,NA))
     
-    x.axis <- g_axis(L$centre, x = TRUE)        
-    y.axis <- g_axis(L$centre, y = TRUE)
-    legend <- g_legend(L$centre)
+    x.axis <- g_axis(list$centre, x = TRUE)        
+    y.axis <- g_axis(list$centre, y = TRUE)
+    legend <- g_legend(list$centre)
     
-    center.withoutlegend = L$centre + ggplot2::theme(axis.line        = ggplot2::element_blank(),
+    center.withoutlegend = list$centre + ggplot2::theme(axis.line        = ggplot2::element_blank(),
                                                      axis.text.x      = ggplot2::element_blank(),
                                                      axis.text.y      = ggplot2::element_blank(),
                                                      axis.ticks       = ggplot2::element_blank(),
@@ -237,10 +237,10 @@ ggheatmap.plot <- function(L, col.width=0.15, row.width=0.15) {
                                                      plot.margin      = grid::unit(c(0,0,0,0), "cm"),
                                                      panel.margin     = grid::unit(c(0,0,0,0), "cm"))
                                              
-    ret <- gridExtra::grid.arrange(L$col, #1 on the layout
+    ret <- gridExtra::grid.arrange(list$col, #1 on the layout
                                    legend, #2 on the layout
                                    center.withoutlegend, #3 on the layout
-                                   L$row, #4 on the layout
+                                   list$row, #4 on the layout
                                    y.axis, #5 on the layout
                                    x.axis, #6 on the layout
                                    layout_matrix = layout,
@@ -308,7 +308,7 @@ statSteamgraph <- ggplot2::ggproto("statSteamgraph",
         }
 )
 
-#' title Internal - Plot a steamgraph (from by ggTimeSeries : https://github.com/Ather-Energy/ggTimeSeries)
+#' @title Internal - Plot a steamgraph (from by ggTimeSeries : https://github.com/Ather-Energy/ggTimeSeries)
 #'
 #' @description xxx
 #'

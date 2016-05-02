@@ -6,14 +6,15 @@
 \alias{SPADEResults-class}
 \title{SPADEResults class definition}
 \description{
-The Results object is a S4 object containing results of SPADE automatic gating. 
-This object inherits from the Result object and consequently store the count matrix and the cluster phenotypes.
-In addition, SPADEResults object contains the informations about SPADE cell clustering results, such as makers used to identify clusters, FCS files and the SPADE Tree.
+The 'SPADEResults' object is a S4 object containing cell clustering results obtained from SPADE.
+
+
+This object inherits from the 'Result' object and stores the count matrix (i.e. the number of cells associated with each cluster of each sample) and the cell cluster phenotypes (i.e. the marker median expressions for each cluster). 
+In addition to the 'Result' object, the 'SPADEResults' object contains information about SPADE clustering results, such as the SPADE tree, the clustering makers and the FCS files.
 }
 \details{
-SPADEResults object is the central element used by SPADEViR functions, it is returned by the importSPADEResult() function. 
-The SPADEResults object owns methods to summuries main informations using print and show methods
-Moreover this object could be exported as a tab separated file using the export method
+The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'importSPADEResult()' function.
 }
 \section{Slots}{
 

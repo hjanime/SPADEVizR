@@ -1,6 +1,6 @@
 #' @title Exportation of SPADEVizR objects
 #'
-#' @description Exports an object into a TAB delimeted file with parameters in header (begining with a sharp '#')
+#' @description Exports a SPADEVizR object into a tab separated file.
 #'
 #' @param object a SPADEVizR object
 #' @param filename a character indicating the location of output file
@@ -9,12 +9,12 @@
 #'
 #' @name export
 #' @rdname export-methods
-setGeneric("export",function(object,filename) { standardGeneric("export") })
+setGeneric("export",function(object,filename = "export.txt") { standardGeneric("export") })
 
 #' @rdname export-methods
 #' @export
 setMethod("export",c("Results"),
-        function(object,filename = "Results.txt"){
+        function(object,filename){
             
             print(filename)
             cat(file = filename,paste0("#Object Results",names(object),"\n"))
@@ -42,7 +42,7 @@ setMethod("export",c("Results"),
 #' @rdname export-methods
 #' @export
 setMethod("export",c("AC"),
-        function(object,filename = "AC.txt"){
+        function(object,filename){
             cat(file = filename, "#Object AC\n")
             cat(file = filename, "#sample.names\t", paste0("\"",object@sample.names,"\"",collapse = "\t"), sep = "", "\n", append = TRUE)
             cat(file = filename, "#cluster.size\t", paste0(object@cluster.size,collapse = "\t"), "\n", sep = "", append = TRUE)
@@ -60,7 +60,7 @@ setMethod("export",c("AC"),
 #' @rdname export-methods
 #' @export
 setMethod("export",c("DEC"),
-        function(object,filename = "DEC.txt"){
+        function(object,filename){
             cat(file = filename, "#Object DEC\n")
             cat(file = filename, "#sample.cond1\t", paste0("\"",object@sample.cond1,"\"",collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#sample.cond2\t", paste0("\"",object@sample.cond2,"\"",collapse = "\t"), "\n", sep = "", append = TRUE)
@@ -79,7 +79,7 @@ setMethod("export",c("DEC"),
 #' @rdname export-methods
 #' @export
 setMethod("export",c("CC"),
-        function(object,filename = "CC.txt"){
+        function(object,filename){
             cat(file = filename, "#Object CC\n")
             cat(file = filename, "#sample.names\t", paste0("\"",object@sample.names,"\"",collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#variable\t", paste0(object@variable,collapse = "\t"), "\n", sep = "", append = TRUE)
@@ -97,7 +97,7 @@ setMethod("export",c("CC"),
 #' @rdname export-methods
 #' @export
 setMethod("export",c("PhenoProfiles"),
-        function(object,filename = "PhenoProfiles.txt"){
+        function(object,filename){
             cat(file = filename, "#Object PhenoProfiles\n")
             cat(file = filename, "#method\t", paste0("\"",object@method,"\"",collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#method.parameter\t", paste0(paste0(names(object@method.parameter)," = ",object@method.parameter,collapse="; ")), "\n", sep = "", append = TRUE)
@@ -112,7 +112,7 @@ setMethod("export",c("PhenoProfiles"),
 #' @rdname export-methods
 #' @export
 setMethod("export",c("EnrichmentProfiles"),
-        function(object,filename = "EnrichmentProfiles.txt"){
+        function(object,filename){
             cat(file = filename, "#Object EnrichmentProfiles\n")
             cat(file = filename, "#method", paste0("\"",object@method,"\"",collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#method.parameter\t", paste0(paste0(names(object@method.parameter)," = ",object@method.parameter,collapse="; ")), "\n", sep = "", append = TRUE)

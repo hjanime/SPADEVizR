@@ -6,20 +6,19 @@
 \alias{Results-class}
 \title{Results class definition}
 \description{
-The Results object is a S4 object containing results of automatic gating. 
-This object store mainly the count matrix and the cluster phenotypes. 
-It is to note that Results is a super classe of the SPADEResult
+The Results object is a S4 object containing cell clustering results obtained from various automatic gating algorithms. 
+
+
+This object mainly stores the count matrix (i.e. the number of cells associated with each cluster of each sample) and the cell cluster phenotypes (i.e. the marker median expressions for each cluster). 
+It is to note that the Results object is a super class of the SPADEResult object.
 }
 \details{
-The Results object is the core (super classe) of SPADEResults object.
-This object could store automatic gating results from other algorithms. 
-The importX() function returns a Result Object.
+The 'cells.count' dataframe stores the number of cells associated with each cluster of each sample. This dataframe has in row the clusters and in column the samples.
 
-The cells.count dataframe have in the first column the cluster names or numeric ID and some columns with number of cells for each sample (with the sample names in colnames)
-The marker.expressions dataframe have .. to continue
+The 'marker.expressions' dataframe stores the marker median expressions for each cluster. This dataframe has in the first the sample names, in the second column the cluster names, and the maker median expressions in the others columns.
 
-The Results object owns methods to summuries main informations using print and show methods
-Moreover this object could be exported as a tab separated file using the export method
+The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'importX()' function.
 }
 \section{Slots}{
 

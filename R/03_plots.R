@@ -1,12 +1,12 @@
 #' @title abundantClustersViewer
 #'
-#' @description Generate a barplot representation to compare cluster abondances
+#' @description Generate a scatter plot representation displaying for each cluster its m
 #' 
-#' @details By default, only abundant clusters are labeled, set parameter `all.label = TRUE` to visualize all labels. 
+#' @details By default, only significant abundant clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE. 
 #' 
-#' @param AC the AC object
-#' @param cluster.size a logicial specifing if points size are related to cell count or not (TRUE by default)
-#' @param all.label a logicial specifing if all cluster label must be show or just significant cluster
+#' @param AC an object of class AC (object returned by the 'computeAC()' function)
+#' @param show.cluster.sizes a logicial specifing if points size are related to cell count or not (TRUE by default)
+#' @param show.all.labels a logicial specifing if all cluster label must be show or just significant cluster
 #' 
 #' @return a ggplot object
 #' 
@@ -14,18 +14,18 @@
 #' 
 #' @export
 abundantClustersViewer <- function(AC,
-                                   cluster.size   = TRUE,
-                                   all.label      = FALSE){
+                                   show.cluster.sizes = TRUE,
+                                   show.all.labels    = FALSE){
 
     AC@result <- cbind (AC@result, cluster.size = AC@cluster.size)
     
     data.text <- AC@result
-    if (!all.label){
+    if (!show.all.labels){
         data.text <- subset(AC@result, AC@result$significance)
     }
 
     plot <-  ggplot2::ggplot(data = AC@result) +
-             ggplot2::ggtitle(ifelse(AC@use.percentages,"Relative cells abundance of clusters (% of cells)","Cells abundance of clusters (# of cells)"))
+             ggplot2::ggtitle("Cells abundance of clusters")
 
     plot <- plot + ggplot2::geom_hline(yintercept = AC@th.mean,
                                        linetype   = "dashed",
@@ -37,11 +37,11 @@ abundantClustersViewer <- function(AC,
                                        alpha      = 0.3,
                                        color      = "red",
                                        size       = 1)
-    if (cluster.size > 0){
-       plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean",color = "significance", size = "cluster.size"))
+    if (show.cluster.sizes > 0){
+       plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significance", size = "cluster.size"), shape = 21, colour = "black", stroke = 1)
     }
     else {
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean",color = "significance"))
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significance"), shape = 21, colour = "black", stroke = 1)
     }                  
     
     x.max <- ceiling(max(-log10(AC@th.pvalue),-log10(AC@result$pvalue)))
@@ -51,15 +51,15 @@ abundantClustersViewer <- function(AC,
     y.breaks <- seq(0, y.max, by = 1)
 
     plot <- plot +  ggrepel::geom_text_repel(data = data.text, 
-                    ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", label = "cluster"),
-                    size          = 3,
-                    box.padding   = grid::unit(0.35, "lines"),
-                    point.padding = grid::unit(0.3, "lines")) +
-                    ggplot2::scale_color_manual(values = c("grey","red")) +
-                    ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
+                                             ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", label = "cluster"),
+                                             size          = 3,
+                                             box.padding   = grid::unit(0.35, "lines"),
+                                             point.padding = grid::unit(0.3, "lines")) +
+                    ggplot2::scale_fill_manual(values = c("grey","red")) +
                     ggplot2::scale_x_continuous(limits = c(0, x.max), minor_breaks = NULL, breaks = x.breaks) + 
-                    ggplot2::xlab(ifelse(AC@use.percentages,"mean percent","mean number of cells")) +                  
+                    ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
                     ggplot2::xlab("-log10(p-value)") +
+                    ggplot2::ylab(ifelse(AC@use.percentages,"mean (% of cells)","mean (# of cells)")) +                  
                     ggplot2::theme_bw()
     
     return(plot)
@@ -70,23 +70,23 @@ abundantClustersViewer <- function(AC,
 #'
 #' @description Generate a Volcano plot representation based on Differentially Enriched Clusters (DEC) of The SPADE result object.
 #' 
-#' @details xxx
+#' @details By default, only significant differentially enriched clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE. 
 #'
 #' @param SPADEResults the SPADEViewer result object
-#' @param DEC object DEC provided by the function computeDEC 
-#' @param fc.log2 a logicial specifing if foldchange or log2(foldchange) is use 
-#' @param cluster.size a logicial specifing if points size are related to cell count or not (TRUE by default)
-#' @param all.label a logicial specifing if all cluster labels must be show or just significant cluster
+#' @param DEC an object of class DEC (object returned by the 'computeDEC()' function)
+#' @param fc.log2 a logicial specifing if fold-change or log2(fold-change) is use 
+#' @param show.cluster.sizes a logicial specifing if points size are related to cell count or not (TRUE by default)
+#' @param show.all.labels a logicial specifing if all cluster labels must be show or just significant cluster
 #'
 #' @return a ggplot object
 #'  
 #' @import ggplot2
 #' 
 #' @export
-volcanoViewer <- function(DEC          = NULL,
-                          fc.log2      = TRUE,
-                          cluster.size = TRUE,
-                          all.label    = FALSE){
+volcanoViewer <- function(DEC                = NULL,
+                          fc.log2            = TRUE,
+                          show.cluster.sizes = TRUE,
+                          show.all.labels    = FALSE){
     
     th.fc <- DEC@th.fc
     
@@ -101,7 +101,7 @@ volcanoViewer <- function(DEC          = NULL,
     DEC@result <- cbind (DEC@result, cluster.size = DEC@cluster.size)
     
     data.text <- DEC@result
-    if (!all.label){
+    if (!show.all.labels){
         data.text <- subset(DEC@result, DEC@result$significance)
     }
     min           <- floor(min(DEC@result$fold.change))
@@ -122,11 +122,11 @@ volcanoViewer <- function(DEC          = NULL,
                                        alpha      = 0.3,
                                        color      = "red",
                                        size       = 1)
-    if (cluster.size > 0){
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(color = "significance", size = "cluster.size"))
+    if (show.cluster.sizes > 0){
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significance", size = "cluster.size"), shape = 21, colour = "black", stroke = 1)
     }
     else {
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(color = "significance"))
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significance"), shape = 21, colour = "black", stroke = 1)
     }
                  
     plot <- plot + ggrepel::geom_text_repel(data     = data.text,
@@ -134,11 +134,11 @@ volcanoViewer <- function(DEC          = NULL,
                                             size          = 3,
                                             box.padding   = grid::unit(0.35, "lines"),
                                             point.padding = grid::unit(0.3, "lines")) +
-                   ggplot2::scale_color_manual(values = c("grey","red")) +
+                   ggplot2::scale_fill_manual(values = c("grey","red")) +
                    ggplot2::scale_x_continuous(limits = c(-max, max) ,minor_breaks = NULL, breaks = x.breaks) +
                    ggplot2::scale_y_continuous(minor_breaks = NULL, breaks = round(-log10(c(DEC@th.pvalue,1,0.1,0.01,0.001)),2)) +
-                   ggplot2::ylab("-log10(p-value)") +
                    ggplot2::xlab(paste0(ifelse(fc.log2,"log2(fold.change)","fold.change"),"\ncond2 < enriched > cond1")) +
+                   ggplot2::ylab("-log10(p-value)") +
                    ggplot2::theme_bw()
     
     return(plot)
@@ -146,13 +146,13 @@ volcanoViewer <- function(DEC          = NULL,
 
 #' @title correlatedClustersViewer
 #'
-#' @description Generate a representation to compare cluster abondances
+#' @description 
 #' 
-#' @details xxx
+#' @details By default, only significant correlated clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE. 
 #'
-#' @param CC the CC object
-#' @param cluster.size a logicial specifing if points size are related to cell count or not (TRUE by default)
-#' @param all.label a logicial specifing if all cluster label must be show or just significant cluster
+#' @param CC an object of class CC (object returned by the 'computeCC()' function)
+#' @param show.cluster.sizes a logicial specifing if points size are related to cell count or not (TRUE by default)
+#' @param show.all.labels a logicial specifing if all cluster label must be show or just significant cluster
 #' 
 #' @return a ggplot object
 #' 
@@ -160,13 +160,13 @@ volcanoViewer <- function(DEC          = NULL,
 #' 
 #' @export
 correlatedClustersViewer <- function(CC,
-                                     cluster.size   = TRUE,
-                                     all.label      = FALSE){
+                                     show.cluster.sizes = TRUE,
+                                     show.all.labels    = FALSE){
     
     CC@result <- cbind (CC@result, cluster.size = CC@cluster.size)
     
     data.text <- CC@result
-    if (!all.label){
+    if (!show.all.labels){
         data.text <- subset(CC@result, CC@result$significance)
     }
     title.details <- ifelse(CC@use.percentages,"(in # of cells)","(in % of cells")
@@ -182,11 +182,11 @@ correlatedClustersViewer <- function(CC,
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1)
-    if (cluster.size > 0){
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)",color = "significance", size = "cluster.size"))
+    if(show.cluster.sizes > 0){
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significance", size = "cluster.size"), shape = 21, colour = "black", stroke = 1)
     }
-    else {
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)",color = "significance"))
+    else{
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significance"), shape = 21, colour = "black", stroke = 1)
     }
     
     y.max <- ceiling(max(-log10(CC@th.pvalue),-log10(CC@result$pvalue)))
@@ -197,10 +197,11 @@ correlatedClustersViewer <- function(CC,
                     size          = 3,
                     box.padding   = grid::unit(0.35, "lines"),
                     point.padding = grid::unit(0.3, "lines")) +
-                    ggplot2::scale_color_manual(values = c("grey","red")) +
-                    ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
+                    ggplot2::scale_fill_manual(values = c("grey","red")) +
                     ggplot2::scale_x_continuous(minor_breaks = NULL, limits = c(-1,1),
                                                 breaks = c(-CC@th.correlation,CC@th.correlation,seq(-1, 1, by = 0.1))) +
+                    ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
+                    ggplot2::xlab(paste(AC@method,"coeficient of correlation")) +
                     ggplot2::ylab("-log10(p-value)") +
                     ggplot2::theme_bw()
     return(plot)
@@ -879,346 +880,6 @@ boxplotViewer <- function(Results,
     return(plots)
 }
 
-##' @title biplotViewer
-##'
-##' @description Generates a biplot representation with two markers
-##'
-##' @details In such representation, each dot corresponds to a cell profile and dot are ploted in a 2-dimentional space corresponding to the marker expressions. 
-##' 
-##' @param SPADEResults a SPADEResults object (Results object is not accepted)
-##' @param x.marker1 a character indicating the marker name of the first dimension
-##' @param y.marker2 a character indicating the marker name of the second dimension
-##' @param samples xxx
-##' @param clusters xxx
-##' @param default.min a numeric value indicating the lower bound of the biplot representation 
-##'
-##' @return if return.gg is TRUE, the function returns a list of ggplot objects
-##'
-##' @import grDevices
-##' 
-##' @export
-#biplotViewer2 <- function(SPADEResults,
-#                         x.marker1,
-#                         y.marker2,
-#                         samples  = NULL, 
-#                         clusters = NULL,
-#                         default.min = -3){
-#   
-#    if (names(SPADEResults) == "Results"){
-#         stop("Error : biplotViewer required a SPADEResults object")
-#    }                 
-#                     
-#    files <- c()
-#    for (sample in names(samples[ samples == TRUE ])){
-#        select <- grep(sample,SPADEResults@fcs.files, fixed = TRUE)
-#        if (length(select) > 0){
-#            files <- c(files, SPADEResults@fcs.files[select])
-#        }
-#    }
-#    print(names(samples[ samples == TRUE ]))
-#    print(files)
-#    flowset <- flowCore::read.flowSet(files,emptyValue = TRUE)
-#    
-#    if(is.null(clusters)){
-#        message("All clusters will be cumpute")
-#    }
-#    else if(all(clusters < SPADEResults@cluster.number)){     
-#        
-#        clusters     <- unique(clusters)   
-#               
-#        message("These clusters will be cumpute :")
-#        message(paste0(clusters,collapse="\t"))
-#        
-#    }else{
-#        stop("Error : cluster ID exceeds number of clusters")
-#    }
-#    
-#    dict    <- SPADEResults@dictionary
-#    flowset.samples <- flowCore::sampleNames(flowset)
-#    flowset.samples <- gsub(".fcs.density.fcs.cluster.fcs$","",flowset.samples)
-#    
-#    marker1.renamed <- x.marker1
-#    marker2.renamed <- y.marker2
-#    
-#    if (nrow(SPADEResults@dictionary) > 0){
-#        marker1.renamed <- SPADEResults@dictionary[x.marker1 == dict$marker, 1]
-#        print(marker1.renamed)
-#        if (length(marker1.renamed) > 0){
-#            marker1.renamed <- marker1.renamed
-#        }
-#        marker2.renamed <- SPADEResults@dictionary[y.marker2 == dict$marker, 1]
-#        print(marker2.renamed)
-#        if (length(marker1.renamed) > 0){
-#            marker2.renamed <- marker2.renamed
-#        }
-#    }
-#    
-##    plot <- ggcyto::ggcyto(fs,aes_string(x = "marker1.renamed", y = "marker2.renamed")) + geom_hex(bins = 64) + xlim(0, 3600)
-#    
-#    x.data <- c()
-#    y.data <- c()
-#    for (i in 1:length(flowset)){
-#            flowframe <- flowset[[i,]]#filter with cluster ID
-#            
-#            exprs <- flowframe@exprs
-#            if (!is.null(clusters)){
-#                exprs <- subset(exprs, exprs[,"cluster"] %in% clusters)
-##                print(exprs[,"cluster"])
-#            }
-#            x.data <- c(x.data,exprs[,marker1.renamed])
-#            y.data <- c(y.data,exprs[,marker2.renamed])
-#    }
-#    
-#    x.data <- unlist(lapply(x.data, FUN = arcsinh))
-#    y.data <- unlist(lapply(y.data, FUN = arcsinh))
-#    
-#    layout           <- data.frame(x = x.data, y = y.data)
-#    colnames(layout) <- c("x","y")
-#    
-#    min              <- min(layout["x"],layout["y"])
-#    min              <- min(min,default.min)*1.2
-#    max              <- max(layout["x"],layout["y"])*1.2
-#    
-#    colramp          <- colorRampPalette(c("yellow","red"))
-#    layout$cols      <- grDevices::densCols(layout$x,layout$y,colramp = colramp)
-#    
-#    plot <- ggplot2::ggplot() +
-#            ggplot2::ggtitle(paste0("Sample used : ",paste0(flowset.samples, collapse = ", "))) +
-#            ggplot2::geom_point(data=layout,ggplot2::aes_string(x="x",y="y",colour="cols"),size=0.25) +
-#            ggplot2::stat_density2d(data=layout,ggplot2::aes_string(x="x",y="y"),size=0.2,colour="blue") +
-#            ggplot2::scale_color_identity() +
-#            ggplot2::xlab(x.marker1) +
-#            ggplot2::ylab(y.marker2) +
-#            ggplot2::coord_cartesian() +
-#            ggplot2::theme(panel.background=ggplot2::element_blank(),
-#                           panel.grid.major=ggplot2::element_line(color="black",linetype="dotted"),
-#                           legend.text=ggplot2::element_blank())
-#    
-#    return(plot)
-#    
-#}
-#
-##' @title biplotViewer
-##'
-##' @description Generates a biplot representation with two markers
-##'
-##' @details In such representation, each dot corresponds to a cell profile and dot are ploted in a 2-dimentional space corresponding to the marker expressions. 
-##' 
-##' @param SPADEResults a SPADEResults object (Results object is not accepted)
-##' @param x.marker1 a character indicating the marker name of the first dimension
-##' @param y.marker2 a character indicating the marker name of the second dimension
-##' @param samples xxx
-##' @param clusters xxx
-##' @param default.min a numeric value indicating the lower bound of the biplot representation 
-##' @param return.gg a logical indicating if the function should return a list of ggplot objects
-##'
-##' @return if return.gg is TRUE, the function returns a list of ggplot objects
-##'
-##' @import grDevices
-##' 
-##' @export
-#biplotViewer <- function(SPADEResults,
-#                         x.marker1,
-#                         y.marker2,
-#                         samples        = NULL, 
-#                         clusters       = NULL,
-#                         sample.merge   = FALSE,
-#                         resample.ratio = NULL){
-# 
-#    if (names(SPADEResults) == "Results"){
-#                         stop("Error : biplotViewer required a SPADEResults object")
-#    }                 
-#                     
-#    biplot <- function (data,title){
-#       
-#        if (!is.null(resample.ratio)){
-#            if (resample.ratio > 0 && resample.ratio < 1){
-#                data <- data[sample(nrow(data), round((nrow(data)*resample.ratio))),]
-#            } else {
-#                stop("resample.ratio must be > 0 and < 1 or null")
-#            }
-#        }
-#        
-#        print(head(data))
-#        min              <- min(data["x"],data["y"])*1.2
-#        max              <- max(data["x"],data["y"])*1.2
-#        
-#        colramp          <- colorRampPalette(c("yellow","red"))
-#        data$cols        <- grDevices::densCols(data$x,data$y,colramp = colramp)
-#        
-#        plot <- ggplot2::ggplot(data = data) +
-#                ggplot2::ggtitle(title) + #paste0("Sample used : ",paste0(names(samples[samples == TRUE]), collapse = ", "))
-#                ggplot2::geom_point(ggplot2::aes_string(x = "x",y = "y",colour = "cols"),size = 0.25) +
-#                ggplot2::stat_density2d(ggplot2::aes_string(x = "x",y = "y"),size = 0.2,colour = "blue", linetype = "dashed") +
-#                ggplot2::scale_color_identity() +
-#                ggplot2::xlab(x.marker1) +
-#                ggplot2::ylab(y.marker2) +
-#                ggplot2::coord_cartesian() +
-#                ggplot2::theme(panel.background = ggplot2::element_blank(),
-#                               panel.grid.major = ggplot2::element_line(color = "black",linetype = "dotted"),
-#                               legend.text = ggplot2::element_blank())
-#        return (plot)
-#    }
-#                        
-#    if(is.null(clusters)){
-#        message("All clusters will be cumpute")
-#    }
-#    else if(all(clusters < SPADEResults@cluster.number)){     
-#        
-#        clusters     <- unique(clusters)   
-#        
-#        message("These clusters will be cumpute :")
-#        message(paste0(clusters,collapse="\t"))
-#        
-#    }else{
-#        stop("Error : cluster ID exceeds number of clusters")
-#    }
-#
-#    flowset <- SPADEResults@flowset
-#    
-#    x.data <- c()
-#    y.data <- c()
-#    flowset.samples <- flowCore::sampleNames(flowset)
-#    
-#    plots <- list()
-#    for (sample in flowset.samples){
-#        if (samples[sample]){
-#            flowframe <- flowset[[which(sample == flowset.samples),]]
-#            exprs <- flowframe@exprs
-#            if (!is.null(clusters)){
-#                exprs <- subset(exprs, exprs[,"cluster"] %in% clusters)
-#            }
-#            x.data <- c(x.data,exprs[,x.marker1])
-#            y.data <- c(y.data,exprs[,y.marker2])
-#            
-#            if (!sample.merge){
-#                print(length(plots)+1)
-#                plots[[length(plots)+1]] <- biplot(data.frame(x = x.data, y = y.data),sample)
-#                x.data <- c()
-#                y.data <- c()
-#            }
-#        }    
-#    }
-#    
-#    if (sample.merge){
-#        plot <- biplot(data.frame(x = x.data, y = y.data),paste0("Sample used : ",paste0(names(samples[samples == TRUE]), collapse = ", ")))
-#    }else{
-#        plot <- gridExtra::arrangeGrob(grobs = plots, nrow = ceiling(sqrt(length(plots))), ncol= ceiling(sqrt(length(plots))) )
-#    }
-#    
-#    return(plot)
-#    
-#}
-#
-##' @title biplotViewer
-##'
-##' @description Generates a biplot representation with two markers
-##'
-##' @details In such representation, each dot corresponds to a cell profile and dot are ploted in a 2-dimentional space corresponding to the marker expressions. 
-##' 
-##' @param SPADEResults a SPADEResults object (Results object is not accepted)
-##' @param x.marker1 a character indicating the marker name of the first dimension
-##' @param y.marker2 a character indicating the marker name of the second dimension
-##' @param samples xxx
-##' @param clusters xxx
-##' @param default.min a numeric value indicating the lower bound of the biplot representation 
-##' @param sample.merge xxx
-##' @param resample.ratio xxx
-##' 
-##' @return if return.gg is TRUE, the function returns a list of ggplot objects
-##'
-##' @import grDevices
-##' 
-##' @export
-#biplotViewer3 <- function(SPADEResults,
-#                          x.marker1,
-#                            y.marker2,
-#                            samples        = NULL, 
-#                            clusters       = NULL,
-#                            sample.merge   = FALSE,
-#                            resample.ratio = NULL){# take care about log10(x+1) transformation
-#    if (names(SPADEResults) == "Results"){
-#        stop("Error : biplotViewer required a SPADEResults object")
-#    }    
-#    
-#    if(is.null(clusters)){
-#        message("All clusters will be cumpute")
-#    }
-#    else if(all(clusters < SPADEResults@cluster.number)){     
-#        
-#        clusters     <- unique(clusters)   
-#        
-#        message("These clusters will be cumpute :")
-#        message(paste0(clusters,collapse="\t"))
-#        
-#    }else{
-#        stop("Error : cluster ID exceeds number of clusters")
-#    }
-#    
-#    flowset <- SPADEResults@flowset
-#    
-#    x.data <- c()
-#    y.data <- c()
-#    facet  <- c()
-#    flowset.samples <- flowCore::sampleNames(flowset)
-#    print(flowset.samples)
-#    plots <- list()
-#    for (sample in flowset.samples){
-#        if (samples[sample]){
-#            flowframe <- flowset[[which(sample == flowset.samples),]]
-#            exprs <- flowframe@exprs
-#            if (!is.null(clusters)){
-#                exprs <- subset(exprs, exprs[,"cluster"] %in% clusters)
-#            }
-#            x.data <- c(x.data,exprs[,x.marker1])
-#            y.data <- c(y.data,exprs[,y.marker2])
-#            
-#            if (!sample.merge){
-#                facet  <- c(facet,rep(sample,length(exprs[,x.marker1])))
-#            }
-#        }    
-#    }
-#    print(unique(facet))
-#    if (sample.merge){
-#       data <- data.frame(x = x.data, y = y.data)
-#    }else{
-#       data <- data.frame(x = x.data, y = y.data, facet = facet)
-#    }
-#    
-#    if (!is.null(resample.ratio)){
-#        if (resample.ratio > 0 && resample.ratio < 1){
-#            data <- data[sample(nrow(data), round((nrow(data)*resample.ratio))),]
-#        } else {
-#            stop("resample.ratio must be > 0 and < 1 or null")
-#        }
-#    }
-#    
-#    print(head(data))
-#    min              <- min(data["x"],data["y"])*1.2
-#    max              <- max(data["x"],data["y"])*1.2
-#    
-#    colramp          <- colorRampPalette(c("yellow","red"))
-#    data$cols        <- grDevices::densCols(data$x,data$y,colramp = colramp)
-#    
-#    plot <- ggplot2::ggplot(data = data) +
-#            ggplot2::ggtitle("biplot") + #paste0("Sample used : ",paste0(names(samples[samples == TRUE]), collapse = ", "))
-#            ggplot2::geom_point(ggplot2::aes_string(x = "x",y = "y",colour = "cols"),size = 0.25) +
-#            ggplot2::stat_density2d(ggplot2::aes_string(x = "x",y = "y"),size = 0.2,colour = "blue", linetype = "dashed") +
-#            ggplot2::scale_color_identity() +
-#            ggplot2::xlab(x.marker1) +
-#            ggplot2::ylab(y.marker2) +
-#            ggplot2::coord_cartesian() +
-#            ggplot2::theme(panel.background = ggplot2::element_blank(),
-#                    panel.grid.major = ggplot2::element_line(color = "black",linetype = "dotted"),
-#                    legend.text = ggplot2::element_blank())
-#    if (!sample.merge){
-#        plot <- plot + ggplot2::facet_wrap(~ facet)
-#    }
-#    
-#    return(plot)
-#    
-#}
-
 #' @title Distogram Viewer
 #'
 #' @description Generate a distogram representation showing the marker co-expression.
@@ -1551,12 +1212,12 @@ CountViewer <- function(Results,
                                 fill = "grey40") +
             ggplot2::scale_shape_manual(values = 21)        
     if(show.samples){                
-            plot <- plot + ggplot2::geom_jitter(data = subset(data.melted, sample != "sum.of.samples"),
+            plot <- plot + ggplot2::geom_jitter(data   = subset(data.melted, sample != "sum.of.samples"),
                                                 height = 0,
-                                                width = 0.5,
+                                                width  = 0.5,
                                                 ggplot2::aes_string(x = "cluster", y = "value", size = "value", fill = "sample"),
-                                                shape = 21,
-                                                alpha = 0.4)
+                                                shape  = 21,
+                                                alpha  = 0.4)
     }
     plot <- plot + ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0,1.1*max(data.melted$value))) +
                    ggplot2::ylab("# of cells") +

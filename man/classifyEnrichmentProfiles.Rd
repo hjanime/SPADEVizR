@@ -6,12 +6,12 @@
 \usage{
 classifyEnrichmentProfiles(Results, method = "hierarchical_h",
   class.number = NULL, eigencell.correlation.th = 0.8,
-  clique.correlation.th = 0.7, hierarchical.correlation.th = 0.8)
+  clique.correlation.th = 0.7, hierarchical.correlation.th = 0.7)
 }
 \arguments{
 \item{Results}{a Results or SPADEResults object}
 
-\item{method}{a character specifying the clustering method among one of those : 'hierarchical','kmeans','eigencell','clique'}
+\item{method}{a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','kmeans','eigencell','clique' (hierarchical_h by default)}
 
 \item{class.number}{a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'kmeans'}
 

@@ -9,29 +9,26 @@ computeDEC(Results, conditions, use.percentages = TRUE, method = "t.test",
   th.fc = 1)
 }
 \arguments{
+\item{Results}{a Results or SPADEResults object}
+
 \item{conditions}{a named vector providing the correspondence between a sample name (in rownames) and the condition of this sample : NA to exclude a sample from tests, 1 or 2 to attribute this sample, respectively to the first or second condition}
 
 \item{use.percentages}{a logical specifying if the computations should be performed on percentage}
 
 \item{method}{a character specifying the name of the statistical test to use "t.test" or "wilcox.test"}
 
-\item{method.adjust}{a character specifying if the pvalues should be corrected using the argument "method" available for function p.adjust, among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr"}
+\item{method.adjust}{a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method)}
 
-\item{method.paired}{a logical indicating whether data measurement are paired (by default FALSE)}
+\item{method.paired}{a logical indicating if the statistical test must be performed in a paired manner}
 
-\item{th.pvalue}{a numeric specifying the pvalue threshold (0.05 by default)}
+\item{th.pvalue}{a numeric specifying the p-value threshold (0.05 by default)}
 
-\item{th.fc}{a numeric specifying the foldchange threshold (1 by default)}
-
-\item{result}{a Results or SPADEResults object}
+\item{th.fc}{a numeric specifying the fold-change threshold (1 by default)}
 }
 \value{
 a DEC object
 }
 \description{
-Differentially Enriched Clusters are clusters for which the means of cell number are significantly different between two conditions.
-}
-\details{
 xxx
 }
 

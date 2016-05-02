@@ -140,13 +140,13 @@ head(dict, n = 4)
 ## 4   (Xe131)Di empty-Xe131
 ```
 
-Once a dictionary has been defined, SPADE cell clustering results can be loaded in the same way as above and by using the `dictionary` parameter. Specific markers can be excluded from the import procedure by providing their names to the `exclude.markers` parameter. the `quantile.heuristic` parameter (set by default to `TRUE`) can be used to approximate the computation of maker range quantiles. For instance, an import of a SPADE using a dictionary and by excluding the "empty-Rh103", "empty-Rh103", "empty-Rh103" and "empty-Rh103" markers can be done using the following command:
+Once a dictionary has been defined, SPADE cell clustering results can be loaded in the same way as above and by using the `dictionary` parameter. Specific markers can be excluded from the import procedure by providing their names to the `exclude.markers` parameter. The `quantile.heuristic` parameter (set by default to `TRUE`) can be used to approximate the computation of maker range quantiles. For instance, an import of a SPADE using a dictionary and by excluding the "empty-Rh103", "empty-Rh103", "empty-Rh103" and "empty-Rh103" markers can be done using the following command:
 
 ```r
 results  <- importSPADEResults("C:/Users/gg248485/Desktop/SPADEVizR.data/HuMa-MAC",
 							   dict               = dict,
 							   quantile.heuristic = TRUE,
-							   exclude.markers    = c("empty-Rh103"))
+							   exclude.markers    = c("empty-Rh103", "empty-Rh103", "empty-Rh103", "empty-Rh103"))
 ## [START] - extracting SPADE results
 ## HuMa-MAC
 ## FCS files import:
@@ -186,7 +186,7 @@ For instance, an import of cell clustering results obtained from as previously d
 #results_other      <- importX(cells.count =  cells.count, marker.expressions = marker.expressions)
 ```
 
-`Results` objects can be used by all functions excepting the `TreeViewer`, `PhenoViewer` (Heatmap viewer)and `classifyPhenoProfiles` which only accept a `SPADEResult` object.
+`Results` objects can be used by all functions excepting the `TreeViewer`, `PhenoViewer` (Heatmap viewer) and `classifyPhenoProfiles` which only accept a `SPADEResult` object.
 
 # <a name="object_structures"/> 4. Object structures
 The `print` and `show` functions are available for all objects of this package.
@@ -233,7 +233,7 @@ Slot       | Description
 sample.names       | a character vector containing the samples used to compute the abundant clusters
 cluster.size       | a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster
 use.percentages    | a logical specifying if computation was performed on percentage of cell abundance
-method.name        | a character containing the name of the statistical test used to identify the abundant clusters
+method             | a character containing the name of the statistical test used to identify the abundant clusters
 method.adjust      | a character containing the name of the multiple correction method used (if any)
 th.mean            | a numeric value specifying the mean threshold
 th.pvalue          | a numeric value specifying the p-value threshold
@@ -250,7 +250,7 @@ sample.cond1       | a character specifying the names of the samples of the firs
 sample.cond2       | a character specifying the names of the samples of the second biological condition
 cluster.size       | a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster
 use.percentages    | a logical specifying if computation was performed on percentage of cell abundance
-method.name        | a character containing the name of the statistical test used to identify the DEC
+method             | a character containing the name of the statistical test used to identify the DEC
 method.adjust      | a character containing the name of the multiple correction method used (if any)
 method.paired      | a logical indicating if the statistical test have been performed in a paired manner
 th.fc              | a numeric value specifying the foldchange threshold
@@ -265,10 +265,10 @@ Different slots are available for a given `CC` object:
 Slot       | Description
 -----------|----------------------------------------------------------------------------------------
 sample.names       | a character vector containing the samples used to compute correlated clusters
-variables          | a numeric vector containing the expression values of the associated variable
+variable           | a numeric vector containing the expression values of the associated variable
 cluster.size       | a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster
 use.percentages    | a logical specifying if computation was performed on percentage of cell abundance
-method.name        | a character containing the name of the statistical test used to identify the CC
+method             | a character containing the name of the statistical test used to identify the CC
 method.adjust      | a character containing the name of the multiple correction method used (if any)
 th.correlation     | a numeric value specifying the correlation threshold (R)
 th.pvalue          | a numeric value specifying the p-value threshold
@@ -282,10 +282,10 @@ Different slots are available for a given `PhenoProfiles` object:
 Slot               | Description
 -------------------|----------------------------------------------------------------------------------------
 class.number       | a numeric value specifying the number of classes
-method.name        | a character specifying the method used to classify cluster
+method             | a character specifying the method used to classify cluster
 method.parameter   | a named list of parameters used by the classification method
 cluster.size       | a numeric vector containing the number of cells associated with each cluster (-- sum of all samples --)
-( XXX) cluster.number| a numeric value specifying the number of clusters
+(XXX) cluster.number| a numeric value specifying the number of clusters
 classes            | a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
 
 ## <a name="object_structure_EnrichmentProfiles"/> 4.7 Classification of clusters based on their enrichment profiles (EnrichmentProfiles object)
@@ -296,7 +296,7 @@ Different slots are available for a given `PhenoProfiles` object:
 Slot               | Description
 -------------------|----------------------------------------------------------------------------------------
 class.number       | a numeric value specifying the number of classes
-method.name        | a character specifying the method used to classify cluster
+method             | a character specifying the method used to classify cluster
 method.parameter   | a list of parameters used by the selected method
 cluster.size       | a numeric vector with the number of cell in each cluster (-- sum of all samples --)
 ( XXX) cluster.number | a numeric value specifying the number of clusters
@@ -469,24 +469,17 @@ For instance, a `EnrichmentProfiles` object or `PhenoProfiles` object can be sho
 ```r
 #plot(EnrichmentProfiles)
 ```
-
 # <a name="#viewer_functions"/> 7. Miscellaneous vizualisations
 
-## <a name="cluster_viewer_function"/> 7.1 Cluster Viewer
-The `clusterViewer` function returns a parallel coordinates respresentation for each cluster of each marker (clustering markers are shown in bold). This visualization allows to compare marker expressions between clusters and also with mean and quantiles expressions. The `show.mean` parameter specify the kind of information to display in the cluster viewer. The `both` value will show marker expressions for each samples together with mean expressions (black dashed line), `only` value will show only the mean expressions of samples and `none` value will mask mean expressions. In order to restrain vizualisation to specific markers and cluster, it is possible to provide a vector of marker names to `markers` parameter or in the same way a vector of clusters to `clusters` parameter.
-<!-- 
-By default all clusters will be computed, thus to avoid heavy processing, it is recommended to provide the vector of cluster to analyze in the "clusters" parameter.
-We strongly advise to exclude "cell_length","FileNum","density","time" of this analysis because this data are pretty higher than other markers values.
--->  
-For instance, the following command describe how to exlude "cell_length","FileNum","density" and "time" markers and then visualize cluster 1 and 8 :
+## <a name="tree_viewer_function"/> 7.3 Tree Viewer
+The `treeViewer` function improve the SPADE tree showing the number of cells for each cluster (node of the tree) and if DEC, AC or CC object is provided (with parameter: `stat.object`), it highlights significant clusters. This function can only handle `SPADEResults` objects (but not a `Results` object). 
+
 
 ```r
-markers <- setdiff(sample(results@marker.names),c("cell_length","FileNum","density","time"))
-gridExtra::grid.arrange(grobs = clusterViewer(results,clusters = c(1,8),show.mean = "both",markers = markers))
+treeViewer(results, stat.object = resultsDEC)
 ```
 
-<img src="README.figures/ClusterViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-
+<img src="README.figures/TreeViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="pheno_viewer_function"/> 7.2 Pheno Viewer
 The `phenoViewer` function returns an heatmap of expression scores for each marker of each cluster.
 <!-- Scores are cumputed for each makers between the lower bound and the upper bound of quantiles. -->
@@ -500,17 +493,19 @@ phenoViewer(results)
 ```
 
 <img src="README.figures/PhenoViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-
-## <a name="tree_viewer_function"/> 7.3 Tree Viewer
-The `treeViewer` function improve the SPADE tree showing the number of cells for each cluster (node of the tree) and if DEC, AC or CC object is provided (with parameter: `stat.object`), it highlights significant clusters. This function can only handle `SPADEResults` objects (but not a `Results` object). 
+## <a name="boxplot_viewer_function"/> 7.5 Boxplot Viewer
+The `boxplotViewer` function aims to compare cell enrichment of a cluster across several biological conditions. Biological `conditions` are encoded in a named vector with samples in rownames providing correspondence with a biological condition (numeric or character are allowed). 
 
 
 ```r
-treeViewer(results, stat.object = resultsDEC)
+conditions <- c(1,2,2,1,1)
+names(conditions) <- results@sample.names
+gridExtra::grid.arrange(grobs = boxplotViewer(results, label = TRUE, conditions = conditions, clusters=c(1,3)))
+## These clusters will be cumpute :
+## 1	3
 ```
 
-<img src="README.figures/TreeViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-
+<img src="README.figures/BoxplotViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="kinetic_viewer_function"/> 7.4 Kinetic Viewer
 The `kineticsViewer` function aims to represent the evolution of cells abundance for each cluster across the time for one or several individuals. It needs the `SPADEResult` object and to specify the `assignments` parameter. This parameter needs a dataframe with sample names in row names and 2 others column providing the timepoints and individuals associated with samples. 
 
@@ -529,29 +524,16 @@ gridExtra::grid.arrange(grobs = kineticsViewer(results, assignments = assignment
 ```
 
 <img src="README.figures/KineticViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-## <a name="boxplot_viewer_function"/> 7.5 Boxplot Viewer
-The `boxplotViewer` function aims to compare cell enrichment of a cluster across several biological conditions. Biological `conditions` are encoded in a named vector with samples in rownames providing correspondence with a biological condition (numeric or character are allowed). 
-
-
-```r
-conditions <- c(1,2,2,1,1)
-names(conditions) <- results@sample.names
-gridExtra::grid.arrange(grobs = boxplotViewer(results, label = TRUE, conditions = conditions, clusters=c(1,3)))
-## These clusters will be cumpute :
-## 1	3
-```
-
-<img src="README.figures/BoxplotViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-## <a name="biplot_viewer_function"/> 7.6 Biplot Viewer
-The `biplot` function can be use to visualize a two dimensions plot with an x-axis marker (`x.marker1`) and a y axis marker (`y.marker2`). It allows to filter cells point by clusters and samples with `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or with a facet for each sample.
-When too cells dots are displayed, it can require heavy computation, to resolve this issue, you can resample your data to show less points with the `resample.ratio` parameter.
-
-This function can only handle `SPADEResults` objects (but not a `Results` object). 
+## <a name="cluster_viewer_function"/> 7.1 Cluster Viewer
+The `clusterViewer` function returns a parallel coordinates respresentation for each cluster of each marker (clustering markers are shown in bold). This visualization allows to compare marker expressions between clusters and also with mean and quantiles expressions. The `show.mean` parameter specify the kind of information to display in the cluster viewer. The `both` value will show marker expressions for each samples together with mean expressions (black dashed line), `only` value will show only the mean expressions of samples and `none` value will mask mean expressions. In order to restrain vizualisation to specific markers and cluster, it is possible to provide a vector of marker names to `markers` parameter or in the same way a vector of clusters to `clusters` parameter.
+For instance, the following command describe how to exlude "cell_length","FileNum","density" and "time" markers and then visualize cluster 1 and 8 :
 
 ```r
-#gridExtra::grid.arrange(biplot())
+markers <- setdiff(sample(results@marker.names),c("cell_length","FileNum","density","time"))
+gridExtra::grid.arrange(grobs = clusterViewer(results,clusters = c(1,8),show.mean = "both",markers = markers))
 ```
 
+<img src="README.figures/ClusterViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="distogram_viewer_function"/> 7.7 Distogram Viewer
 The `distogramViewer` function displays correlations between all markers.
 
@@ -613,6 +595,15 @@ CountViewer(results,samples = samples, clusters = c("1","8","7","4","5","6","3",
 ```
 
 <img src="README.figures/CountViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+## <a name="biplot_viewer_function"/> 7.6 Biplot Viewer
+The `biplot` function can be use to visualize a two dimensions plot with an x-axis marker (`x.marker1`) and a y axis marker (`y.marker2`). It allows to filter cells point by clusters and samples with `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or with a facet for each sample.
+When too cells dots are displayed, it can require heavy computation, to resolve this issue, you can resample your data to show less points with the `resample.ratio` parameter.
+
+This function can only handle `SPADEResults` objects (but not a `Results` object). 
+
+```r
+#gridExtra::grid.arrange(biplot())
+```
 # <a name="license"/> 9. Export 
 The `export()` function is available for all objects of this package. Use this function to export an object to a tab separated file able to be open with Microsoft Excel&copy; or with Libre Office Calc.
 
