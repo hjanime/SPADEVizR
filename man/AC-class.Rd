@@ -6,29 +6,32 @@
 \alias{AC-class}
 \title{Abundant Clusters (AC) class definition}
 \description{
-The Results object is a S4 object containing the results identification of abundant cluster. 
-It also contains all informations about statistical parameters used to performs this test.
+The AC object is a S4 object containing the identified of abundant cluster. 
+It contains all informations about statistical parameters used to performs this test.
 }
 \details{
-AC is a printable and a plotable object calling the abundantClustersViewer() fonction.
+A cluster is considered as a significant abundant cluster if the 2 thresholds (mean and p-value) are reached.  
+The AC object is returned by the computeAC() fonction.
+The AC object owns methods to summuries main informations using print and show methods
+Moreover this object could be exported as a tab separated file using the export method
 }
 \section{Slots}{
 
 \describe{
-\item{\code{sample.names}}{a character vector containing the samples names used}
+\item{\code{sample.names}}{a character vector containing the samples used to compute the abundant clusters}
 
-\item{\code{cluster.size}}{a numeric vector containing number of cells ( sum of all samples ) for each cluster}
+\item{\code{cluster.size}}{a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster}
 
-\item{\code{use.percentages}}{a logical specifying if computations was performed on percentage of cell abondance}
+\item{\code{use.percentages}}{a logical specifying if computation was performed on percentage of cell abundance}
 
-\item{\code{method}}{a character containing the name of the statistical test used to identify the AC}
+\item{\code{method}}{a character containing the name of the statistical test used to identify the abundant clusters}
 
-\item{\code{method.adjust}}{a character containing the name of the multiple correction method used}
+\item{\code{method.adjust}}{a character containing the name of the multiple correction method used (if any)}
 
-\item{\code{th.pvalue}}{a numeric vector with pvalue threshold}
+\item{\code{th.mean}}{a numeric value specifying the mean threshold}
 
-\item{\code{th.mean}}{a numeric vector with mean threshold}
+\item{\code{th.pvalue}}{a numeric value specifying the p-value threshold}
 
-\item{\code{result}}{a data.frame with clusters in row. The first and second colunm contain the mean and the standard deviation and the third contain the pvalue. Finnaly the last columns is a logicial ("significance") describing if the 2 thresholds was reached or not}
+\item{\code{result}}{a data.frame containing for each cluster (first column): the mean (second column) and the standard deviation (third column) of the biological condition, the associated p-value (fourth column) and a logical (fifth column) specifying if the cluster is significantly abundant.}
 }}
 

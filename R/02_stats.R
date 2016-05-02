@@ -66,8 +66,8 @@ computeAC <- function(Results,
                use.percentages = use.percentages,
                method          = method,
                method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust),#TODO think about another way
-               th.pvalue       = th.pvalue,
                th.mean         = th.mean,
+               th.pvalue       = th.pvalue,
                result          = result)
        
     message("[END] - computing ACs")
@@ -96,7 +96,7 @@ computeAC <- function(Results,
 computeDEC <- function(Results,
                        conditions,
                        use.percentages = TRUE,
-                       method     = "t.test",
+                       method          = "t.test",
                        method.adjust   = NULL,
                        method.paired   = FALSE,
                        th.pvalue       = 0.05,
@@ -126,9 +126,9 @@ computeDEC <- function(Results,
     s1 <- ncol(data.cond1)
     
     pv <- apply(data, 1, function(x){
-                return(do.call(method, args = list(x = x[1:s1],
-                                        y        = x[-(1:s1)],
-                                        paired   = method.paired)
+                return(do.call(method, args   = list(x = x[1:s1],
+                                       y      = x[-(1:s1)],
+                                       paired = method.paired)
                         )$p.value
                 )
             }

@@ -53,7 +53,9 @@ Results <- setClass("Results",
 #' This object inherits from the Result object and consequently store the count matrix and the cluster phenotypes.
 #' In addition, SPADEResults object contains the informations about SPADE cell clustering results, such as makers used to identify clusters, FCS files and the SPADE Tree.
 #' @details 
-#' SPADEResults object is the central element used by the main SPADEViR functions, it is return by the The importSPADEResult() function. 
+#' SPADEResults object is the central element used by SPADEViR functions, it is returned by the importSPADEResult() function. 
+#' The SPADEResults object owns methods to summuries main informations using print and show methods
+#' Moreover this object could be exported as a tab separated file using the export method
 #' 
 #' @slot use.raw.medians a logical specifying if the marker expressions correspond to the raw or transformed data
 #' @slot dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
@@ -147,19 +149,24 @@ SPADEResults <- setClass("SPADEResults",
 
 #' @title Abundant Clusters (AC) class definition
 #' 
-#' @description The Results object is a S4 object containing the results identification of abundant cluster. 
-#' It also contains all informations about statistical parameters used to performs this test.  
+#' @description 
+#' The AC object is a S4 object containing the identified of abundant cluster. 
+#' It contains all informations about statistical parameters used to performs this test.  
 #' 
-#' @details AC is a printable and a plotable object calling the abundantClustersViewer() fonction.
+#' @details 
+#' A cluster is considered as a significant abundant cluster if the 2 thresholds (mean and p-value) are reached.  
+#' The AC object is returned by the computeAC() fonction.
+#' The AC object owns methods to summuries main informations using print and show methods
+#' Moreover this object could be exported as a tab separated file using the export method
 #' 
-#' @slot sample.names a character vector containing the samples names used
-#' @slot cluster.size a numeric vector containing number of cells ( sum of all samples ) for each cluster
-#' @slot use.percentages a logical specifying if computations was performed on percentage of cell abondance
-#' @slot method a character containing the name of the statistical test used to identify the AC
-#' @slot method.adjust a character containing the name of the multiple correction method used
-#' @slot th.pvalue a numeric vector with pvalue threshold 
-#' @slot th.mean a numeric vector with mean threshold
-#' @slot result a data.frame with clusters in row. The first and second colunm contain the mean and the standard deviation and the third contain the pvalue. Finnaly the last columns is a logicial ("significance") describing if the 2 thresholds was reached or not  
+#' @slot sample.names a character vector containing the samples used to compute the abundant clusters
+#' @slot cluster.size a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster
+#' @slot use.percentages a logical specifying if computation was performed on percentage of cell abundance
+#' @slot method a character containing the name of the statistical test used to identify the abundant clusters
+#' @slot method.adjust a character containing the name of the multiple correction method used (if any)
+#' @slot th.mean a numeric value specifying the mean threshold
+#' @slot th.pvalue a numeric value specifying the p-value threshold
+#' @slot result a data.frame containing for each cluster (first column): the mean (second column) and the standard deviation (third column) of the biological condition, the associated p-value (fourth column) and a logical (fifth column) specifying if the cluster is significantly abundant.
 #' 
 #' @name AC-class
 #' @rdname AC-class
@@ -170,8 +177,8 @@ AC <- setClass("AC",
                        use.percentages = "logical",
                        method          = "character",
                        method.adjust   = "character",
-                       th.pvalue       = "numeric",   
                        th.mean         = "numeric",
+                       th.pvalue       = "numeric",   
                        result          = "data.frame"),
                validity = function(object){
             
@@ -210,9 +217,15 @@ AC <- setClass("AC",
 
 #' @title Differentially Enriched Clusters (DEC) class definition
 #' 
-#' @description DEC is a S4 object containing the result of computeDEC function.
+#' @description 
+#' The DEC object is a S4 object containing the identified differentially enriched clusters beetween the selected conditions. 
+#' It contains all informations about statistical parameters used to performs this test.  
 #' 
-#' @details DEC is a printable and a plotable object calling the volcanoViewer() fonction.  
+#' @details 
+#' A cluster is considered as a significant differentially enriched cluster if the 2 thresholds (foldchange and p-value) are reached.  
+#' The DEC object is returned by the computeDEC() fonction.
+#' The AC object owns methods to summuries main informations using print and show methods
+#' Moreover this object could be exported as a tab separated file using the export method
 #' 
 #' @slot sample.cond1 a character specifying the names of the samples corresponding the first condition
 #' @slot sample.cond2 a character specifying the names of the samples corresponding the second condition

@@ -6,10 +6,14 @@
 \alias{DEC-class}
 \title{Differentially Enriched Clusters (DEC) class definition}
 \description{
-DEC is a S4 object containing the result of computeDEC function.
+The DEC object is a S4 object containing the identified differentially enriched clusters beetween the selected conditions. 
+It contains all informations about statistical parameters used to performs this test.
 }
 \details{
-DEC is a printable and a plotable object calling the volcanoViewer() fonction.
+A cluster is considered as a significant differentially enriched cluster if the 2 thresholds (foldchange and p-value) are reached.  
+The DEC object is returned by the computeDEC() fonction.
+The AC object owns methods to summuries main informations using print and show methods
+Moreover this object could be exported as a tab separated file using the export method
 }
 \section{Slots}{
 

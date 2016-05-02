@@ -218,7 +218,7 @@ correlatedClustersViewer <- function(CC,
 ##' 
 ##' @return a ggplot object
 ##' 
-##' @import ggplot2 ggnetwork intergraph
+##' @import ggplot2 ggnetwork
 ##' 
 ##' @export
 ##' 
@@ -536,7 +536,7 @@ clusterViewer <- function(Results,
          
         i <- length(plots) + 1
         
-        cells.number <- sum(cells.count[cells.count$cluster == current.cluster,])#-which()
+        cells.number <- sum(cells.count[cells.count$cluster == current.cluster,colnames(cells.count) != "cluster"])#-which()
                 
         plots[[i]] <- ggplot2::ggplot(data = data.temp) +
                       ggplot2::ggtitle(paste("cluster ",current.cluster," - Cluster Viewer (", cells.number," cells)" ,sep = ""))                      
@@ -715,7 +715,7 @@ kineticsViewer <- function(Results,
                            use.percentages = TRUE){
     
     data <- Results@cells.count
-    
+
     if(is.null(clusters)){
         clusters <- data[,"cluster"]
         message("All clusters will be cumpute")
@@ -731,6 +731,8 @@ kineticsViewer <- function(Results,
     }else{
         stop("Error : Unknown cluster ")
     }
+    
+    cells.count <- data[,c("cluster",rownames(assignments))]
     
     if(use.percentages){
         data.percent <- prop.table(as.matrix(data[,colnames(data) != "cluster"],2)) * 100
@@ -749,6 +751,8 @@ kineticsViewer <- function(Results,
 
     print(data.melted)
     
+
+    
     plots <- list()
     for(current.cluster in clusters){
         print(clusters)
@@ -759,7 +763,7 @@ kineticsViewer <- function(Results,
         
         i <- length(plots) + 1
         
-        cells.number <- sum(Results@cells.count[Results@cells.count$cluster == current.cluster,])
+        cells.number <- sum(cells.count[cells.count$cluster == current.cluster,colnames(cells.count) != "cluster"])
         plots[[i]] <- ggplot2::ggplot(data = data.temp, ggplot2::aes_string(x = "timepoints", y = "value", group = "individuals", color = "individuals")) +
                       ggplot2::ggtitle(paste("cluster ",current.cluster," - Kinetics Viewer (", cells.number," cells)",sep = "")) +
                       ggplot2::geom_line(size = 1, na.rm = TRUE) + #TODO add smooth curve with spline function

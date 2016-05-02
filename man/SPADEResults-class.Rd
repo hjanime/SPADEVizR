@@ -11,7 +11,9 @@ This object inherits from the Result object and consequently store the count mat
 In addition, SPADEResults object contains the informations about SPADE cell clustering results, such as makers used to identify clusters, FCS files and the SPADE Tree.
 }
 \details{
-SPADEResults object is the central element used by the main SPADEViR functions, it is return by the The importSPADEResult() function.
+SPADEResults object is the central element used by SPADEViR functions, it is returned by the importSPADEResult() function. 
+The SPADEResults object owns methods to summuries main informations using print and show methods
+Moreover this object could be exported as a tab separated file using the export method
 }
 \section{Slots}{
 
