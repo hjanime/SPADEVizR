@@ -482,9 +482,11 @@ clusterViewer <- function(Results,
     }
     data <- c()
     if(is.null(samples)){ 
-        data  <- Results@marker.expressions
+        data        <- Results@marker.expressions
+        cells.count <- Results@cells.count
     }else{
-        data  <- subset(Results@marker.expressions, sample %in% names(samples[ samples == TRUE]), drop = FALSE)
+        data        <- subset(Results@marker.expressions, sample %in% names(samples[ samples == TRUE]), drop = FALSE)
+        cells.count <- Results@cells.count[,c("cluster",names(samples[ samples == TRUE]))]
     }
 
     if(!is.null(clusters)){
@@ -510,6 +512,7 @@ clusterViewer <- function(Results,
     
     if (names(Results) == "SPADEResults"){
         for(i in 1:nrow(data)){
+            print(paste0(i,data[i,"marker"]))
             data[i,"lower.bound"] <- Results@quantiles[1,as.character(data[i,"marker"])]
             data[i,"upper.bound"] <- Results@quantiles[2,as.character(data[i,"marker"])]
         }
@@ -533,8 +536,8 @@ clusterViewer <- function(Results,
          
         i <- length(plots) + 1
         
-        cells.number <- sum(Results@cells.count[Results@cells.count$cluster == current.cluster,])
-        
+        cells.number <- sum(cells.count[cells.count$cluster == current.cluster,])#-which()
+                
         plots[[i]] <- ggplot2::ggplot(data = data.temp) +
                       ggplot2::ggtitle(paste("cluster ",current.cluster," - Cluster Viewer (", cells.number," cells)" ,sep = ""))                      
         
@@ -554,7 +557,7 @@ clusterViewer <- function(Results,
         }
         
         if(names(Results) == "SPADEResults"){
-            plots[[i]] <- plots[[i]] + ggplot2::geom_ribbon(ggplot2::aes_string(x = "as.numeric(marker)", ymin = "lower.bound", ymax = "upper.bound",fill = "sample"),alpha = 0.1, colour = "grey")
+            plots[[i]] <- plots[[i]] + ggplot2::geom_ribbon(ggplot2::aes_string(x = "as.numeric(marker)", ymin = "lower.bound", ymax = "upper.bound"),alpha = 0.1, fill = "grey20")
         }
         
         plots[[i]] <- plots[[i]] + ggplot2::scale_x_discrete(limits = markers) +

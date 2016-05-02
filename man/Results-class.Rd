@@ -18,7 +18,7 @@ The importX() function returns a Result Object.
 The cells.count dataframe have in the first column the cluster names or numeric ID and some columns with number of cells for each sample (with the sample names in colnames)
 The marker.expressions dataframe have .. to continue
 
-The Results object owns methods to summuries main informations with print and show methods
+The Results object owns methods to summuries main informations using print and show methods
 Moreover this object could be exported as a tab separated file using the export method
 }
 \section{Slots}{

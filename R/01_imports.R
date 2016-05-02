@@ -32,24 +32,29 @@ importSPADEResults <- function(path,
     path <- normalizePath(path,"/")
     
     message("FCS files import:")
-    fcs.files         <- dir(path,full.names = TRUE,pattern = ".fcs.density.fcs.cluster.fcs$")
-    samples.names     <- gsub(".fcs.density.fcs.cluster.fcs","",basename(fcs.files))
-    fcs.files         <- dir(path,full.names = TRUE,pattern = ".fcs.density.fcs.cluster.fcs$")
-    flowset           <- flowCore::read.flowSet(fcs.files,emptyValue = TRUE)
+    fcs.files         <- dir(path, full.names = TRUE, pattern = ".fcs.density.fcs.cluster.fcs$")
+    samples.names     <- gsub(".fcs.density.fcs.cluster.fcs", "", basename(fcs.files))
+    fcs.files         <- dir(path, full.names = TRUE, pattern = ".fcs.density.fcs.cluster.fcs$")
+    flowset           <- flowCore::read.flowSet(fcs.files, emptyValue = TRUE)
     flowCore::sampleNames(flowset) <- samples.names
 
     if(nrow(dict)>0){
-        flowset@colnames <- rename.markers(flowset@colnames,dict)
+        flowset@colnames <- rename.markers(flowset@colnames, dict)
         flowset    <- flowset[,1:length(flowset@colnames)]
     }
 
+    to.exlude       <- c("cell_length", "FileNum", "density", "time")
+    flag            <- is.element(toupper(to.exlude), toupper(flowset@colnames))
+    to.exlude       <- to.exlude[flag]
+    exclude.markers <- union(to.exlude, exclude.markers)
+    
     if (!is.null(exclude.markers)){
-        flowset <- exclude.markers(flowset,exclude.markers, colnames.FCS = flowset@colnames)
+        flowset <- exclude.markers(flowset, exclude.markers, colnames.FCS = flowset@colnames)
     }
     message("\tarchsin transform...")
     
     transform.arcsinh <- flowCore::arcsinhTransform(a=0, b=0.2) #a and b match SPADE a and b
-    marker.toTransform <- setdiff(flowset@colnames, c("time","cell_length","cluster","FileNum","density"))
+    marker.toTransform <- setdiff(flowset@colnames, c("cluster"))
     transformations <- flowCore::transformList(marker.toTransform, transform.arcsinh)
     flowset <- flowCore::transform(flowset, transformations)
 
@@ -116,6 +121,8 @@ importSPADEResults <- function(path,
 
     if(nrow(dict)>0){           
         colnames(marker.expressions)  <- rename.markers(marker.expressions.header,dict)    
+    }else{
+        colnames(marker.expressions)  <- marker.expressions.header
     }
     
     clustering.markers <- colnames(marker.expressions)[clustering.markers.indices]
