@@ -26,18 +26,6 @@ setMethod("print","Results",
 )
 
 
-#' @title Textual previews for SPADEResults objects
-#'
-#' @description Prints a previews for a SPADEResults object.
-#'
-#' @param x a SPADEResults object
-#' 
-#' @return none
-#'  
-#' @name print
-#' @rdname print-methods
-NULL
-
 #' @rdname print-methods
 #' @export
 setMethod("print","SPADEResults",
@@ -163,18 +151,6 @@ setMethod("print","PhenoProfiles",
         }
 )
 
-#' @title Textual preview for EnrichmentProfiles objects
-#'
-#' @description Prints a preview for a EnrichmentProfiles object.
-#'
-#' @param x a EnrichmentProfiles object
-#' 
-#' @return none
-#'  
-#' @name print
-#' @rdname print-methods
-NULL
-
 #' @rdname print-methods
 #' @export
 setMethod("print","EnrichmentProfiles",
@@ -230,36 +206,11 @@ setMethod("show","AC",
         definition = function(object){print(object)}
 )
 
-#' @title Textual preview for Differentially Enriched Clusters (DEC) object
-#'
-#' @description Show a preview a for Differentially Enriched Clusters (DEC) object
-#'
-#' @param x a Differentially Enriched Clusters (DEC) object
-#' 
-#' @return none
-#'  
-#' @name show
-#' @rdname show-methods
-NULL
-
 #' @rdname show-methods
 #' @export
 setMethod("show","DEC",
         definition = function(object){print(object)}
 )
-
-
-#' @title Textual preview for Correlated Clusters (CC) objects
-#'
-#' @description Show a preview a Correlated Clusters (CC) object.
-#'
-#' @param x a Correlated Clusters (CC) object
-#' 
-#' @return none
-#'  
-#' @name show
-#' @rdname show-methods
-NULL
 
 #' @rdname show-methods
 #' @export
@@ -267,36 +218,11 @@ setMethod("show","CC",
         definition = function(object){print(object)}
 )
 
-#' @title Textual preview for PhenoProfiles objects
-#'
-#' @description Show a preview a PhenoProfiles object.
-#'
-#' @param x a PhenoProfiles object
-#' 
-#' @return none
-#'  
-#' @name show
-#' @rdname show-methods
-NULL
-
 #' @rdname show-methods
 #' @export
 setMethod("show","PhenoProfiles",
         definition = function(object){print(object)}
 )
-
-
-#' @title Textual preview for EnrichmentProfiles objects
-#'
-#' @description Show a preview a EnrichmentProfiles object.
-#'
-#' @param x a EnrichmentProfiles object
-#' 
-#' @return none
-#'  
-#' @name show
-#' @rdname show-methods
-NULL
 
 #' @rdname show-methods
 #' @export

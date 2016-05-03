@@ -2,7 +2,7 @@
 % Please edit documentation in R/10_utils.R
 \name{ggheatmap.plot}
 \alias{ggheatmap.plot}
-\title{Internal - ggheatmap.plot}
+\title{Internal - Generate an heatmap by assembling elements}
 \usage{
 ggheatmap.plot(list, col.width = 0.15, row.width = 0.15)
 }
@@ -17,9 +17,6 @@ ggheatmap.plot(list, col.width = 0.15, row.width = 0.15)
 a ggplot2 axis
 }
 \description{
-ggheatmap.plot display the heatmap build by ggheatmap
-}
-\details{
-xxx
+This function displays the heatmap elements build by 'ggheatmap()'
 }
 

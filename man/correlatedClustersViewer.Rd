@@ -2,23 +2,23 @@
 % Please edit documentation in R/03_plots.R
 \name{correlatedClustersViewer}
 \alias{correlatedClustersViewer}
-\title{correlatedClustersViewer}
+\title{Visualization of correlated clusters}
 \usage{
 correlatedClustersViewer(CC, show.cluster.sizes = TRUE,
-  show.all.labels = FALSE)
+  show.all_labels = FALSE)
 }
 \arguments{
-\item{CC}{an object of class CC (object returned by the 'computeCC()' function)}
+\item{CC}{an object of class 'CC' (object returned by the 'computeCC()' function)}
 
 \item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
 
-\item{show.all.labels}{a logicial specifing if all cluster label must be show or just significant cluster}
+\item{show.all_labels}{a logicial specifing if all cluster label must be show or just significant cluster}
 }
 \value{
-a ggplot object
+a 'ggplot' object
 }
 \description{
-
+Generate a scatter plot representation showing for each cluster
 }
 \details{
 By default, only significant correlated clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.

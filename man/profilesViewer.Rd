@@ -4,32 +4,20 @@
 \alias{profilesViewer}
 \title{profilesViewer}
 \usage{
-profilesViewer(profile.object, cluster.size = TRUE)
+profilesViewer(profile.object, show.cluster.sizes = TRUE)
 }
 \arguments{
 \item{profile.object}{a PhenoProfiles object or an EnrichmentProfiles object}
 
-\item{cluster.size}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
-
-\item{show.unclassified}{a logical specifying if unclassified clusters must be shown or not (FALSE by default)}
-
-\item{profile.object}{a PhenoProfiles object or an EnrichmentProfiles object}
-
-\item{cluster.size}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
 }
 \value{
-a ggplot object
-
-a ggplot object
+a 'ggplot' object
 }
 \description{
 Generate a graph representation of PhenoProfiles classes
-
-Generate a graph representation of PhenoProfiles classes
 }
 \details{
-xxx
-
 xxx
 }
 

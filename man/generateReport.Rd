@@ -2,7 +2,7 @@
 % Please edit documentation in R/04_reports.R
 \name{generateReport}
 \alias{generateReport}
-\title{Generate report and plot.}
+\title{Generate a report including SPADEVizR plots.}
 \usage{
 generateReport(Results, PDFfile, reports = c("pheno", "kinetic", "cluster",
   "kinetic_cluster", "tree", "disto", "stream", "MDS"), clusters = NULL,
@@ -10,25 +10,25 @@ generateReport(Results, PDFfile, reports = c("pheno", "kinetic", "cluster",
   profile.objects = list(), width = 29.7, height = 21)
 }
 \arguments{
-\item{Results}{a SPADEResuts or Result object}
+\item{Results}{a 'SPADEResults' or 'Result' object}
 
 \item{PDFfile}{a character specifying the output path}
 
-\item{reports}{a vector of the plot names to add in the report (following the vector order). Plot names are : "pheno", "MDS", "cluster", "tree", "disto","stream". By default all plots will be add}
+\item{reports}{a character vector specifying the names and the order of the desired plots among: "pheno", "MDS", "cluster", "tree", "disto", "stream" and "count".}
 
-\item{clusters}{a character vector of ID cluster to be reported}
+\item{clusters}{a character vector of clusters to include in the report (all will be included by default)}
 
-\item{markers}{a character vector of markers to be reported}
+\item{markers}{a character vector of markers to include in the report (all will be included by default)}
 
-\item{stat.objects}{a list of stat.object (object of type DEC, AC or CC)}
+\item{stat.objects}{a list of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')}
 
-\item{profile.objects}{a list of profile.objects (object of type PhenoProfiles or EnrichmentProfiles)}
+\item{profile.objects}{a list of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')}
 
 \item{width}{a numeric specifying the plot width}
 
 \item{height}{a numeric specifying the plot height}
 }
 \description{
-Generate a report based on the SPADE result object.
+Generate a customizable report based on SPADEVizR vizualisation features.
 }
 

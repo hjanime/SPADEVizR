@@ -7,10 +7,10 @@
 g_legend(gplot)
 }
 \arguments{
-\item{a.gplot}{a ggplot2 plot}
+\item{gplot}{a 'ggplot' plot}
 }
 \value{
-a ggplot2 legend
+a 'ggplot' legend object
 }
 \description{
 This function is used internally to extract the legend from a 'ggplot' objet.

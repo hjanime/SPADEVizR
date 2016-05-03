@@ -23,7 +23,7 @@ importSPADEResults(path, dict = data.frame(),
 \item{quantile.heuristic}{a logicial specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
 }
 \value{
-SPADEResults a SPADE result object
+a S4 object of class 'SPADEResults'
 }
 \description{
 The 'importSPADEResults()' function imports SPADE cell clustering results from a specified path.

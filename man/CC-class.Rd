@@ -6,16 +6,14 @@
 \alias{CC-class}
 \title{Correlated Clusters (CC class)  definition}
 \description{
-The 'CC' object is a S4 object containing the information related to the clusters correlated with a phenotypic variable. 
-
-
-This object contains all information about the statistical parameters used.
+The 'CC' object is a S4 object containing coefficient of correlation associated between each cluster and a phenotypic variable.
+Moreover this object contains all parameters used in the statistical analysis.
 }
 \details{
 A cluster is considered as a significant correlated cluster if its associated p-value and correlation threshold are below the specific thresholds 'th.pvalue' and 'th.correlation'.  
 
 The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-This object is returned by the 'computeCC()' function.
+This object is returned by the 'identifyCC()' function.
 }
 \section{Slots}{
 

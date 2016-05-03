@@ -107,10 +107,10 @@ SPADEResults <- setClass("SPADEResults",
                                                  nrow(object@cells.count),")"))
                                  return (FALSE)
                              }
-                             if(ncol(object@cells.count) != (length(object@sample.names)+1)){
+                             if(ncol(object@cells.count) != length(object@sample.names)){
                                  message(paste0("Object SPADEResults, Error : number of samples (",
                                                  length(object@sample.names),
-                                                 " + 1 for cluster) is inconsistent with cells.count matrix size (",
+                                                 ") is inconsistent with cells.count matrix size (",
                                                  ncol(object@cells.count),")"))
                                  return (FALSE)
                              }
@@ -154,15 +154,13 @@ SPADEResults <- setClass("SPADEResults",
 #' 
 #' @description 
 #' The 'AC' object is a S4 object containing the information related to the abundant clusters in a given biological condition. 
-#' 
-#' 
-#' This object contains all information about the statistical parameters used.
+#' Moreover this object contains all parameters used in the statistical analysis.  
 #' 
 #' @details 
 #' A cluster is considered as a significant abundant cluster if its associated p-value and mean are below the specific thresholds 'th.pvalue' and 'th.mean'.  
 #' 
 #' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-#' This object is returned by the 'computeAC()' function. 
+#' This object is returned by the 'identifyAC()' function. 
 #' 
 #' @slot sample.names a character vector containing the samples used to compute the abundant clusters
 #' @slot cluster.size a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster
@@ -224,15 +222,13 @@ AC <- setClass("AC",
 #' 
 #' @description 
 #' The 'DEC' object is a S4 object containing the information related to the differentially enriched clusters between two given biological conditions. 
-#' 
-#' 
-#' This object contains all information about the statistical parameters used. 
+#' Moreover this object contains all parameters used in the statistical analysis.  
 #' 
 #' @details 
 #' A cluster is considered as a differentially enriched cluster if its associated p-value and fold-change are below the specific thresholds 'th.pvalue' and 'th.fc'.  
 #' 
 #' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-#' This object is returned by the 'computeDEC()' function. 
+#' This object is returned by the 'identifyDEC()' function. 
 #' 
 #' @slot sample.cond1 a character specifying the names of the samples of the first biological condition
 #' @slot sample.cond2 a character specifying the names of the samples of the second biological condition
@@ -305,16 +301,14 @@ DEC <- setClass("DEC",
 #' @title Correlated Clusters (CC class)  definition
 #' 
 #' @description 
-#' The 'CC' object is a S4 object containing the information related to the clusters correlated with a phenotypic variable. 
+#' The 'CC' object is a S4 object containing coefficient of correlation associated between each cluster and a phenotypic variable.
+#' Moreover this object contains all parameters used in the statistical analysis.
 #' 
-#' 
-#' This object contains all information about the statistical parameters used. 
-#' 
-#' @details 
+#' @details
 #' A cluster is considered as a significant correlated cluster if its associated p-value and correlation threshold are below the specific thresholds 'th.pvalue' and 'th.correlation'.  
 #' 
 #' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-#' This object is returned by the 'computeCC()' function. 
+#' This object is returned by the 'identifyCC()' function. 
 #' 
 #' @slot sample.names a character vector containing the samples used to compute correlated clusters
 #' @slot variable a numeric vector containing the expression values of the associated variable
@@ -412,7 +406,7 @@ CC <- setClass("CC",
 #' @exportClass PhenoProfiles
 PhenoProfiles <- setClass("PhenoProfiles",
                           slots=c(method           = "character",
-                                  method.parameter = "list",
+                                  method.parameter = "numeric",
                                   cluster.size     = "numeric",
                                   cluster.number   = "numeric",
                                   class.number     = "numeric",
@@ -438,7 +432,7 @@ PhenoProfiles <- setClass("PhenoProfiles",
 #' This object is returned by the 'classifyEnrichmentProfiles()' function. 
 #' 
 #' @slot method a character specifying the method used to classify cluster
-#' @slot method.parameter a list of parameters used by the selected method
+#' @slot method.parameter a numeric parameters associated with the chosen method
 #' @slot cluster.size a numeric vector with the number of cell in each cluster (sum of all samples)
 #' @slot cluster.number a numeric providing the number of cluster
 #' @slot class.number a numeric providing the number of classes
@@ -449,7 +443,7 @@ PhenoProfiles <- setClass("PhenoProfiles",
 #' @exportClass EnrichmentProfiles
 EnrichmentProfiles <- setClass("EnrichmentProfiles",
                                slots=c(method                   = "character",
-                                       method.parameter         = "list",
+                                       method.parameter         = "numeric",
                                        cluster.size             = "numeric",
                                        cluster.number           = "numeric",
                                        class.number             = "numeric",
@@ -461,13 +455,14 @@ EnrichmentProfiles <- setClass("EnrichmentProfiles",
                                }
 )
 
-#' @title Class name 
+#' @title Definition of class names 
 #'
-#' @description Provides the name of each SPADEVizR object
+#' @description 
+#' Provides the name of each SPADEVizR object
 #'
 #' @param x a SPADEVizR object
 #' 
-#' @return a character specifying the name of the object
+#' @return a character providing the name of the object
 #'  
 #' @name names
 #' @rdname names-methods
@@ -479,37 +474,11 @@ setMethod("names","Results",
         definition = function(x){return("Results")}
 )
 
-
-#' @title SPADEResults object name
-#'
-#' @description Named a SPADEResults object.
-#'
-#' @param x a SPADEResults object
-#' 
-#' @return none
-#'  
-#' @name names
-#' @rdname names-methods
-NULL
-
 #' @rdname names-methods
 #' @export
 setMethod("names","SPADEResults",
         definition = function(x){return("SPADEResults")}
 )
-
-
-#' @title AC object name
-#'
-#' @description Named a AC object.
-#'
-#' @param x a AC object
-#' 
-#' @return none
-#'  
-#' @name names
-#' @rdname names-methods
-NULL
 
 #' @rdname names-methods
 #' @export
@@ -517,35 +486,11 @@ setMethod("names","AC",
         definition = function(x){return("AC")}
 )
 
-#' @title DEC object name
-#'
-#' @description Named a DEC object.
-#'
-#' @param x a DEC object
-#' 
-#' @return none
-#'  
-#' @name names
-#' @rdname names-methods
-NULL
-
 #' @rdname names-methods
 #' @export
 setMethod("names","DEC",
         definition = function(x){return("DEC")}
 )
-
-#' @title CC object name
-#'
-#' @description Named a CC object.
-#'
-#' @param x a CC object
-#' 
-#' @return none
-#'  
-#' @name names
-#' @rdname names-methods
-NULL
 
 #' @rdname names-methods
 #' @export
@@ -553,36 +498,11 @@ setMethod("names","CC",
         definition = function(x){return("CC")}
 )
 
-
-#' @title PhenoProfiles object name
-#'
-#' @description Named a PhenoProfiles object.
-#'
-#' @param x a PhenoProfiles object
-#' 
-#' @return none
-#'  
-#' @name names
-#' @rdname names-methods
-NULL
-
 #' @rdname names-methods
 #' @export
 setMethod("names","PhenoProfiles",
         definition = function(x){return("PhenoProfiles")}
 )
-
-#' @title EnrichmentProfiles object name
-#'
-#' @description Named a EnrichmentProfiles object.
-#'
-#' @param x a EnrichmentProfiles object
-#' 
-#' @return none
-#'  
-#' @name names
-#' @rdname names-methods
-NULL
 
 #' @rdname names-methods
 #' @export

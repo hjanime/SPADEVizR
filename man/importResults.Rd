@@ -12,7 +12,7 @@ importResults(cells.count, marker.expressions)
 \item{marker.expressions}{a dataframe containing median marker expression values for each cluster of each sample. In additions of markers, the 2 two first columns are are dedicated to "cluster" and "sample"}
 }
 \value{
-Results a result object
+a S4 object of class 'Results'
 }
 \description{
 The 'importX()' function imports cell clustering results from two dataframes ('cells.count' and 'marker.expressions').

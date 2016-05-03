@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_stats.R
 \name{computeEigenCellClusters}
 \alias{computeEigenCellClusters}
-\title{Internal - computeEigenCellClusters}
+\title{Internal - Eigen vector classification}
 \usage{
 computeEigenCellClusters(data, eigencell.correlation.th = 0.8)
 }
@@ -12,10 +12,10 @@ computeEigenCellClusters(data, eigencell.correlation.th = 0.8)
 \item{eigencell.correlation.th}{}
 }
 \value{
-a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
+a dataframe containing for each cluster, its name and class
 }
 \description{
-xxx
+This function is used internally to classify clusters enrichment profilies or phenotype profiles using eigen vector decomposition.
 }
 \details{
 xxx

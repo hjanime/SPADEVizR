@@ -22,7 +22,7 @@ This object is returned by the 'classifyEnrichmentProfiles()' function.
 \describe{
 \item{\code{method}}{a character specifying the method used to classify cluster}
 
-\item{\code{method.parameter}}{a list of parameters used by the selected method}
+\item{\code{method.parameter}}{a numeric parameters associated with the chosen method}
 
 \item{\code{cluster.size}}{a numeric vector with the number of cell in each cluster (sum of all samples)}
 

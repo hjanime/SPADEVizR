@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_plots.R
 \name{kineticsViewer}
 \alias{kineticsViewer}
-\title{Kinetic Viewer}
+\title{Visualization of cluster enrichment profiles kinetics}
 \usage{
 kineticsViewer(Results, assignments, clusters = NULL,
   use.percentages = TRUE)
@@ -17,10 +17,10 @@ kineticsViewer(Results, assignments, clusters = NULL,
 \item{use.percentages}{a logical specifying if the visualisation should be performed on percentage}
 }
 \value{
-a ggplot object
+a 'ggplot' object
 }
 \description{
-Kinetic viewer aim to represent the kinetics of xxx
+Generates a kinetics plot representation showing for each cluster its enrichment profiles at each timepoint of each individual.
 }
 \details{
 xxx

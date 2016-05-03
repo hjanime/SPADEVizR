@@ -7,15 +7,13 @@
 \title{Differentially Enriched Clusters (DEC class) definition}
 \description{
 The 'DEC' object is a S4 object containing the information related to the differentially enriched clusters between two given biological conditions. 
-
-
-This object contains all information about the statistical parameters used.
+Moreover this object contains all parameters used in the statistical analysis.
 }
 \details{
 A cluster is considered as a differentially enriched cluster if its associated p-value and fold-change are below the specific thresholds 'th.pvalue' and 'th.fc'.  
 
 The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-This object is returned by the 'computeDEC()' function.
+This object is returned by the 'identifyDEC()' function.
 }
 \section{Slots}{
 

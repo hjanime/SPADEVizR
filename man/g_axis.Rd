@@ -4,22 +4,22 @@
 \alias{g_axis}
 \title{Internal - Extraction of ggplot axes}
 \usage{
-g_axis(gplot, x = !y, y = !x)
+g_axis(gplot, x.axis = !y.axis, y.axis = !x.axis)
 }
 \arguments{
-\item{x}{a logical, TRUE to extract x axis}
+\item{gplot}{a 'ggplot' plot}
 
-\item{y}{a logical, TRUE to extract y axis}
+\item{x}{a logical value specifying if the x-axis must be extract}
 
-\item{a.gplot}{a ggplot2 plot}
+\item{y}{a logical value specifying if the y-axis must be extract}
 }
 \value{
-an object of class xxx
+a 'ggplot' axis object
 }
 \description{
 This function is used internally to extract axes from a 'ggplot' objet.
 }
 \details{
-It is to note that x and y are mutuality excluded (both cannot be both TRUE) with priority to x.
+It is to note that 'x' and 'y' are mutuality excluded (both cannot be both TRUE) with priority to 'x'.
 }
 

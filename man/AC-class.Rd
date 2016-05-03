@@ -7,15 +7,13 @@
 \title{Abundant Clusters (AC class) definition}
 \description{
 The 'AC' object is a S4 object containing the information related to the abundant clusters in a given biological condition. 
-
-
-This object contains all information about the statistical parameters used.
+Moreover this object contains all parameters used in the statistical analysis.
 }
 \details{
 A cluster is considered as a significant abundant cluster if its associated p-value and mean are below the specific thresholds 'th.pvalue' and 'th.mean'.  
 
 The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-This object is returned by the 'computeAC()' function.
+This object is returned by the 'identifyAC()' function.
 }
 \section{Slots}{
 

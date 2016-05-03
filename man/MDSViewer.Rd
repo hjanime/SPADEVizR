@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_plots.R
 \name{MDSViewer}
 \alias{MDSViewer}
-\title{MDS viewer.}
+\title{Visualization of SPADE cluster similarities using MDS}
 \usage{
 MDSViewer(Results, use.percentages = TRUE, assignments, clusters = NULL,
   space = "clusters", dist.method = "euclidean")
@@ -24,7 +24,7 @@ MDSViewer(Results, use.percentages = TRUE, assignments, clusters = NULL,
 a list of ggplot objects
 }
 \description{
-Generate a MDS representation based on the SPADE result object.
+Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs phenotypes.
 }
 \details{
 xxx

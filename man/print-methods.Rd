@@ -28,23 +28,11 @@
 }
 \arguments{
 \item{x}{a SPADEVizR object}
-
-\item{x}{a SPADEResults object}
-
-\item{x}{a EnrichmentProfiles object}
 }
 \value{
-none
-
-none
-
 none
 }
 \description{
 Prints a previews for a SPADEVizR object.
-
-Prints a previews for a SPADEResults object.
-
-Prints a preview for a EnrichmentProfiles object.
 }
 

@@ -2,15 +2,19 @@
 % Please edit documentation in R/03_plots.R
 \name{distogramViewer}
 \alias{distogramViewer}
-\title{Distogram Viewer}
+\title{Visualization of marker co-expressions}
 \usage{
-distogramViewer(Results)
+distogramViewer(Results, clusters = NULL, samples = NULL)
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
+
+\item{clusters}{xxx}
+
+\item{samples}{xxx}
 }
 \value{
-a list of ggplot objects
+a list of 'ggplot' objects
 }
 \description{
 Generate a distogram representation showing the marker co-expression.

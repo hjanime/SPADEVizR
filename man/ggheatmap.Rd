@@ -8,11 +8,11 @@ ggheatmap(matrix, dendrogram.type = "rectangle", num = 5,
   clustering.markers = NULL)
 }
 \arguments{
-\item{matrix}{a matrix}
+\item{matrix}{a numeric matrix containing the markers expression categories}
 
 \item{dendrogram.type}{a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)}
 
-\item{num}{xxx}
+\item{num}{a numeric value specifying the number of markers expression categories}
 
 \item{clustering.markers}{a character vector of clustering markers}
 }

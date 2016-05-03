@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_stats.R
 \name{computeHierarchicalClustering}
 \alias{computeHierarchicalClustering}
-\title{Internal - computeHierarchicalClustering}
+\title{Internal - Hierarchical classification}
 \usage{
 computeHierarchicalClustering(data, class.number = NULL,
   hierarchical.correlation.th = 0.8)
@@ -10,17 +10,17 @@ computeHierarchicalClustering(data, class.number = NULL,
 \arguments{
 \item{data}{a matrix with all clusters in rownames}
 
-\item{class.number}{the number of classe to cluster, if class.number is NULL numer of classe will be determined base on hierarchical correlation threshold}
+\item{class.number}{a numeric specifying the number of classes}
 
-\item{hierarchical.correlation.th}{}
+\item{hierarchical.correlation.th}{a numeric value specifying the cut height}
 }
 \value{
-a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
+a dataframe containing for each cluster, its name and class
 }
 \description{
-xxx
+This function is used internally to classify clusters enrichment profilies or phenotype profiles using a hierarchical algorithm.
 }
 \details{
-xxx
+If 'class.number' is NULL, classification will be determined base on the cut height correlation threshold.
 }
 

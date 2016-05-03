@@ -1,13 +1,13 @@
-#' @title Generate report and plot.
+#' @title Generate a report including SPADEVizR plots.
 #'
-#' @description Generate a report based on the SPADE result object.
+#' @description Generate a customizable report based on SPADEVizR vizualisation features.
 #'
-#' @param Results a SPADEResuts or Result object
-#' @param reports a vector of the plot names to add in the report (following the vector order). Plot names are : "pheno", "MDS", "cluster", "tree", "disto","stream". By default all plots will be add
-#' @param clusters a character vector of ID cluster to be reported
-#' @param markers a character vector of markers to be reported
-#' @param stat.objects a list of stat.object (object of type DEC, AC or CC)
-#' @param profile.objects a list of profile.objects (object of type PhenoProfiles or EnrichmentProfiles)
+#' @param Results a 'SPADEResults' or 'Result' object
+#' @param reports a character vector specifying the names and the order of the desired plots among: "pheno", "MDS", "cluster", "tree", "disto", "stream" and "count".
+#' @param clusters a character vector of clusters to include in the report (all will be included by default)
+#' @param markers a character vector of markers to include in the report (all will be included by default)
+#' @param stat.objects a list of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')
+#' @param profile.objects a list of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')
 #' @param PDFfile a character specifying the output path
 #' @param width a numeric specifying the plot width
 #' @param height a numeric specifying the plot height
@@ -71,6 +71,9 @@ generateReport <- function(Results,
                },
                stream          = {
                    plots <- c(plots, list(streamgraphViewer(Results, clusters = clusters)))
+               },
+               count           = {
+                   plots <- c(plots, list(countViewer(Results, clusters = clusters)))
                })
        
     }

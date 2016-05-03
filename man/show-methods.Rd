@@ -28,35 +28,11 @@
 }
 \arguments{
 \item{x}{a SPADEVizR object}
-
-\item{x}{a Differentially Enriched Clusters (DEC) object}
-
-\item{x}{a Correlated Clusters (CC) object}
-
-\item{x}{a PhenoProfiles object}
-
-\item{x}{a EnrichmentProfiles object}
 }
 \value{
-none
-
-none
-
-none
-
-none
-
 none
 }
 \description{
 Show a previews for a SPADEVizR objects.
-
-Show a preview a for Differentially Enriched Clusters (DEC) object
-
-Show a preview a Correlated Clusters (CC) object.
-
-Show a preview a PhenoProfiles object.
-
-Show a preview a EnrichmentProfiles object.
 }
 

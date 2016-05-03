@@ -14,7 +14,7 @@ streamgraphViewer(Results, order = NULL, clusters = NULL)
 \item{clusters}{a numerical vector containing the clusters to use in the representation, by default all clusters will be use}
 }
 \value{
-a ggplot object
+a 'ggplot' object
 }
 \description{
 Generate a streamgraph representation showing the evolution of cell count in clusters across samples

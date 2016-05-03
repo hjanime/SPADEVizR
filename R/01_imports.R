@@ -17,7 +17,7 @@
 #' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)
 #' @param quantile.heuristic a logicial specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
 #' 
-#' @return SPADEResults a SPADE result object
+#' @return a S4 object of class 'SPADEResults'
 #'
 #' @import flowCore 
 #'
@@ -81,7 +81,7 @@ importSPADEResults <- function(path,
         
         SPADES.matrix        <- read.table(file,sep = ",",header = TRUE,stringsAsFactors = FALSE,check.names = FALSE)
         
-        cells.count.sample    <- SPADES.matrix [,"count"]
+        cells.count.sample   <- SPADES.matrix [,"count"]
         
         name <- gsub('.fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$','',basename(file))
         
@@ -89,8 +89,8 @@ importSPADEResults <- function(path,
             cells.count     <- cbind(cells.count, cells.count.sample)
             samples.headers <- append(samples.headers,name)
         }else{
-            cells.count     <- data.frame(cluster = SPADES.matrix [,"ID"], cells.count.sample)
-            samples.headers <- c("cluster",name)
+            cells.count     <- data.frame(row.names = SPADES.matrix [,"ID"], cells.count.sample)
+            samples.headers <- name
         }
         
         SPADES.matrix <- SPADES.matrix[, grep ("count|percenttotal",colnames(SPADES.matrix), invert = TRUE)]
@@ -101,7 +101,7 @@ importSPADEResults <- function(path,
     }
     
     nb.cluster <- nrow(cells.count)
-    dimnames(cells.count)   <- list(1:nb.cluster,samples.headers)
+    colnames(cells.count)   <- samples.headers
 
     marker.expressions.header <- colnames(marker.expressions)
     marker.expressions.header <- gsub("X.","(",marker.expressions.header,fixed = TRUE)
@@ -183,7 +183,7 @@ importSPADEResults <- function(path,
 #' @param cells.count a dataframe of cells abondances with clusters in row and samples in column 
 #' @param marker.expressions a dataframe containing median marker expression values for each cluster of each sample. In additions of markers, the 2 two first columns are are dedicated to "cluster" and "sample" 
 #' 
-#' @return Results a result object
+#' @return a S4 object of class 'Results'
 #' 
 #' @export 
 importResults <- function(cells.count,
@@ -299,9 +299,9 @@ filter.medians <- function(data,use.raw.medians = FALSE){
 #' This function performs the exact calculation of quantiles with all cells but needs more memory than computeQuantile.heuristic.
 #' 
 #' @param flowset a flowCore flowset
-#' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles
+#' @param probs a numeric vector of 2 values specifying the quantiles to compute
 #' 
-#' @return a numeric matrix with bounds
+#' @return a numeric matrix containing the quantiles of each marker
 #' 
 #' @import flowCore
 computeQuantile <- function(flowset,probs = c(0.05,0.95)){
@@ -332,18 +332,18 @@ computeQuantile <- function(flowset,probs = c(0.05,0.95)){
 #' @title Internal - Compute quantile with FCS flowset sample by sample
 #'
 #' @description 
-#' This function is used internally, it provide the mean of quantiles from each sample to seed up computation.
+#' This function is used internally to provide the mean of quantiles from each sample to seed up computation.
 #' 
 #' @details 
 #' This function performs an approximate calculation of quantiles using less memory than computeQuantile.
 #' 
 #' @param flowset a flowCore flowset 
-#' @param probs a vector of probabilities with 2 values in [0,1] to compute quantiles
+#' @param probs a numeric vector of 2 values specifying the quantiles to compute
 #' 
 #' @import flowCore
 #' 
-#' @return a numeric matrix with bounds
-computeQuantile.heuristic <- function(flowset,probs = c(0.05,0.95)){
+#' @return a numeric matrix containing the quantiles of each marker
+computeQuantile.approximation <- function(flowset,probs = c(0.05,0.95)){
     
     bounds.by.sample <- flowCore::fsApply(flowset[,flowset@colnames != "cluster"], flowCore::each_col, stats::quantile, probs = probs)
 

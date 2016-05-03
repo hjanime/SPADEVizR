@@ -2,10 +2,10 @@
 % Please edit documentation in R/03_plots.R
 \name{boxplotViewer}
 \alias{boxplotViewer}
-\title{boxplotViewer}
+\title{Visualization of cluster enrichment profiles conditions}
 \usage{
 boxplotViewer(Results, conditions, clusters = NULL, use.percentages = TRUE,
-  label = FALSE, violin = TRUE)
+  show.legend = FALSE, show.violin = TRUE)
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
@@ -14,19 +14,19 @@ boxplotViewer(Results, conditions, clusters = NULL, use.percentages = TRUE,
 
 \item{clusters}{a numerical vector containing the clusters to use in the representation}
 
-\item{use.percentages}{a logical specifying if the visualisation should be performed on percentage}
+\item{use.percentages}{a logical specifying if the visualisation must be performed on percentage}
 
-\item{label}{a logical to show sample label or not (FALSE by default)}
+\item{show.legend}{a logical specifying if the legend must be displayed}
 
-\item{violin}{xxx}
+\item{show.violin}{a logical specifying if the count distribution must be displayed}
 }
 \value{
-a ggplot object
+a 'ggplot' object
 }
 \description{
-Generate a boxplot representation to compare the cell enrichment of biological conditions for each cluster
+Generate a boxplot representation displaying the cell abundance for each cluster. Clusters are gathered by given biological conditions.
 }
 \details{
-xxx
+Cells clusters are colored based on theirs associated biological samples.
 }
 

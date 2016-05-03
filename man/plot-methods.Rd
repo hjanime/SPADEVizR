@@ -5,9 +5,10 @@
 \alias{plot}
 \alias{plot,AC,ANY-method}
 \alias{plot,CC,ANY-method}
+\alias{plot,DEC,ANY-method}
 \alias{plot,EnrichmentProfiles,ANY-method}
 \alias{plot,PhenoProfiles,ANY-method}
-\title{xxx}
+\title{Graphical representation for some SPADEVizR objects}
 \usage{
 \S4method{plot}{DEC,ANY}(x, y, ...)
 
@@ -20,15 +21,12 @@
 \S4method{plot}{EnrichmentProfiles,ANY}(x, y, ...)
 }
 \arguments{
-\item{xxx}{}
+\item{x}{a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object}
 }
 \value{
-xxx
+a 'ggplot' object
 }
 \description{
-xxx
-}
-\details{
-xxx
+This function generates a graphical representation for 'AC', 'DEC', 'CC', 'PhenoProfiles' and 'EnrichmentProfiles' objects.
 }
 

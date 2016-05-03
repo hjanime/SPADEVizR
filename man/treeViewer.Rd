@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_plots.R
 \name{treeViewer}
 \alias{treeViewer}
-\title{SPADE Tree viewer}
+\title{Visualization of combined SPADE trees}
 \usage{
 treeViewer(SPADEResults, samples = NULL, stat.object = NULL,
   vertex_size = c(1, 15))
@@ -20,7 +20,7 @@ treeViewer(SPADEResults, samples = NULL, stat.object = NULL,
 a list of ggplot objects
 }
 \description{
-xxx
+Generates a tree representation showing combined SPADE trees.
 }
 \details{
 xxx

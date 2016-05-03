@@ -2,25 +2,25 @@
 % Please edit documentation in R/03_plots.R
 \name{abundantClustersViewer}
 \alias{abundantClustersViewer}
-\title{abundantClustersViewer}
+\title{Visualization of abundant clusters}
 \usage{
-abundantClustersViewer(AC, show.cluster.sizes = TRUE,
-  show.all.labels = FALSE)
+abundantClustersViewer(AC, show.cluster_sizes = TRUE,
+  show.all_labels = FALSE)
 }
 \arguments{
 \item{AC}{an object of class AC (object returned by the 'computeAC()' function)}
 
-\item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster_sizes}{a logicial specifing if dot sizes are proportional to cell counts}
 
-\item{show.all.labels}{a logicial specifing if all cluster label must be show or just significant cluster}
+\item{show.all_labels}{a logicial specifing if all cluster labels must be shown (or just significant clusters)}
 }
 \value{
-a ggplot object
+a 'ggplot' object
 }
 \description{
-Generate a scatter plot representation displaying for each cluster its m
+Generates a scatter plot representation showing for each cluster its mean abundance and associated p-value.
 }
 \details{
-By default, only significant abundant clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.
+By default, only significant abundant clusters are labeled. Labels for all clusters can be displayed by setting the 'show.all_labels' parameter to TRUE.
 }
 

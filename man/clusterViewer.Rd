@@ -2,29 +2,38 @@
 % Please edit documentation in R/03_plots.R
 \name{clusterViewer}
 \alias{clusterViewer}
-\title{ClusterViewer}
+\title{Visualization of cluster phenotypes}
 \usage{
 clusterViewer(Results, samples = NULL, clusters = NULL, markers = NULL,
   show.mean = "both")
 }
 \arguments{
-\item{Results}{a SPADEResuts or Result object (without quantiles bounds if a Results object is provided)}
+\item{Results}{a SPADEResults or Result object}
 
-\item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
+\item{samples}{a named vector specifying the samples to used}
 
-\item{clusters}{a character vector containing the clusters to use for the representation}
+\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
 
-\item{markers}{a pattern describing markers to observe}
+\item{markers}{a character vector specifying the markers to be displayed}
 
-\item{show.mean}{a character : "none" "both" "only", "both" by default}
+\item{show.mean}{a character specifying if marker means expression should be displayed, possible value are among : "none", "only" or "both"}
 }
 \value{
 a list of ggplot objects
 }
 \description{
-Cluster viewer
+Generates a parallel coordinate plot representation showing for each cluster the marker median expressions.
 }
 \details{
-xxx
+If 'Results' is an object of class 'SPADEResults' object then the quantile ranges will be displayed using a ribbon.
+
+The 'samples' parameter required a named vector providing the correspondence between a sample name (in rowname) and the logical value TRUE to show this sample or FALSE otherwise.
+
+The 'show.mean' parameter allows to vizualize three kinds of information:
+\itemize{
+\item "none" value will show marker median expressions for each selected samples;
+\item "only" value will show only the mean of median maker expressions for all selected samples (displayed as black dashed line);
+\item "both" value will show marker median expressions for each selected samples together with the mean of median maker expressionsons for all selected samples.
+}
 }
 

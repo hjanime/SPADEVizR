@@ -1,13 +1,15 @@
-#' @title Internal - computePhenoTable
+#' @title Internal - Generatate a matrix of marker expression scores describing phenotypes
 #' 
-#' @description computePhenoTable
+#' @description 
+#' This function generate a numeric matrix of expression scores for each marker of each cluster.
 #' 
-#' @details xxx
+#' @details 
+#' XXX 
 #' 
 #' @param SPADEResults a SPADEResults object
-#' @param num a numeric indicating the number of "phenotype"
+#' @param num a numeric value specifying the number of markers expression categories
 #'  
-#' @return xxx
+#' @return a numeric matrix of expression scores
 #' 
 #' @import gtools
 #'
@@ -15,14 +17,14 @@ computePhenoTable <- function(SPADEResults, num = 5){
     
     message("[START] - computing PhenoTable")
     
-    data.melted            <- data.frame(reshape2::melt(SPADEResults@marker.expressions[colnames(SPADEResults@marker.expressions)],id.vars = c("sample","cluster")))
+    data.melted           <- data.frame(reshape2::melt(SPADEResults@marker.expressions[colnames(SPADEResults@marker.expressions)], id.vars = c("sample","cluster")))
     
-    colnames(data.melted)  <- c("sample","cluster","marker","value")
+    colnames(data.melted) <- c("sample","cluster","marker","value")
 
-    data.melted$marker     <- as.vector(data.melted$marker)
+    data.melted$marker    <- as.vector(data.melted$marker)
 
-    means                  <- plyr::ddply(data.melted, c("cluster","marker"), function(df){mean(df$value, na.rm = TRUE)}) #NA values are removed
-    colnames(means)        <- c("cluster","marker","value")
+    means                 <- plyr::ddply(data.melted, c("cluster","marker"), function(df){mean(df$value, na.rm = TRUE)}) #NA values are removed
+    colnames(means)       <- c("cluster","marker","value")
 
     for(i in 1:nrow(means)){
         cluster <- means[i,"cluster"]
@@ -50,9 +52,9 @@ computePhenoTable <- function(SPADEResults, num = 5){
 #' @description 
 #' This function is used internally to build the element needed for an heatmap
 #' 
-#' @param matrix a matrix
+#' @param matrix a numeric matrix containing the markers expression categories
 #' @param dendrogram.type a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)
-#' @param num xxx
+#' @param num a numeric value specifying the number of markers expression categories
 #' @param clustering.markers a character vector of clustering markers
 #' @return a list of 3 plots (top dendrogram, right dendrogram, heatmap)
 #'
@@ -67,8 +69,8 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
     row.dendro <- ggdendro::dendro_data(as.dendrogram(row.hc),type = dendrogram.type)
     col.dendro <- ggdendro::dendro_data(as.dendrogram(col.hc),type = dendrogram.type)
     
-    col.plot <- dendro(col.dendro, col=TRUE)
-    row.plot <- dendro(row.dendro, row=TRUE)
+    col.plot <- g_dendro(col.dendro, col=TRUE)
+    row.plot <- g_dendro(row.dendro, row=TRUE)
     
     col.ord <- match(col.dendro$labels$label, colnames(matrix))
     row.ord <- match(row.dendro$labels$label, rownames(matrix))
@@ -109,23 +111,25 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
 
 #' @title Internal - Build a dendrograms plot
 #'
-#' @description xxx
+#' @description 
+#' This function is used internally to generate a 'ggplot' dendrogram.
 #'
-#' @details xxx
-#'
-#' @param ddata xxx
-#' @param row xxx
-#' @param col xxx
+#' @details 
+#' It is to note that 'row' and 'col' are mutuality excluded (both cannot be both TRUE) with priority to row.
 #' 
-#' @return a dendroplot
+#' @param dist a numeric matrix containing distances between objects
+#' @param row a logical value specifying if the horizontal dendrogram must be computed
+#' @param col a logical value specifying if the vertical dendrogram must be computed
+#' 
+#' @return a 'ggplot' dendrogram object
 #'
 #' @import ggplot2 ggdendro
-dendro <- function(ddata, row=!col, col=!row) {
+g_dendro <- function(dist, row=!col, col=!row) {
 
     tangle <- if(row) { 0 } else { 90 }
 
     p <- ggplot2::ggplot() +
-         ggplot2::geom_segment(data = ggdendro::segment(ddata),
+         ggplot2::geom_segment(data = ggdendro::segment(dist),
                                ggplot2::aes_string(x = "x", y = "y", xend = "xend", yend = "yend")) +
          ggplot2::labs(x = NULL, y = NULL) +
          ggdendro::theme_dendro() +
@@ -159,12 +163,12 @@ dendro <- function(ddata, row=!col, col=!row) {
 #' @description 
 #' This function is used internally to extract the legend from a 'ggplot' objet.
 #'
-#' @param a.gplot a ggplot2 plot
+#' @param gplot a 'ggplot' plot
 #' 
-#' @return a ggplot2 legend
+#' @return a 'ggplot' legend object
 #'
 #' @import ggplot2 gtable
-g_legend<-function(gplot){
+g_legend <- function(gplot){
     tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(gplot))
     tmp <- gtable::gtable_filter(tmp, "guide-box")
     
@@ -177,17 +181,17 @@ g_legend<-function(gplot){
 #' This function is used internally to extract axes from a 'ggplot' objet.
 #'
 #' @details 
-#' It is to note that x and y are mutuality excluded (both cannot be both TRUE) with priority to x.
+#' It is to note that 'x' and 'y' are mutuality excluded (both cannot be both TRUE) with priority to 'x'.
 #'
-#' @param a.gplot a ggplot2 plot
-#' @param x a logical, TRUE to extract x axis
-#' @param y a logical, TRUE to extract y axis
+#' @param gplot a 'ggplot' plot
+#' @param x a logical value specifying if the x-axis must be extract
+#' @param y a logical value specifying if the y-axis must be extract
 #' 
-#' @return an object of class xxx
+#' @return a 'ggplot' axis object
 #'
 #' @import ggplot2 gtable
-g_axis<-function(gplot, x =! y, y =! x ){
-    if (x){
+g_axis <- function(gplot, x.axis =! y.axis, y.axis =! x.axis ){
+    if (x.axis){
         name <- "axis-b"
     }
     else {
@@ -199,11 +203,10 @@ g_axis<-function(gplot, x =! y, y =! x ){
     return(tmp$grobs[[TRUE]])
 }
 
-#' @title Internal - ggheatmap.plot
+#' @title Internal - Generate an heatmap by assembling elements
 #'
-#' @description ggheatmap.plot display the heatmap build by ggheatmap
-#'
-#' @details xxx
+#' @description 
+#' This function displays the heatmap elements build by 'ggheatmap()'
 #'
 #' @param list the list of ggplot object provided by ggheatmap
 #' @param col.width size of horizontal dendrogram
@@ -218,8 +221,8 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
                     c(5,3,4),
                     c(NA,6,NA))
     
-    x.axis <- g_axis(list$centre, x = TRUE)        
-    y.axis <- g_axis(list$centre, y = TRUE)
+    x.axis <- g_axis(list$centre, x.axis = TRUE)        
+    y.axis <- g_axis(list$centre, y.axis = TRUE)
     legend <- g_legend(list$centre)
     
     center.withoutlegend = list$centre + ggplot2::theme(axis.line        = ggplot2::element_blank(),
@@ -268,17 +271,9 @@ statSteamgraph <- ggplot2::ggproto("statSteamgraph",
             
             data.table::setDT(data)
             
-            datasdorder = data[,
-                               list(
-                                    sdy = sd(y)
-                                ),
-                                    by = list(group)
-                              ][,
+            datasdorder = data[, list(sdy = sd(y)), by = list(group)][,
                                  ranksdy := rank(sdy, ties.method = 'random')
-                              ][
-                                 ranksdy %%2 == 0,
-                                 ranksdy := -ranksdy
-                              ]
+                              ][ ranksdy %%2 == 0, ranksdy := -ranksdy]
             
             data = merge(data,
                          datasdorder,

@@ -1,19 +1,20 @@
-#' @title Compute the Abundant Clusters
+#' @title Identification of the Abundant Clusters
 #' 
 #' @description 
-#' xxx
-#' @param Results a Results or SPADEResults object
+#' This function is used to identifed the abundant clusters. That is to say clusters that have cell abundance statistically greather than a specific threshold.
+#' 
+#' @param Results a 'Results' or 'SPADEResults' object
 #' @param condition a named vector providing the correspondence between a sample name (in rowname) and the logical value TRUE to test abondance for this sample or FALSE otherwise
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
-#' @param method a character containing the statistical method to use for the ACs detection. The parameter can take the values "t.test" or "wilcox.test"
+#' @param method a character specifying the statistical method used to identifed the abundant clusters. The parameter can take the values "t.test" or "wilcox.test"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
-#' @param th.pvalue a numeric specifying the p-value threshold (0.05 by default)
-#' @param th.mean a numeric specifying the mean threshold (0 by default)
+#' @param th.pvalue a numeric specifying the p-value threshold
+#' @param th.mean a numeric specifying the abundance mean threshold
 #' 
-#' @return a AC object
+#' @return a S4 object of class 'AC'
 #' 
 #' @export
-computeAC <- function(Results,
+identifyAC <- function(Results,
                       condition,
                       use.percentages = TRUE,
                       method          = "t.test",
@@ -23,15 +24,13 @@ computeAC <- function(Results,
     
     message("[START] - computing ACs")
     
-    data.filtered   <- Results@cells.count[, colnames(Results@cells.count) != "cluster"]
-
-    data.filtered   <- data.filtered[,names(condition[ condition == TRUE ]), drop = FALSE]
+    data   <- Results@cells.count[,names(condition[ condition == TRUE ]), drop = FALSE]
     
     if(use.percentages){
-        data   <- prop.table(as.matrix(data.filtered),2)
+        data   <- prop.table(as.matrix(data),2)
         data   <- data * 100
     }else{
-        data   <- data.filtered
+        data   <- data
     }
             
     message("Sampled used :")
@@ -50,7 +49,7 @@ computeAC <- function(Results,
         pv <- p.adjust(pv, method = method.adjust)
     }
     
-    result <- data.frame(cluster = Results@cells.count[,"cluster"],
+    result <- data.frame(cluster = rownames(Results@cells.count),
                          mean    = apply(data,1,mean),
                          sd      = apply(data,1,sd),
                          pvalue  = pv)
@@ -60,7 +59,7 @@ computeAC <- function(Results,
 
     AC <- new ("AC",
                sample.names    = colnames(data),
-               cluster.size    = apply(data.filtered,1,sum),
+               cluster.size    = apply(data,1,sum),
                use.percentages = use.percentages,
                method          = method,
                method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust),#TODO think about another way
@@ -73,24 +72,25 @@ computeAC <- function(Results,
     return(AC)
 }
 
-#' @title Compute the Differentially Enriched Clusters
+#' @title Identification of the Differentially Enriched Clusters
 #' 
 #' @description
-#' xxx
+#' This function is used to identifed differentially enriched clusters. 
+#' That is to say clusters that are differentially enriched two biologicals conditions.
 #' 
-#' @param Results a Results or SPADEResults object
+#' @param Results a 'Results' or 'SPADEResults' object
 #' @param conditions a named vector providing the correspondence between a sample name (in rownames) and the condition of this sample : NA to exclude a sample from tests, 1 or 2 to attribute this sample, respectively to the first or second condition
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character specifying the name of the statistical test to use "t.test" or "wilcox.test"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
 #' @param method.paired a logical indicating if the statistical test must be performed in a paired manner
-#' @param th.pvalue a numeric specifying the p-value threshold (0.05 by default)
-#' @param th.fc a numeric specifying the fold-change threshold (1 by default)
+#' @param th.pvalue a numeric specifying the p-value threshold
+#' @param th.fc a numeric specifying the fold-change threshold
 #'
-#' @return a DEC object
+#' @return a S4 object of class 'DEC'
 #' 
 #' @export
-computeDEC <- function(Results,
+identifyDEC <- function(Results,
                        conditions,
                        use.percentages = TRUE,
                        method          = "t.test",
@@ -101,18 +101,18 @@ computeDEC <- function(Results,
     
     message("[START] - computing DECs\n")
     
-    data.filtered   <- Results@cells.count[, colnames(Results@cells.count) != "cluster"]
+    data   <- Results@cells.count[, colnames(Results@cells.count) != "cluster"]
     
-    data.cond1   <- data.filtered[,names(conditions[(!is.na(conditions) & conditions == 1)]), drop = FALSE]
-    data.cond2   <- data.filtered[,names(conditions[(!is.na(conditions) & conditions == 2)]), drop = FALSE]
+    data.cond1   <- data[,names(conditions[(!is.na(conditions) & conditions == 1)]), drop = FALSE]
+    data.cond2   <- data[,names(conditions[(!is.na(conditions) & conditions == 2)]), drop = FALSE]
     
-    data.filtered         <- cbind(data.cond1,data.cond2) 
+    data         <- cbind(data.cond1,data.cond2) 
     
     if(use.percentages){
-        data   <- prop.table(as.matrix(data.filtered),2)
+        data   <- prop.table(as.matrix(data),2)
         data   <- data * 100
     }else{
-        data   <- data.filtered
+        data   <- data
     }
         
     message("cond1:")
@@ -144,7 +144,7 @@ computeDEC <- function(Results,
             }
     )
 
-    result <- data.frame(cluster     = Results@cells.count[,"cluster"],
+    result <- data.frame(cluster     = rownames(Results@cells.count),
                          mean.cond1  = apply(data.cond1,1,mean),
                          sd.cond1    = apply(data.cond1,1,sd),
                          mean.cond2  = apply(data.cond2,1,mean),
@@ -160,7 +160,7 @@ computeDEC <- function(Results,
     DEC <- new ("DEC",
                 sample.cond1    = colnames(data.cond1),
                 sample.cond2    = colnames(data.cond2),
-                cluster.size    = apply(data.filtered,1,sum),
+                cluster.size    = apply(data,1,sum),
                 use.percentages = use.percentages,
                 method          = method,
                 method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust), #TODO think about another way
@@ -174,23 +174,24 @@ computeDEC <- function(Results,
     return(DEC)
 }
 
-#' @title Compute the correlation of SPADE cluster with a cynetics phenotype
+#' @title Identification of the correlation of SPADE cluster with a cynetics phenotype
 #' 
 #' @description 
-#' xxx
+#' This function is used to identifed correlated clusters. 
+#' That is to say clusters that correlate with a phenotypic variable.
 #' 
-#' @param Results a Results or SPADEResults object
+#' @param Results a 'Results' or 'SPADEResults' object
 #' @param variable a numerical named vector providing the correspondence between a sample name (in rowname) and the specific phenotype or NA to ignore a sample
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character indicating the correlation method to use : "pearson", "spearman"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
-#' @param th.pvalue a numeric specifying the p-value threshold (0.05 by default)
-#' @param th.correlation a numeric specifying the absolute value of the correlation coefficient threshold (0.75 by default)
+#' @param th.pvalue a numeric specifying the p-value threshold
+#' @param th.correlation a numeric specifying the absolute value of the correlation coefficient threshold
 #' 
-#' @return a CC object
+#' @return a S4 object of class 'CC'
 #'
 #' @export
-computeCC <- function(Results,
+identifyCC <- function(Results,
                       variable,
                       use.percentages = TRUE,
                       method          = "pearson",
@@ -200,15 +201,15 @@ computeCC <- function(Results,
                   
     message("[START] - computing CCs")
 
-    data.filtered <- Results@cells.count[, colnames(Results@cells.count) != "cluster"]
+    data <- Results@cells.count
     variable      <- na.omit(variable) 
-    data.filtered <- data.filtered[,names(variable), drop = FALSE]
+    data <- data[, names(variable), drop = FALSE]
     
     if(use.percentages){
-        data   <- prop.table(as.matrix(data.filtered),2)
+        data   <- prop.table(as.matrix(data), 2)
         data   <- data * 100
     }else{
-        data   <- data.filtered
+        data   <- data
     }
     
     n            <- nrow(data)
@@ -225,9 +226,9 @@ computeCC <- function(Results,
         cor.pvalue <- p.adjust(cor.pvalue, method = method.adjust)
     }
     
-    result <- data.frame(cluster         = Results@cells.count[,"cluster"],
-                         correlation     = cor.estimate,
-                         pvalue          = cor.pvalue)
+    result <- data.frame(cluster     = rownames(Results@cells.count),
+                         correlation = cor.estimate,
+                         pvalue      = cor.pvalue)
         
     result$significance <- ifelse(result$pvalue < th.pvalue, TRUE, FALSE)
     result$significance <- ifelse(abs(result$correlation) > th.correlation, result$significance , FALSE)       
@@ -235,7 +236,7 @@ computeCC <- function(Results,
     CC <- new("CC",
               sample.names    = colnames(data),
               variable        = variable,
-              cluster.size    = apply(data.filtered,1,sum),
+              cluster.size    = apply(data,1,sum),
               use.percentages = use.percentages,
               method          = method,
               method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust),#TODO think about another way
@@ -248,32 +249,35 @@ computeCC <- function(Results,
     return(CC)
 }
 
-#' @title classifyPhenoProfiles xxx
+#' @title Classification of clusters based on their phenotype profiles
 #' 
-#' @description xxx
+#' @description 
+#' Classifies clusters based on their phenotype profiles.
 #' 
-#' @details xxx
+#' @details 
+#' class.number a numeric specifying the number of classes needed when the method parameter choosen is either "hierarchical_k" or "k_means"
+#' eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
+#' clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
+#' hierarchical.correlation.th a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree
 #' 
 #' @param Results a Results or SPADEResults object
-#' @param method a character specifying the clustering method among one of those : 'hierarchical','kmeans','eigencell','clique'
-#' @param class.number a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'kmeans'
-#' @param eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
-#' @param clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
-#' @param hierarchical.correlation.th a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree
+#' @param method a character specifying the clustering method among one of those : 'hierarchical','k_means','eigencell','clique'
+#' @param method.parameter a numeric specifying the numeric value required by the selected method 
 #' 
-#' @return a PhenoProfiles object
+#' @return a S4 object of class 'PhenoProfiles'
 #'
 #' @export
 classifyPhenoProfiles <- function (Results,
-                                   method                      = "hierarchical_h",
-                                   class.number                = NULL,
-                                   eigencell.correlation.th    = 0.8,
-                                   clique.correlation.th       = 0.7,
-                                   hierarchical.correlation.th = 0.7){
+                                   method           = "hierarchical_h",
+                                   method.parameter = NULL){
+    default.eigencell.correlation.th    <- 0.8
+    default.clique.correlation.th       <- 0.7
+    default.hierarchical.correlation.th <- 0.7                           
+    
     message("[START] - computing classifyPhenoProfiles")
     
-    if (!is.element(method,c("hierarchical_h", "hierarchical_k", "kmeans", "eigencell", "clique"))){
-        stop("Error : In classifyPhenoProfiles, method must be one of those : 'hierarchical_h','hierarchical_k','kmeans','eigencell','clique'")
+    if (!is.element(method,c("hierarchical_h", "hierarchical_k", "k_means", "eigencell", "clique"))){
+        stop("Error : In classifyPhenoProfiles, method must be one of those : 'hierarchical_h','hierarchical_k','k-means','eigencell','clique'")
     }
     
     table <- computePhenoTable(Results)
@@ -282,48 +286,45 @@ classifyPhenoProfiles <- function (Results,
     
     table.wide <- reshape2::dcast(table, cluster~marker)
     table.wide <- table.wide[, colnames(table.wide) != "cluster"]
-    rownames(table.wide) <- Results@cells.count[,"cluster"]   
+    rownames(table.wide) <- rownames(Results@cells.count)   
 
     table.wide <- na.omit(table.wide) 
 
-    method.parameter <- list()
-    
     #print(table.wide)
     
     switch(method,
             hierarchical_h = {
-                classes <- computeHierarchicalClustering(data, class.number = NULL, hierarchical.correlation.th)
-                method.parameter <- list(hierarchical.correlation.th = hierarchical.correlation.th)
+                if (is.null(method.parameter)){
+                    method.parameter <- default.hierarchical.correlation.th
+                }
+                classes <- computeHierarchicalClustering(table.wide, class.number = NULL, hierarchical.correlation.th = method.parameter)
             },
             hierarchical_k = {
-                if (!is.null(class.number)){
-                classes <- computeHierarchicalClustering(data, class.number = class.number)
-                method.parameter <- list(class.number = class.number)
-                }else{
-                    Stop("Error, class.number can't be null with hierarchical_k")
+                if (is.null(method.parameter)){
+                    Stop("Error, class.number can't be null with 'hierarchical_k' method")
                 }
+                classes <- computeHierarchicalClustering(table.wide, class.number = method.parameter, hierarchical.correlation.th = NULL)
             },
-            kmeans = {
-                if (!is.null(class.number)){
-                    classes <- computeKMeans(table.wide, k = class.number)
-                    #print(classes)
-                    method.parameter <- list(class.number = class.number)
-                }else{
-                    Stop("Error, class.number can't be null with KMeans")
+            k_means = {
+                if (is.null(method.parameter)){
+                    Stop("Error, class.number can't be null with 'k_means' method")
                 }
+                classes <- computeKmeans(table.wide, method.parameter)
             },
             eigencell = {
-                classes <- computeEigenCellClusters(table.wide, eigencell.correlation.th)
-                method.parameter <- list(eigencell.correlation.th = eigencell.correlation.th)
+                if (is.null(method.parameter)){
+                    method.parameter <- default.eigencell.correlation.th
+                }
+                classes <- computeEigenCellClusters(table.wide, method.parameter)
             },
             clique = {
-                classes <- computeClique(table.wide, clique.correlation.th)
-                method.parameter <- list(clique.correlation.th = clique.correlation.th)
+                if (is.null(method.parameter)){
+                    method.parameter <- default.clique.correlation.th
+                }
+                classes <- computeClique(table.wide, method.parameter)
             })
     
-    cluster.count <- subset(Results@cells.count, cluster %in% classes$cluster)
-    cluster.count <- cluster.count[, colnames(Results@cells.count) != "cluster"]
-    cluster.size <- apply(cluster.count, 1, sum)
+    cluster.size <- apply(Results@cells.count, 1, sum)
     
     pheno <- new ("PhenoProfiles",
                   method                   = method,
@@ -337,68 +338,73 @@ classifyPhenoProfiles <- function (Results,
     return(pheno)    
 }
 
-#' @title classifyEnrichmentProfiles xxx
+#' @title Classification of clusters based on their enrichment profiles
 #' 
-#' @description xxx
+#' @description 
+#' Classifies clusters based on their enrichment profiles.
 #' 
-#' @details xxx
+#' @details 
+#' class.number a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'k-means'
+#' eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
+#' clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
+#' hierarchical.correlation.th a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree
 #' 
 #' @param Results a Results or SPADEResults object
-#' @param method a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','kmeans','eigencell','clique' (hierarchical_h by default)
-#' @param class.number a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'kmeans'
-#' @param eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
-#' @param clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
-#' @param hierarchical.correlation.th a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree
+#' @param method a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','k_means','eigencell','clique' (hierarchical_h by default)
+#' @param method.parameter a numeric specifying the numeric value required by the selected method
 #' 
-#' @return a EnrichmentProfiles object 
+#' @return a S4 object of class 'EnrichmentProfiles'
 #'
 #' @export
 classifyEnrichmentProfiles <- function(Results,
-                                       method                      = "hierarchical_h",
-                                       class.number                = NULL,
-                                       eigencell.correlation.th    = 0.8,
-                                       clique.correlation.th       = 0.7,
-                                       hierarchical.correlation.th = 0.7){ # think about select sample ?
+                                       method           = "hierarchical_h",
+                                       method.parameter = NULL){ # think about select sample ?
+ 
+    default.eigencell.correlation.th    <- 0.8
+    default.clique.correlation.th       <- 0.7
+    default.hierarchical.correlation.th <- 0.7                                 
+     
     message("[START] - computing classifyEnrichmentProfiles")
     
-    if (!is.element(method,c("hierarchical_h", "hierarchical_k", "kmeans", "eigencell", "clique"))){
-        stop("Error : In classifyEnrichmentProfiles, method must be one of those : 'hierarchical_h','hierarchical_k','kmeans','eigencell','clique'")
+    if (!is.element(method,c("hierarchical_h", "hierarchical_k", "k_means", "eigencell", "clique"))){
+        stop("Error : In classifyEnrichmentProfiles, method must be one of those : 'hierarchical_h','hierarchical_k','k_means','eigencell','clique'")
     }
     
-    data     <- Results@cells.count[, colnames(Results@cells.count) != "cluster"]
-    rownames(data) <- Results@cells.count[,"cluster"] 
-    
-    method.parameter <- list()
+    data     <- Results@cells.count
     
     switch(method,
-           hierarchical_h = {
-               classes <- computeHierarchicalClustering(data, class.number = NULL, hierarchical.correlation.th)
-               method.parameter <- list(hierarchical.correlation.th = hierarchical.correlation.th)
-           },
-           hierarchical_k = {
-               if (!is.null(class.number)){
-                   classes <- computeHierarchicalClustering(data, class.number = class.number)
-                   method.parameter <- list(class.number = class.number)
-               }else{
-                   Stop("Error, class.number can't be null with hierarchical_k")
-               }
-           },
-           kmeans = {
-               classes <- computeKMeans(data, k = class.number)
-               method.parameter <- list(class.number = class.number)
-           },
-           eigencell = {
-               classes <- computeEigenCellClusters(data, eigencell.correlation.th)
-               method.parameter <- list(eigencell.correlation.th = eigencell.correlation.th)
-           },
-           clique = {
-               classes <- computeClique(data, clique.correlation.th)
-               method.parameter <- list(clique.correlation.th = clique.correlation.th)
-           })
+            hierarchical_h = {
+                if (is.null(method.parameter)){
+                    method.parameter <- default.hierarchical.correlation.th
+                }
+                classes <- computeHierarchicalClustering(data, class.number = NULL, hierarchical.correlation.th = method.parameter)
+            },
+            hierarchical_k = {
+                if (is.null(method.parameter)){
+                    Stop("Error, class.number can't be null with 'hierarchical_k' method")
+                }
+                classes <- computeHierarchicalClustering(data, class.number = method.parameter)
+            },
+            k_means = {
+                if (is.null(method.parameter)){
+                    Stop("Error, class.number can't be null with 'k_means' method")
+                }
+                classes <- computeKmeans(data, method.parameter)
+            },
+            eigencell = {
+                if (is.null(method.parameter)){
+                    method.parameter <- default.eigencell.correlation.th
+                }
+                classes <- computeEigenCellClusters(data, method.parameter)
+            },
+            clique = {
+                if (is.null(method.parameter)){
+                    method.parameter <- default.clique.correlation.th
+                }
+                classes <- computeClique(data, method.parameter)
+            })
 
-   cluster.count <- subset(Results@cells.count, cluster %in% classes$cluster)
-   cluster.count <- cluster.count[, colnames(Results@cells.count) != "cluster"]
-   cluster.size <- apply(cluster.count,1,sum)
+   cluster.size <- apply(Results@cells.count,1,sum)
    
    enrich <- new ("EnrichmentProfiles",
                   method                   = method,
@@ -412,17 +418,19 @@ classifyEnrichmentProfiles <- function(Results,
     return(enrich)  
 }
 
-#' @title Internal - computeHierarchicalClustering
+#' @title Internal - Hierarchical classification
 #' 
-#' @description xxx
+#' @description 
+#' This function is used internally to classify clusters enrichment profilies or phenotype profiles using a hierarchical algorithm. 
 #' 
-#' @details xxx
+#' @details 
+#' If 'class.number' is NULL, classification will be determined base on the cut height correlation threshold.
 #' 
 #' @param data a matrix with all clusters in rownames
-#' @param class.number the number of classe to cluster, if class.number is NULL numer of classe will be determined base on hierarchical correlation threshold
-#' @param hierarchical.correlation.th
+#' @param class.number a numeric specifying the number of classes
+#' @param hierarchical.correlation.th a numeric value specifying the cut height
 #' 
-#' @return a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
+#' @return a dataframe containing for each cluster, its name and class
 #' 
 computeHierarchicalClustering <- function (data,
                                            class.number                = NULL,
@@ -450,19 +458,21 @@ computeHierarchicalClustering <- function (data,
 }
 
 
-#' @title Internal - computeKMeans
+#' @title Internal - Kmeans classification
 #' 
-#' @description xxx
+#' @description 
+#' This function is used internally to classify clusters enrichment profilies or phenotype profiles using a k-means algorithm. 
 #' 
-#' @details xxx
+#' @details 
+#' xxx
 #' 
-#' @param data a matrix with all clusters in rownames
-#' @param k number of classes
+#' @param data a numeric matrix with cluster names in rownames
+#' @param k a numeric specifying the desired number of classes
 #' 
-#' @return a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
+#' @return a dataframe containing for each cluster, its name and class
 #' 
-computeKMeans <- function(data,
-                          k){
+computeKmeans <- function(data,
+                          k = NULL){
     kmeans <- kmeans(data, centers = k)    
     result <- data.frame(cluster = as.character(rownames(data)), classe = as.numeric(kmeans$cluster), stringsAsFactors = FALSE )
         
@@ -470,16 +480,18 @@ computeKMeans <- function(data,
 }
 
 
-#' @title Internal - computeEigenCellClusters
+#' @title Internal - Eigen vector classification
 #' 
-#' @description xxx
+#' @description 
+#' This function is used internally to classify clusters enrichment profilies or phenotype profiles using eigen vector decomposition. 
 #' 
-#' @details xxx
+#' @details 
+#' xxx
 #' 
 #' @param data a matrix with all clusters in rownames
 #' @param eigencell.correlation.th
 #' 
-#' @return a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
+#' @return a dataframe containing for each cluster, its name and class
 #' 
 computeEigenCellClusters <- function(data, 
                                      eigencell.correlation.th = 0.80){
@@ -510,16 +522,18 @@ computeEigenCellClusters <- function(data,
     return(res)
 }
 
-#' @title Internal - computeClique
+#' @title Internal - Clique percolation classification
 #' 
-#' @description xxx
+#' @description 
+#' This function is used internally to classify clusters enrichment profilies or phenotype profiles using a clique percolation algorithm. 
 #' 
-#' @details xxx
+#' @details 
+#' xxx
 #' 
 #' @param data a matrix with all clusters in rownames
 #' @param eigencell.correlation.th
 #' 
-#' @return a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
+#' @return a dataframe containing for each cluster, its name and class
 #' 
 computeClique <- function(data,
                           clique.correlation.th = 0.7){

@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_stats.R
 \name{computeClique}
 \alias{computeClique}
-\title{Internal - computeClique}
+\title{Internal - Clique percolation classification}
 \usage{
 computeClique(data, clique.correlation.th = 0.7)
 }
@@ -12,10 +12,10 @@ computeClique(data, clique.correlation.th = 0.7)
 \item{eigencell.correlation.th}{}
 }
 \value{
-a dataframe containing the cluster ID, the classe of this cluster and a clustering score.
+a dataframe containing for each cluster, its name and class
 }
 \description{
-xxx
+This function is used internally to classify clusters enrichment profilies or phenotype profiles using a clique percolation algorithm.
 }
 \details{
 xxx

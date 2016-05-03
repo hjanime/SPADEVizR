@@ -2,32 +2,28 @@
 % Please edit documentation in R/02_stats.R
 \name{classifyEnrichmentProfiles}
 \alias{classifyEnrichmentProfiles}
-\title{classifyEnrichmentProfiles xxx}
+\title{Classification of clusters based on their enrichment profiles}
 \usage{
 classifyEnrichmentProfiles(Results, method = "hierarchical_h",
-  class.number = NULL, eigencell.correlation.th = 0.8,
-  clique.correlation.th = 0.7, hierarchical.correlation.th = 0.7)
+  method.parameter = NULL)
 }
 \arguments{
 \item{Results}{a Results or SPADEResults object}
 
-\item{method}{a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','kmeans','eigencell','clique' (hierarchical_h by default)}
+\item{method}{a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','k_means','eigencell','clique' (hierarchical_h by default)}
 
-\item{class.number}{a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'kmeans'}
-
-\item{eigencell.correlation.th}{a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering}
-
-\item{clique.correlation.th}{a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering}
-
-\item{hierarchical.correlation.th}{a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree}
+\item{method.parameter}{a numeric specifying the numeric value required by the selected method}
 }
 \value{
-a EnrichmentProfiles object
+a S4 object of class 'EnrichmentProfiles'
 }
 \description{
-xxx
+Classifies clusters based on their enrichment profiles.
 }
 \details{
-xxx
+class.number a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'k-means'
+eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
+clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
+hierarchical.correlation.th a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree
 }
 
