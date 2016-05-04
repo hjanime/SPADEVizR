@@ -7,7 +7,7 @@
 importSPADEResults(path, dict = data.frame(),
   exclude.markers = c("cell_length", "FileNum", "density", "time"),
   probs = c(0.05, 0.95), use.raw.medians = FALSE,
-  quantile.heuristic = FALSE)
+  quantile.approximation = FALSE)
 }
 \arguments{
 \item{path}{a character specify the path of SPADE results folder}
@@ -20,7 +20,7 @@ importSPADEResults(path, dict = data.frame(),
 
 \item{use.raw.medians}{a logicial specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)}
 
-\item{quantile.heuristic}{a logicial specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
+\item{quantile.approximation}{a logicial specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
 }
 \value{
 a S4 object of class 'SPADEResults'
@@ -33,6 +33,6 @@ This function import the expression matrix and count matrix as well as the SPADE
 This function apply an hyperbolic sine transformation to imported FCS data and compute the maker range quantiles.
 }
 \details{
-The computation of maker range quantiles can be approximated using quantile.heuristic parameter which is more efficient in term of loading time and memory usage.
+The computation of maker range quantiles can be approximated using 'quantile.approximation' parameter which is more efficient in term of loading time and memory usage.
 }
 

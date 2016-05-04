@@ -53,7 +53,7 @@ identifyAC <- function(Results,
                          mean    = apply(data,1,mean),
                          sd      = apply(data,1,sd),
                          pvalue  = pv)
-    
+   
    result$significance <- ifelse(result$pvalue < th.pvalue, TRUE , FALSE)
    result$significance <- ifelse(abs(result$mean) > th.mean, result$significance , FALSE) 
 
@@ -66,7 +66,7 @@ identifyAC <- function(Results,
                th.mean         = th.mean,
                th.pvalue       = th.pvalue,
                result          = result)
-       
+    
     message("[END] - computing ACs")
 	
     return(AC)
@@ -255,13 +255,30 @@ identifyCC <- function(Results,
 #' Classifies clusters based on their phenotype profiles.
 #' 
 #' @details 
-#' class.number a numeric specifying the number of classes needed when the method parameter choosen is either "hierarchical_k" or "k_means"
-#' eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
-#' clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
-#' hierarchical.correlation.th a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree
+#' The classification is done on cell abundances of each clusters and could be performed using 5 methods:
+#' \itemize{
+#' \item "hierarchical_k" 
+#' This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
+#' The hierarchical classification is cutted is order provided the desired number of classes. 
+#' This number of classes must be provided as a numeric integer using the 'method.parameter' parameter.
+#' It is to note that negative correlations are considered as uncorrelated;
+#' \item "hierarchical_k" 
+#' This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
+#' This heigth is correlation threshold and must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' \item "eigencell" 
+#' This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
+#' Clusters which correlate above a specific threshold with the same eigen vector are classified together.
+#' This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' \item "clique" 
+#' This method first compute the pearson correlation matrix and then use this matrix to generate an undirected graph.
+#' In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
+#' This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' The largest cliques are then researched in this graph. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
+#' Finally the founded cliques are considered as classes of cluster.
+#' }
 #' 
 #' @param Results a Results or SPADEResults object
-#' @param method a character specifying the clustering method among one of those : 'hierarchical','k_means','eigencell','clique'
+#' @param method a character specifying the clustering method among one of those : "hierarchical_h", "hierarchical_k","k-means","eigencell","clique"
 #' @param method.parameter a numeric specifying the numeric value required by the selected method 
 #' 
 #' @return a S4 object of class 'PhenoProfiles'
@@ -276,7 +293,7 @@ classifyPhenoProfiles <- function (Results,
     
     message("[START] - computing classifyPhenoProfiles")
     
-    if (!is.element(method,c("hierarchical_h", "hierarchical_k", "k_means", "eigencell", "clique"))){
+    if (!is.element(method,c("hierarchical_h", "hierarchical_k", "k-means", "eigencell", "clique"))){
         stop("Error : In classifyPhenoProfiles, method must be one of those : 'hierarchical_h','hierarchical_k','k-means','eigencell','clique'")
     }
     
@@ -293,38 +310,39 @@ classifyPhenoProfiles <- function (Results,
     #print(table.wide)
     
     switch(method,
-            hierarchical_h = {
+            "hierarchical_h" = {
                 if (is.null(method.parameter)){
                     method.parameter <- default.hierarchical.correlation.th
                 }
                 classes <- computeHierarchicalClustering(table.wide, class.number = NULL, hierarchical.correlation.th = method.parameter)
             },
-            hierarchical_k = {
+            "hierarchical_k" = {
                 if (is.null(method.parameter)){
-                    Stop("Error, class.number can't be null with 'hierarchical_k' method")
+                    stop("Error, class.number can't be null with 'hierarchical_k' method")
                 }
                 classes <- computeHierarchicalClustering(table.wide, class.number = method.parameter, hierarchical.correlation.th = NULL)
             },
-            k_means = {
+            "k-means" = {
                 if (is.null(method.parameter)){
-                    Stop("Error, class.number can't be null with 'k_means' method")
+                    stop("Error, class.number can't be null with 'k-means' method")
                 }
                 classes <- computeKmeans(table.wide, method.parameter)
             },
-            eigencell = {
+            "eigencell" = {
                 if (is.null(method.parameter)){
                     method.parameter <- default.eigencell.correlation.th
                 }
                 classes <- computeEigenCellClusters(table.wide, method.parameter)
             },
-            clique = {
+            "clique" = {
                 if (is.null(method.parameter)){
                     method.parameter <- default.clique.correlation.th
                 }
                 classes <- computeClique(table.wide, method.parameter)
             })
-    
-    cluster.size <- apply(Results@cells.count, 1, sum)
+    classes$class <- as.numeric(classes$class)
+    classes       <- classes[ order(classes$class), ]
+    cluster.size  <- apply(Results@cells.count, 1, sum)
     
     pheno <- new ("PhenoProfiles",
                   method                   = method,
@@ -344,13 +362,30 @@ classifyPhenoProfiles <- function (Results,
 #' Classifies clusters based on their enrichment profiles.
 #' 
 #' @details 
-#' class.number a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'k-means'
-#' eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
-#' clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
-#' hierarchical.correlation.th a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree
+#' The classification is done on cell abundances of each clusters and could be performed using 5 methods:
+#' \itemize{
+#' \item "hierarchical_k" 
+#' This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
+#' The hierarchical classification is cutted is order provided the desired number of classes. 
+#' This number of classes must be provided as a numeric integer using the 'method.parameter' parameter.
+#' It is to note that negative correlations are considered as uncorrelated;
+#' \item "hierarchical_k" 
+#' This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
+#' This heigth is correlation threshold and must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' \item "eigencell" 
+#' This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
+#' Clusters which correlate above a specific threshold with the same eigen vector are classified together.
+#' This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' \item "clique" 
+#' This method first compute the pearson correlation matrix and then use this matrix to generate an undirected graph.
+#' In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
+#' This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' The largest cliques are then researched in this graph. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
+#' Finally the founded cliques are considered as classes of cluster.
+#' }
 #' 
 #' @param Results a Results or SPADEResults object
-#' @param method a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','k_means','eigencell','clique' (hierarchical_h by default)
+#' @param method a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','k-means','eigencell','clique' (hierarchical_h by default)
 #' @param method.parameter a numeric specifying the numeric value required by the selected method
 #' 
 #' @return a S4 object of class 'EnrichmentProfiles'
@@ -366,45 +401,46 @@ classifyEnrichmentProfiles <- function(Results,
      
     message("[START] - computing classifyEnrichmentProfiles")
     
-    if (!is.element(method,c("hierarchical_h", "hierarchical_k", "k_means", "eigencell", "clique"))){
-        stop("Error : In classifyEnrichmentProfiles, method must be one of those : 'hierarchical_h','hierarchical_k','k_means','eigencell','clique'")
+    if (!is.element(method,c("hierarchical_h", "hierarchical_k", "k-means", "eigencell", "clique"))){
+        stop("Error : In classifyEnrichmentProfiles, method must be one of those : 'hierarchical_h','hierarchical_k','k-means','eigencell','clique'")
     }
     
     data     <- Results@cells.count
     
     switch(method,
-            hierarchical_h = {
+            "hierarchical_h" = {
                 if (is.null(method.parameter)){
                     method.parameter <- default.hierarchical.correlation.th
                 }
                 classes <- computeHierarchicalClustering(data, class.number = NULL, hierarchical.correlation.th = method.parameter)
             },
-            hierarchical_k = {
+            "hierarchical_k" = {
                 if (is.null(method.parameter)){
-                    Stop("Error, class.number can't be null with 'hierarchical_k' method")
+                    stop("Error, class.number can't be null with 'hierarchical_k' method")
                 }
                 classes <- computeHierarchicalClustering(data, class.number = method.parameter)
             },
-            k_means = {
+            "k-means" = {
                 if (is.null(method.parameter)){
-                    Stop("Error, class.number can't be null with 'k_means' method")
+                    stop("Error, class.number can't be null with 'k-means' method")
                 }
                 classes <- computeKmeans(data, method.parameter)
             },
-            eigencell = {
+            "eigencell" = {
                 if (is.null(method.parameter)){
                     method.parameter <- default.eigencell.correlation.th
                 }
                 classes <- computeEigenCellClusters(data, method.parameter)
             },
-            clique = {
+            "clique" = {
                 if (is.null(method.parameter)){
                     method.parameter <- default.clique.correlation.th
                 }
                 classes <- computeClique(data, method.parameter)
             })
-
-   cluster.size <- apply(Results@cells.count,1,sum)
+   classes$class <- as.numeric(classes$class)
+   classes       <- classes[ order(classes$class), ]
+   cluster.size  <- apply(Results@cells.count,1,sum)
    
    enrich <- new ("EnrichmentProfiles",
                   method                   = method,
@@ -424,6 +460,9 @@ classifyEnrichmentProfiles <- function(Results,
 #' This function is used internally to classify clusters enrichment profilies or phenotype profiles using a hierarchical algorithm. 
 #' 
 #' @details 
+#' This function compute the pearson correlation matrix associated to the provided matrix. 
+#' It is to note that negative correlations are considered as uncorrelated.
+#' This correlation matrix is used to performs a hierarchical classification.
 #' If 'class.number' is NULL, classification will be determined base on the cut height correlation threshold.
 #' 
 #' @param data a matrix with all clusters in rownames
@@ -451,8 +490,7 @@ computeHierarchicalClustering <- function (data,
         res <- cutree(tree, h = hierarchical.correlation.th)
     }
     
-    res <- data.frame (cluster = as.character(names(res)), classe = res)
-    res <- res[order(res$cluster),]
+    res <- data.frame (cluster = as.character(names(res)), class = res)
     
     return(res)
 }
@@ -474,7 +512,7 @@ computeHierarchicalClustering <- function (data,
 computeKmeans <- function(data,
                           k = NULL){
     kmeans <- kmeans(data, centers = k)    
-    result <- data.frame(cluster = as.character(rownames(data)), classe = as.numeric(kmeans$cluster), stringsAsFactors = FALSE )
+    result <- data.frame(cluster = as.character(rownames(data)), class = as.numeric(kmeans$cluster))
         
     return(result)
 }
@@ -488,8 +526,8 @@ computeKmeans <- function(data,
 #' @details 
 #' xxx
 #' 
-#' @param data a matrix with all clusters in rownames
-#' @param eigencell.correlation.th
+#' @param data a numeric matrix with all clusters in rownames
+#' @param eigencell.correlation.th a numeric value indicating the correlation coefficient threshold
 #' 
 #' @return a dataframe containing for each cluster, its name and class
 #' 
@@ -509,16 +547,19 @@ computeEigenCellClusters <- function(data,
     }
 
     res <- as.data.frame(res)
-    colnames(res) <- c("cluster","classe")
+    colnames(res) <- c("cluster","class")
     
-    classes.uniq <- unique(res[,"classe"])
-    classes <- data.frame(classe = classes.uniq, classe.ID =  1:length(classes.uniq))
+    classes.uniq <- unique(res[,"class"])
+    classes <- data.frame(class = classes.uniq, class.ID =  1:length(classes.uniq))
     
     for (i in 1:nrow(res)){
-        res[i,"classe"] <- classes[classes$classe == res[i,"classe"],"classe.ID"]
+        res[i, "class"] <- classes[classes$class == res[i, "class"], "class.ID"]
     }
     
-    res <- res[order(res$cluster),]
+    unclassified <- setdiff(rownames(data), res$cluster)
+    print(unclassified)
+    res <- rbind(res, data.frame(cluster = unclassified, class = rep(NA, length(unclassified))))
+
     return(res)
 }
 
@@ -530,8 +571,8 @@ computeEigenCellClusters <- function(data,
 #' @details 
 #' xxx
 #' 
-#' @param data a matrix with all clusters in rownames
-#' @param eigencell.correlation.th
+#' @param data a numeric matrix with all clusters in rownames
+#' @param clique.correlation.th a numeric value indicating the correlation coefficient threshold
 #' 
 #' @return a dataframe containing for each cluster, its name and class
 #' 
@@ -561,8 +602,10 @@ computeClique <- function(data,
         res <- rbind(res, cbind(cluster, i))
     }
 
-    colnames(res) <- c("cluster", "classe")
-    res <- res[order(res$cluster),]
+    colnames(res) <- c("cluster", "class")
+    
+    unclassified <- setdiff(rownames(data), res$cluster)
+    res <- rbind(res, data.frame(cluster = unclassified, class = rep(NA, length(unclassified))))
 
     return(res)
     

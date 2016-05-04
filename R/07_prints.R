@@ -179,7 +179,7 @@ setMethod("print","EnrichmentProfiles",
 #'
 #' @description Show a previews for a SPADEVizR objects.
 #'
-#' @param x a SPADEVizR object
+#' @param object a SPADEVizR object
 #' 
 #' @return none
 #'  
@@ -198,7 +198,6 @@ setMethod("show","Results",
 setMethod("show","SPADEResults",
         definition = function(object){print(object)}
 )
-
 
 #' @rdname show-methods
 #' @export

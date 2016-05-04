@@ -5,20 +5,23 @@
 \title{Generate a report including SPADEVizR plots.}
 \usage{
 generateReport(Results, PDFfile, reports = c("pheno", "kinetic", "cluster",
-  "kinetic_cluster", "tree", "disto", "stream", "MDS"), clusters = NULL,
-  markers = NULL, assignments = NULL, stat.objects = list(),
-  profile.objects = list(), width = 29.7, height = 21)
+  "kinetic_cluster", "tree", "disto", "stream", "MDS_clusters"),
+  clusters = NULL, markers = NULL, assignments = NULL,
+  stat.objects = list(), profile.objects = list(), width = 29.7,
+  height = 21)
 }
 \arguments{
 \item{Results}{a 'SPADEResults' or 'Result' object}
 
 \item{PDFfile}{a character specifying the output path}
 
-\item{reports}{a character vector specifying the names and the order of the desired plots among: "pheno", "MDS", "cluster", "tree", "disto", "stream" and "count".}
+\item{reports}{a character vector specifying the names and the order of the desired plots among: XXX.}
 
 \item{clusters}{a character vector of clusters to include in the report (all will be included by default)}
 
 \item{markers}{a character vector of markers to include in the report (all will be included by default)}
+
+\item{assignments}{a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment}
 
 \item{stat.objects}{a list of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')}
 

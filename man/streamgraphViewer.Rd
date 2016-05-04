@@ -11,7 +11,7 @@ streamgraphViewer(Results, order = NULL, clusters = NULL)
 
 \item{order}{a named vector a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples in numeric (NA to exclude this sample)}
 
-\item{clusters}{a numerical vector containing the clusters to use in the representation, by default all clusters will be use}
+\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
 }
 \value{
 a 'ggplot' object

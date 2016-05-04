@@ -3,22 +3,24 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,AC,ANY-method}
-\alias{plot,CC,ANY-method}
-\alias{plot,DEC,ANY-method}
+\alias{plot,AC,missing-method}
+\alias{plot,CC,missing-method}
+\alias{plot,DEC,missing-method}
 \alias{plot,EnrichmentProfiles,ANY-method}
 \alias{plot,PhenoProfiles,ANY-method}
 \title{Graphical representation for some SPADEVizR objects}
 \usage{
-\S4method{plot}{DEC,ANY}(x, y, ...)
+plot(x, y = NULL, ...)
 
-\S4method{plot}{AC,ANY}(x, y, ...)
+\S4method{plot}{DEC,missing}(x, y = NULL, ...)
 
-\S4method{plot}{CC,ANY}(x, y, ...)
+\S4method{plot}{AC,missing}(x, y = NULL, ...)
 
-\S4method{plot}{PhenoProfiles,ANY}(x, y, ...)
+\S4method{plot}{CC,missing}(x, y = NULL, ...)
 
-\S4method{plot}{EnrichmentProfiles,ANY}(x, y, ...)
+\S4method{plot}{PhenoProfiles,ANY}(x, y = NULL, ...)
+
+\S4method{plot}{EnrichmentProfiles,ANY}(x, y = NULL, ...)
 }
 \arguments{
 \item{x}{a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object}

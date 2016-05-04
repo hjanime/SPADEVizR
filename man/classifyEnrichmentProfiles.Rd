@@ -10,7 +10,7 @@ classifyEnrichmentProfiles(Results, method = "hierarchical_h",
 \arguments{
 \item{Results}{a Results or SPADEResults object}
 
-\item{method}{a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','k_means','eigencell','clique' (hierarchical_h by default)}
+\item{method}{a character specifying the clustering method among one of those : 'hierarchical_h','hierarchical_k','k-means','eigencell','clique' (hierarchical_h by default)}
 
 \item{method.parameter}{a numeric specifying the numeric value required by the selected method}
 }
@@ -21,9 +21,26 @@ a S4 object of class 'EnrichmentProfiles'
 Classifies clusters based on their enrichment profiles.
 }
 \details{
-class.number a numeric specifying the number of classes needed when the method parameter choosen is either 'hierarchical_k' or 'k-means'
-eigencell.correlation.th a numeric (ignored if method is not 'eigencell') specifying the correlation threshold (in [0,1], 0.8 by default)  in case of eigencell clustering
-clique.correlation.th a numeric (ignored if method is not 'clique') specifying the correlation threshold (in [0,1], 0.7 by default) in case of clique clustering
-hierarchical.correlation.th a numeric (ignored if method is not 'hierarchical_h') in [0,1]) specifying the threshold of correlation (in [0,1], 0.8 by default) use to cut the hirerchical tree
+The classification is done on cell abundances of each clusters and could be performed using 5 methods:
+\itemize{
+\item "hierarchical_k" 
+This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
+The hierarchical classification is cutted is order provided the desired number of classes. 
+This number of classes must be provided as a numeric integer using the 'method.parameter' parameter.
+It is to note that negative correlations are considered as uncorrelated;
+\item "hierarchical_k" 
+This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
+This heigth is correlation threshold and must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+\item "eigencell" 
+This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
+Clusters which correlate above a specific threshold with the same eigen vector are classified together.
+This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+\item "clique" 
+This method first compute the pearson correlation matrix and then use this matrix to generate an undirected graph.
+In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
+This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+The largest cliques are then researched in this graph. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
+Finally the founded cliques are considered as classes of cluster.
+}
 }
 

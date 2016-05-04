@@ -3,9 +3,10 @@
 #' @description Generate a customizable report based on SPADEVizR vizualisation features.
 #'
 #' @param Results a 'SPADEResults' or 'Result' object
-#' @param reports a character vector specifying the names and the order of the desired plots among: "pheno", "MDS", "cluster", "tree", "disto", "stream" and "count".
+#' @param reports a character vector specifying the names and the order of the desired plots among: XXX.
 #' @param clusters a character vector of clusters to include in the report (all will be included by default)
 #' @param markers a character vector of markers to include in the report (all will be included by default)
+#' @param assignments a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment
 #' @param stat.objects a list of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')
 #' @param profile.objects a list of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')
 #' @param PDFfile a character specifying the output path
@@ -17,7 +18,7 @@
 #' @export
 generateReport <- function(Results,
                            PDFfile,
-                           reports         = c("pheno", "kinetic", "cluster", "kinetic_cluster", "tree", "disto", "stream", "MDS"),
+                           reports         = c("pheno", "kinetic", "cluster", "kinetic_cluster", "tree", "disto", "stream", "MDS_clusters"),
                            clusters        = NULL,
                            markers         = NULL,
                            assignments     = NULL,
@@ -37,17 +38,15 @@ generateReport <- function(Results,
     }
     
     for(i in 1:length(reports)){
-
-        #print(reports[i])
         switch(reports[i],
-               MDS             = {
+               MDS_clusters    = {
                   plots <- c(plots, list(MDSViewer(Results, space = "clusters", clusters = clusters)))
-                  if (!is.null(assignments)){
-                      plots <- c(plots, list(MDSViewer(Results, space = "samples", clusters = clusters, assignments = assignments)))
-                  }
+               },
+               MDS_samples     = {
+                  plots <- c(plots, list(MDSViewer(Results, space = "samples", clusters = clusters, assignments = assignments)))
                },
                pheno           = {
-                  plots <- c(plots, list(ggheatmap.plot(phenoViewer(Results))))
+                  plots <- c(plots, list(phenoViewer(Results)))
                },
                tree            = {
                   plots <- c(plots, list(treeViewer(Results)))
@@ -57,14 +56,14 @@ generateReport <- function(Results,
                    cluster.plots  <- clusterViewer(Results, clusters = clusters, markers = markers)
                    
                    for (i in 1:length(kinetics.plots)){
-                       plots <- c(plots, list(gridExtra::grid.arrange(kinetics.plots[[i]], cluster.plots[[i]], ncol = 2)))
+                       plots <- c(plots, list(gridExtra::arrangeGrob(kinetics.plots[[i]], cluster.plots[[i]], ncol = 2)))
                    }
                },
                kinetic         = {
-                  plots <- c(plots,kineticsViewer(results, assignments = assignments, clusters = clusters))
+                   plots <- c(plots, kineticsViewer(Results, assignments = assignments, clusters = clusters))
                },
                cluster         = {
-                  plots <- c(plots,clusterViewer(Results,clusters = clusters, markers = markers))
+                   plots <- c(plots, clusterViewer(Results,clusters = clusters, markers = markers))
                },
                disto           = {
                    plots <- c(plots, list(distogramViewer(Results)))
@@ -77,7 +76,7 @@ generateReport <- function(Results,
                })
        
     }
-    #print(length(stat.objects))
+
     for(stat.object in stat.objects){
         plots <- c(plots, list(plot(stat.object)))
     }
@@ -85,11 +84,13 @@ generateReport <- function(Results,
         plots <- c(plots, list(plot(profile.object)))
     }
     
-    #print(length(plots))
-    pages.plots <- gridExtra::marrangeGrob(grobs = plots, nrow = 1, ncol=1)
+    print(length(plots))
+    
+    plot(plots)
+    pages.plots <- gridExtra::marrangeGrob(grobs = plots, nrow = 1, ncol = 1)
 
     ggplot2::ggsave(PDFfile, pages.plots, width = width, height = height)
     message("[END]-report")
-    
+
 }
 

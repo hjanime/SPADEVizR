@@ -4,15 +4,15 @@
 \alias{clusterViewer}
 \title{Visualization of cluster phenotypes}
 \usage{
-clusterViewer(Results, samples = NULL, clusters = NULL, markers = NULL,
+clusterViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
   show.mean = "both")
 }
 \arguments{
 \item{Results}{a SPADEResults or Result object}
 
-\item{samples}{a named vector specifying the samples to used}
-
 \item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
+
+\item{samples}{a named vector specifying the samples to used}
 
 \item{markers}{a character vector specifying the markers to be displayed}
 

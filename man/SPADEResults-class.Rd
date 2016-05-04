@@ -19,11 +19,23 @@ This object is returned by the 'importSPADEResult()' function.
 \section{Slots}{
 
 \describe{
+\item{\code{cells.count}}{a dataframe containing the number of cells for each cluster of each sample}
+
+\item{\code{marker.expressions}}{a numerical dataframe containing marker median expressions for each cluster of each sample}
+
+\item{\code{sample.names}}{a character vector containing the sample names}
+
+\item{\code{marker.names}}{a character vector containing the markers names}
+
+\item{\code{cluster.number}}{a numeric specifying the number of cell clusters}
+
 \item{\code{use.raw.medians}}{a logical specifying if the marker expressions correspond to the raw or transformed data}
 
 \item{\code{dictionary}}{a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)}
 
 \item{\code{marker.clustering}}{a logical vector specifying marker that have been used during the clustering precedure}
+
+\item{\code{flowset}}{a flowSet object containing the imported SPADE FCS file}
 
 \item{\code{fcs.files}}{a character vector containing the absolute path of the original FCS files}
 

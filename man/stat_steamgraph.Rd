@@ -8,7 +8,17 @@ stat_steamgraph(mapping = NULL, data = NULL, show.legend = NA,
   inherit.aes = TRUE, na.rm = TRUE, ...)
 }
 \arguments{
-\item{xxx}{}
+\item{mapping}{xxx}
+
+\item{data}{xxx}
+
+\item{show.legend}{xxx}
+
+\item{inherit.aes}{xxx}
+
+\item{na.rm}{xxx}
+
+\item{...}{xxx}
 }
 \value{
 xxx

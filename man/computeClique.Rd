@@ -7,9 +7,9 @@
 computeClique(data, clique.correlation.th = 0.7)
 }
 \arguments{
-\item{data}{a matrix with all clusters in rownames}
+\item{data}{a numeric matrix with all clusters in rownames}
 
-\item{eigencell.correlation.th}{}
+\item{clique.correlation.th}{a numeric value indicating the correlation coefficient threshold}
 }
 \value{
 a dataframe containing for each cluster, its name and class

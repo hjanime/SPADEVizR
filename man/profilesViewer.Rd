@@ -9,7 +9,7 @@ profilesViewer(profile.object, show.cluster.sizes = TRUE)
 \arguments{
 \item{profile.object}{a PhenoProfiles object or an EnrichmentProfiles object}
 
-\item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster.sizes}{a logicial specifing if dot sizes are proportional to cell counts}
 }
 \value{
 a 'ggplot' object

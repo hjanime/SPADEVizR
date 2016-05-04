@@ -12,7 +12,7 @@ boxplotViewer(Results, conditions, clusters = NULL, use.percentages = TRUE,
 
 \item{conditions}{conditions a named vector providing the correspondence between a sample name (in rownames) and the condition of this sample : NA to exclude a sample from tests}
 
-\item{clusters}{a numerical vector containing the clusters to use in the representation}
+\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
 
 \item{use.percentages}{a logical specifying if the visualisation must be performed on percentage}
 

@@ -8,17 +8,17 @@
 #' This function apply an hyperbolic sine transformation to imported FCS data and compute the maker range quantiles.
 #' 
 #' @details
-#' The computation of maker range quantiles can be approximated using quantile.heuristic parameter which is more efficient in term of loading time and memory usage.
+#' The computation of maker range quantiles can be approximated using 'quantile.approximation' parameter which is more efficient in term of loading time and memory usage.
 #'  
 #' @param path a character specify the path of SPADE results folder
 #' @param dict a two column dataframe providing the correspondance between the original marker names (first column) and the real marker names (second column)
 #' @param exclude.markers a character vector of markers to exclude (case insentive)
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute maker range quantiles. First is the lower bound and second is the upper bound.
 #' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)
-#' @param quantile.heuristic a logicial specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
+#' @param quantile.approximation a logicial specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
 #' 
 #' @return a S4 object of class 'SPADEResults'
-#'
+#' 
 #' @import flowCore 
 #'
 #' @export 
@@ -27,7 +27,7 @@ importSPADEResults <- function(path,
                                exclude.markers    = c("cell_length", "FileNum", "density", "time"),
                                probs              = c(0.05,0.95),
                                use.raw.medians    = FALSE,
-                               quantile.heuristic = FALSE){
+                               quantile.approximation = FALSE){
     
     message("[START] - extracting SPADE results")
     message(paste0(basename(path),"\n"))
@@ -57,8 +57,8 @@ importSPADEResults <- function(path,
 
     message("\tcompute quantiles...")
     
-    if(quantile.heuristic){
-        quantiles <- computeQuantile.heuristic(flowset,probs)
+    if(quantile.approximation){
+        quantiles <- computeQuantile.approximation(flowset,probs)
     }
     else{
         quantiles <- computeQuantile(flowset,probs)
@@ -197,7 +197,7 @@ importResults <- function(cells.count,
     res <- new("Results", 
                marker.expressions  = marker.expressions,
                cells.count         = cells.count,
-               sample.names        = as.character(setdiff(unique(results@marker.expressions$sample),"cluster")),
+               sample.names        = as.character(setdiff(unique(marker.expressions$sample),"cluster")),
                marker.names        = colnames(marker.expressions)[3:length(marker.expressions)],
                cluster.number      = length(unique(marker.expressions$cluster)))    
 }
@@ -296,7 +296,7 @@ filter.medians <- function(data,use.raw.medians = FALSE){
 #' This function is used internally to compute the maker range quantiles.
 #' 
 #' @details 
-#' This function performs the exact calculation of quantiles with all cells but needs more memory than computeQuantile.heuristic.
+#' This function performs the exact calculation of quantiles with all cells but needs more memory than 'computeQuantile.approximation'.
 #' 
 #' @param flowset a flowCore flowset
 #' @param probs a numeric vector of 2 values specifying the quantiles to compute

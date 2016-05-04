@@ -12,7 +12,7 @@ kineticsViewer(Results, assignments, clusters = NULL,
 
 \item{assignments}{a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment}
 
-\item{clusters}{a numerical vector containing the clusters to use in the representation, by default all clusters will be use}
+\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
 
 \item{use.percentages}{a logical specifying if the visualisation should be performed on percentage}
 }

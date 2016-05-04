@@ -9,9 +9,9 @@ g_axis(gplot, x.axis = !y.axis, y.axis = !x.axis)
 \arguments{
 \item{gplot}{a 'ggplot' plot}
 
-\item{x}{a logical value specifying if the x-axis must be extract}
+\item{x.axis}{a logical value specifying if the x-axis must be extract}
 
-\item{y}{a logical value specifying if the y-axis must be extract}
+\item{y.axis}{a logical value specifying if the y-axis must be extract}
 }
 \value{
 a 'ggplot' axis object

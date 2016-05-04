@@ -10,7 +10,7 @@ correlatedClustersViewer(CC, show.cluster.sizes = TRUE,
 \arguments{
 \item{CC}{an object of class 'CC' (object returned by the 'computeCC()' function)}
 
-\item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster.sizes}{a logicial specifing if dot sizes are proportional to cell counts}
 
 \item{show.all_labels}{a logicial specifing if all cluster label must be show or just significant cluster}
 }

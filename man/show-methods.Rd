@@ -27,7 +27,7 @@
 \S4method{show}{EnrichmentProfiles}(object)
 }
 \arguments{
-\item{x}{a SPADEVizR object}
+\item{object}{a SPADEVizR object}
 }
 \value{
 none

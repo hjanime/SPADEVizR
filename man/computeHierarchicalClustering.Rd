@@ -21,6 +21,9 @@ a dataframe containing for each cluster, its name and class
 This function is used internally to classify clusters enrichment profilies or phenotype profiles using a hierarchical algorithm.
 }
 \details{
+This function compute the pearson correlation matrix associated to the provided matrix. 
+It is to note that negative correlations are considered as uncorrelated.
+This correlation matrix is used to performs a hierarchical classification.
 If 'class.number' is NULL, classification will be determined base on the cut height correlation threshold.
 }
 

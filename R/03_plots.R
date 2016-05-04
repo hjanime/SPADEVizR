@@ -27,14 +27,13 @@ abundantClustersViewer <- function(AC,
     }
 
     plot <-  ggplot2::ggplot(data = AC@result) +
-             ggplot2::ggtitle("Cells abundance of clusters")
-
-    plot <- plot + ggplot2::geom_hline(yintercept = AC@th.mean,
+             ggplot2::ggtitle(paste0("Cells abundance of clusters(", sum(AC@cluster.size), " cells)", sep = "")) +
+             ggplot2::geom_hline(yintercept = AC@th.mean,
                                        linetype   = "dashed",
                                        alpha      = 0.3,
                                        color      = "red",
                                        size       = 1) +  
-                   ggplot2::geom_vline(xintercept = -log10(AC@th.pvalue),
+             ggplot2::geom_vline(xintercept = -log10(AC@th.pvalue),
                                        linetype   = "dashed",
                                        alpha      = 0.3,
                                        color      = "red",
@@ -76,10 +75,9 @@ abundantClustersViewer <- function(AC,
 #' @details 
 #' By default, only significant differentially enriched clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE. 
 #'
-#' @param SPADEResults the SPADEViewer result object
 #' @param DEC an object of class 'DEC' (object returned by the 'computeDEC()' function)
 #' @param fc.log2 a logicial specifing if fold-change or log2(fold-change) is use 
-#' @param show.cluster.sizes a logicial specifing if points size are related to cell count or not (TRUE by default)
+#' @param show.cluster.sizes a logicial specifing if dot sizes are proportional to cell counts
 #' @param show.all_labels a logicial specifing if all cluster labels must be show or just significant cluster
 #'
 #' @return a 'ggplot' object
@@ -112,10 +110,11 @@ volcanoViewer <- function(DEC                = NULL,
     max           <- ceiling(max(DEC@result$fold.change))
     max           <- max(max,abs(min))
     x.breaks      <- c(round(c(-th.fc, th.fc),2), seq(-max, max, by = 1))
-    title.details <- ifelse(DEC@use.percentages,"(with % of cells)","(with # of cells)")
     
+    title.details <- ifelse(DEC@use.percentages,"using % of cells","(using # of cells")
+        
     plot <- ggplot2::ggplot(data = DEC@result, ggplot2::aes_string(x = "fold.change", y = "-log10(pvalue)")) +
-            ggplot2::ggtitle(paste0("Volcano plot showing differentially enriched clusters ",title.details)) +
+            ggplot2::ggtitle(paste0("Volcano plot showing differentially enriched clusters ", title.details, " (", sum(DEC@cluster.size), " cells)", sep = "")) +
             ggplot2::geom_vline(xintercept = c(th.fc,-th.fc),
                                        linetype   = "dashed",
                                        alpha      = 0.3,
@@ -157,7 +156,7 @@ volcanoViewer <- function(DEC                = NULL,
 #' By default, only significant correlated clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE. 
 #'
 #' @param CC an object of class 'CC' (object returned by the 'computeCC()' function)
-#' @param show.cluster.sizes a logicial specifing if points size are related to cell count or not (TRUE by default)
+#' @param show.cluster.sizes a logicial specifing if dot sizes are proportional to cell counts
 #' @param show.all_labels a logicial specifing if all cluster label must be show or just significant cluster
 #' 
 #' @return a 'ggplot' object
@@ -175,9 +174,9 @@ correlatedClustersViewer <- function(CC,
     if (!show.all_labels){
         data.text <- subset(CC@result, CC@result$significance)
     }
-    title.details <- ifelse(CC@use.percentages,"(in # of cells)","(in % of cells")
+    title.details <- ifelse(CC@use.percentages,"using % of cells","using # of cells")
     plot <- ggplot2::ggplot(data = CC@result) +
-            ggplot2::ggtitle(paste0("Correlation of clusters kinetics", title.details," with variables provided")) +
+            ggplot2::ggtitle(paste0("Correlation of clusters kinetics ", title.details," (", sum(CC@cluster.size), " cells)", sep = "")) +
             ggplot2::geom_hline(yintercept = -log10(CC@th.pvalue),
                                 linetype   = "dashed",
                                 alpha      = 0.3,
@@ -200,9 +199,9 @@ correlatedClustersViewer <- function(CC,
     
     plot <- plot +  ggrepel::geom_text_repel(data = data.text, 
                     ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", label = "cluster"),
-                    size          = 3,
-                    box.padding   = grid::unit(0.35, "lines"),
-                    point.padding = grid::unit(0.3, "lines")) +
+                                        size          = 3,
+                                        box.padding   = grid::unit(0.35, "lines"),
+                                        point.padding = grid::unit(0.3, "lines")) +
                     ggplot2::scale_fill_manual(values = c("grey","red")) +
                     ggplot2::scale_x_continuous(minor_breaks = NULL, limits = c(-1,1),
                                                 breaks = c(-CC@th.correlation,CC@th.correlation,seq(-1, 1, by = 0.1))) +
@@ -224,11 +223,11 @@ correlatedClustersViewer <- function(CC,
 #' xxx
 #'
 #' @param profile.object a PhenoProfiles object or an EnrichmentProfiles object
-#' @param show.cluster.sizes a logicial specifing if points size are related to cell count or not (TRUE by default)
+#' @param show.cluster.sizes a logicial specifing if dot sizes are proportional to cell counts
 #' 
 #' @return a 'ggplot' object
 #' 
-#' @import ggplot2 ggnetwork
+#' @import ggplot2 ggnetwork network
 #' 
 #' @export
 #' 
@@ -316,11 +315,12 @@ profilesViewer <- function (profile.object,
 #'  
 #' @name plot
 #' @rdname plot-methods
-NULL
+setGeneric("plot", function(x,y=NULL,...){ standardGeneric("plot") })
+
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot",c("DEC"),
+setMethod("plot",c("DEC","missing"),
         function(x,...){
             return(volcanoViewer(x,...))
         }
@@ -328,16 +328,16 @@ setMethod("plot",c("DEC"),
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot",c("AC"),
-        function(x,...){
+setMethod("plot",c("AC","missing"),
+        function(x,y,...){
             return(abundantClustersViewer(x,...))
         }
 )
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot",c("CC"),
-        function(x,...){
+setMethod("plot",c("CC","missing"),
+        function(x,y,...){
             return(correlatedClustersViewer(x,...))
         }
 )
@@ -377,8 +377,8 @@ setMethod("plot",c("EnrichmentProfiles"),
 #' }
 #' 
 #' @param Results a SPADEResults or Result object
-#' @param samples a named vector specifying the samples to used
 #' @param clusters a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)
+#' @param samples a named vector specifying the samples to used
 #' @param markers a character vector specifying the markers to be displayed 
 #' @param show.mean a character specifying if marker means expression should be displayed, possible value are among : "none", "only" or "both"
 #' 
@@ -388,17 +388,15 @@ setMethod("plot",c("EnrichmentProfiles"),
 #' 
 #' @export
 clusterViewer <- function(Results,
-                          samples       = NULL,
                           clusters      = NULL,
+                          samples       = NULL,
                           markers       = NULL,
                           show.mean     = "both"){
 
-    clusters <- as.character(clusters)
-    
     if(show.mean != "none" && show.mean != "both" && show.mean != "only"){
         stop("Error : show.mean must be one of those : 'none' 'both' 'only' ")
     }
-    data <- c()
+
     if(is.null(samples)){
         data        <- Results@marker.expressions
         cells.count <- Results@cells.count
@@ -408,10 +406,13 @@ clusterViewer <- function(Results,
     }
 
     if(!is.null(clusters)){
+        if (typeof(clusters) != "character"){
+            stop("Error : The clusters parameter must be a character vector")
+        }
         clusters.select <- data[,"cluster"] %in% clusters
         data            <- data[clusters.select,]
-    }else {
-        clusters <- data[,"cluster"]
+    }else{
+        clusters <- unique(data[,"cluster"])
     }
     
     if(!is.null(markers)){
@@ -439,6 +440,8 @@ clusterViewer <- function(Results,
     plots <- list()
     
     for(current.cluster in clusters){
+        
+        #print(current.cluster)
         
         data.temp  <- data[data["cluster"] == current.cluster,]
         if (names(Results) == "SPADEResults"){
@@ -585,7 +588,7 @@ treeViewer <- function(SPADEResults,
                            y    = SPADEResults@graph.layout[edges[,1],2],
                            yend = SPADEResults@graph.layout[edges[,2],2])
 
-    cells.number <- colSums(data)
+    cells.number <- sum(colSums(data))
     
     plot <- ggplot2::ggplot() +
             ggplot2::ggtitle(paste("Tree Viewer (", cells.number, " cells)", sep = "")) +
@@ -625,7 +628,7 @@ treeViewer <- function(SPADEResults,
 #' 
 #' @param Results a SPADEResults or Results object
 #' @param assignments a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment
-#' @param clusters a numerical vector containing the clusters to use in the representation, by default all clusters will be use
+#' @param clusters a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)
 #' @param use.percentages a logical specifying if the visualisation should be performed on percentage
 #' 
 #' @return a 'ggplot' object
@@ -638,14 +641,19 @@ kineticsViewer <- function(Results,
                            clusters        = NULL,
                            use.percentages = TRUE){
     
+    if(missing(assignments) || is.null(assignments)){
+        stop("Error : the 'assignments' parameter is required")   
+    }
+                       
     data <- Results@cells.count
-
-    clusters <- as.character(clusters)
     
     if(is.null(clusters)){
         clusters <- rownames(data)
         message("All clusters will be cumpute")
     }else if(all(clusters %in% rownames(data))){
+        if (typeof(clusters) != "character"){
+            stop("Error : The clusters parameter must be a character vector")
+        }
         clusters <- unique(clusters)
         data     <- data[clusters,]
         message("These clusters will be cumpute :")
@@ -681,7 +689,8 @@ kineticsViewer <- function(Results,
         max.value  <- max.value + max.value*0.1 + 1
         
         i <- length(plots) + 1
-        
+        #print(current.cluster)
+        #print(cells.count)
         cells.number <- sum(cells.count[current.cluster,])
         plots[[i]] <- ggplot2::ggplot(data = data.temp, ggplot2::aes_string(x = "timepoints", y = "value", group = "individuals", color = "individuals")) +
                       ggplot2::ggtitle(paste("cluster ",current.cluster," - Kinetics Viewer (", cells.number," cells)",sep = "")) +
@@ -712,7 +721,7 @@ kineticsViewer <- function(Results,
 #' 
 #' @param Results a SPADEResults or Results object
 #' @param conditions conditions a named vector providing the correspondence between a sample name (in rownames) and the condition of this sample : NA to exclude a sample from tests
-#' @param clusters a numerical vector containing the clusters to use in the representation
+#' @param clusters a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)
 #' @param use.percentages a logical specifying if the visualisation must be performed on percentage
 #' @param show.legend a logical specifying if the legend must be displayed
 #' @param show.violin a logical specifying if the count distribution must be displayed
@@ -731,12 +740,13 @@ boxplotViewer <- function(Results,
                       
     data <- Results@cells.count
     
-    clusters <- as.character(clusters)
-    
     if(is.null(clusters)){
         clusters <- rownames(data)
         message("All clusters will be cumpute")
     }else if(all(clusters %in% rownames(data))){
+        if (typeof(clusters) != "character"){
+            stop("Error : The clusters parameter must be a character vector")
+        }
         clusters <- unique(clusters)
         data     <- data[clusters,]
         message("These clusters will be cumpute :")
@@ -804,13 +814,15 @@ boxplotViewer <- function(Results,
 #' @title Visualization of marker co-expressions
 #'
 #' @description 
-#' Generate a distogram representation showing the marker co-expression.
+#' Generate a distogram representation showing the marker co-expressions.
 #' 
-#' @details xxx
+#' @details 
+#' xxx
 #'
 #' @param Results a SPADEResults or Results object
-#' @param clusters xxx
-#' @param samples xxx
+#' @param clusters a character vector containing the clusters names to be use (by default all clusters will be used)
+#' @param samples a character vector specifying the samples to use 
+#' @param markers a character vector specifying the markers to be displayed 
 #' 
 #' @return a list of 'ggplot' objects
 #' 
@@ -819,18 +831,43 @@ boxplotViewer <- function(Results,
 #' @export
 distogramViewer <- function(Results,
                             clusters = NULL,
-                            samples  = NULL){
+                            samples  = NULL,
+                            markers  = NULL){
+
+    if(is.null(samples)){
+        data        <- Results@marker.expressions
+        cells.count <- Results@cells.count
+    }else{
+        data        <- subset(Results@marker.expressions, sample %in% names(samples[ samples == TRUE]), drop = FALSE)
+        cells.count <- Results@cells.count[, c(names(samples[ samples == TRUE] )), drop = FALSE]
+    }
     
-    data <- Results@marker.expressions[,grep("sample|cluster",colnames(Results@marker.expressions), invert = TRUE), drop = FALSE]
+    #print(head(data))
     
+    if(!is.null(clusters)){
+        if (typeof(clusters) != "character"){
+            stop("Error : The clusters parameter must be a character vector")
+        }
+        clusters.select <- data[,"cluster"] %in% clusters
+        data            <- data[clusters.select,]
+        cells.count     <- cells.count[clusters,]
+    }
+    
+    #print(head(data))
+    
+    data <- data[ , -c(1, 2) ]
+    if(!is.null(markers)){
+        data <- cbind(data[,markers])
+    }
+       
     data <- na.omit(data)# NA values are removed
     
-    cormat <- round(cor(data),2)
-    dist <- as.dist((1-cormat)/2)
+    cormat <- round(cor(data), 2)
+    dist <- as.dist(1 - cormat)
     hc <- hclust(dist)
     cormat <-cormat[hc$order, hc$order]
     
-    cormat[upper.tri(cormat,diag = TRUE)] <- NA
+    cormat[upper.tri(cormat, diag = TRUE)] <- NA
     
     markers <- colnames(cormat)
     
@@ -841,7 +878,7 @@ distogramViewer <- function(Results,
     bold.markers <- "plain"
     if (names(Results) == "SPADEResults"){
         clustering.markers <- is.element(markers, Results@marker.names[Results@marker.clustering])
-        bold.markers <- ifelse(clustering.markers,"bold","plain")
+        bold.markers <- ifelse(clustering.markers, "bold", "plain")
     }
     
     plot <- ggplot2::ggplot(data = melted.cormat, ggplot2::aes_string(x = "Var1", y = "Var2", fill = "value")) + 
@@ -884,13 +921,15 @@ distogramViewer <- function(Results,
 
 #' @title streamgraphViewer
 #'
-#' @description Generate a streamgraph representation showing the evolution of cell count in clusters across samples
+#' @description 
+#' Generate a streamgraph representation showing the evolution of cell count in clusters across samples
 #' 
-#' @details xxx
+#' @details 
+#' xxx
 #' 
 #' @param Results a SPADEResults or Results object
 #' @param order a named vector a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples in numeric (NA to exclude this sample)
-#' @param clusters a numerical vector containing the clusters to use in the representation, by default all clusters will be use
+#' @param clusters a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)
 #'
 #' @return a 'ggplot' object
 #' 
@@ -902,9 +941,7 @@ streamgraphViewer <- function(Results,
                               clusters     = NULL){
     
     data <- Results@cells.count
-    
-    clusters <- as.character(clusters)
-    
+       
     if(!is.null(order)){
         data    <- data[,names(order[!is.na(order)]), drop = FALSE]
     }
@@ -913,6 +950,9 @@ streamgraphViewer <- function(Results,
         clusters <- rownames(data)
         message("All clusters will be cumpute")
     }else if(all(clusters %in% rownames(data))){
+        if (typeof(clusters) != "character"){
+            stop("Error : The clusters parameter must be a character vector")
+        }
         clusters <- unique(clusters)
         data     <- data[clusters,]
         message("These clusters will be cumpute :")
@@ -920,8 +960,9 @@ streamgraphViewer <- function(Results,
     }else{
         stop("Error : Unknown cluster ")
     }
-    cells.number <- colSums(data)
     
+    cells.number <- sum(colSums(data))
+
     data <- cbind(cluster = rownames(data), data)
     melted.data           <- reshape2::melt(data, id = "cluster")
     colnames(melted.data) <- c("cluster","samples","value")
@@ -931,10 +972,12 @@ streamgraphViewer <- function(Results,
     plot = ggplot2::ggplot(data = melted.data, ggplot2::aes_string(x = "samples", y = "value", group = "cluster", fill = "cluster")) +
            ggplot2::ggtitle(paste("Streamgraph showing the evolution of cell abondance in clusters across samples (", cells.number, " cells)", sep = "")) +
            stat_steamgraph() +
+           #ggplot2::geom_point(ggplot2::aes_string(x = "samples", y = "value")) +
+           #ggrepel::geom_text_repel(ggplot2::aes_string(x = "samples", y = "value", label = "cluster", color = "cluster"), size = 5) +
            ggplot2::theme_bw() +
            ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0),
                           legend.text = ggplot2::element_text(size = 6))
-    
+
     return(plot)
           
 }
@@ -952,7 +995,7 @@ streamgraphViewer <- function(Results,
 #' @param Results a SPADEResults or Results object
 #' @param use.percentages a logical specifying if the visualisation should be performed on percentage
 #' @param assignments a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment
-#' @param clusters specify the set of clusters to use
+#' @param clusters a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)
 #' @param space a caracter specifying the space ("clusters" or "samples", cluster by default)
 #' @param dist.method a character string containing the name of the distance measure to use
 #' 
@@ -969,13 +1012,14 @@ MDSViewer <- function(Results,
                       dist.method     = "euclidean"){
     
     data <- Results@cells.count
-    
-    clusters <- as.character(clusters)
-    
+
     if(is.null(clusters)){
         clusters <- rownames(data)
         message("All clusters will be cumpute")
     }else if(all(clusters %in% rownames(data))){
+        if (typeof(clusters) != "character"){
+            stop("Error : The clusters parameter must be a character vector")
+        }
         clusters <- unique(clusters)
         data     <- data[clusters,]
         message("These clusters will be cumpute :")
@@ -997,6 +1041,9 @@ MDSViewer <- function(Results,
     data <- cbind(cluster = rownames(data), data)               
     
     if(space == "samples"){
+        if(missing(assignments) || is.null(assignments)){
+            stop("Error : the 'assignments' parameter is required when the 'space' parameter is \"sample\"")   
+        }
         data <- t(data[,colnames(data) != "cluster"])
     }else if(space != "clusters"){
         stop("Error in \"space\" parameter")
@@ -1030,7 +1077,7 @@ MDSViewer <- function(Results,
         datai$individuals <- as.factor(datai$individuals)
         datai$timepoints  <- as.factor(datai$timepoints)
         
-        cells.number <- colSums(cells.count[,rownames(assignments)])
+        cells.number <- sum(colSums(cells.count[,rownames(assignments)]))
         plot <- ggplot2::ggplot(data = datai)  +
                 ggplot2::ggtitle(paste("MDS with samples (", cells.number, " cells)", sep = "")) +
                 ggplot2::geom_hline(yintercept = (min.lim+max.lim)/2,linetype = "dashed") +
@@ -1057,7 +1104,7 @@ MDSViewer <- function(Results,
         datai <- cbind (datai, cluster = data[,"cluster"])
         datai$cluster <- as.factor(datai$cluster)
         
-        cells.number <- colSums(cells.count)
+        cells.number <- sum(colSums(cells.count))
         plot <- ggplot2::ggplot(data = datai)  +
                 ggplot2::ggtitle(paste("MDS with clusters (", cells.number, " cells)", sep = "")) +
                 ggplot2::geom_hline(yintercept = (min.lim+max.lim)/2,linetype = "dashed") +
@@ -1092,7 +1139,7 @@ MDSViewer <- function(Results,
 #' 
 #' @param Results a SPADEResults or Results object
 #' @param samples a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)
-#' @param clusters a character vector containing the clusters to use for the representation
+#' @param clusters a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)
 #' @param min.cells a numeric specifying the minimun number of cell (sum of all selected samples) to display a cluster
 #' @param sort a logical specifying if clusters will be to be sorted (descending) based on the sum of all selected samples for each cluster
 #' @param show.samples a logical specifying if the number of cells for all selected samples will be displayed
@@ -1108,39 +1155,40 @@ countViewer <- function(Results,
                         min.cells    = 0,
                         sort         = TRUE,
                         show.samples = TRUE){
-
-    clusters <- as.character(clusters)
-                    
+       
     if(is.null(samples)){ 
         data <- Results@cells.count
     }else{
         data  <- Results@cells.count[, names(samples[ samples == TRUE]), drop = FALSE]
     }
    
-    print(head(data))
+    #print(head(data))
     
     if(!is.null(clusters)){
-        data <- data[cluster]
+        if (typeof(clusters) != "character"){
+            stop("Error : The clusters parameter must be a character vector")
+        }
+        data <- data[clusters, , drop = FALSE]
     }
+
+    cells.number <- sum(colSums(data))
     
-    data  <- cbind(data, sum.of.samples = apply(data, 1, sum))
+    data  <- cbind(data, "sum.of.samples" = apply(data, 1, sum))
     data  <- data[data$sum.of.samples > min.cells, ]
-    
-    data <- cbind(cluster = rownames(data), data)
+        
+    data <- cbind("cluster" = rownames(data), data)
     
     if (sort){
-        data <- transform(data, cluster = reorder(cluster, -sum.of.samples))
+        data <- transform(data, "cluster" = reorder(cluster, -sum.of.samples))
     }else{
         data$cluster <- as.factor(data$cluster)
     }
     
     data.melted <- reshape2::melt(data, id = c("cluster"))  
-    colnames(data.melted) <- c("cluster","sample","value")
+    colnames(data.melted) <- c("cluster", "sample", "value")
     
     data.melted$total <- ifelse(data.melted[,"sample"] == "sum.of.samples","sum of selected samples","")
-    
-    cells.number <- colSums(data)
-    
+        
     plot <- ggplot2::ggplot(data = data.melted) +
             ggplot2::ggtitle(paste("CountViewer showing the number of cells for each cluster (", cells.number, " cells)", sep = "")) +
             ggplot2::geom_point(data = subset(data.melted, sample == "sum.of.samples"),
@@ -1162,72 +1210,3 @@ countViewer <- function(Results,
            
     return(plot)
 }
-
-##' @title ClusterViewer
-##' 
-##' @description Cluster viewer 
-##' 
-##' @details xxx
-##' 
-##' @param SPADEResults a SPADEResuts object
-##' @param samples a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)
-##' @param clusters a numerical vector containing the clusters to use in the representation
-##' @param markers a pattern describing markers to observe
-##' @param show.mean a character : "none" "both" "only", "both" by default
-##' 
-##' @return a list of ggplot objects 
-##'
-##' @import reshape2 ggplot2
-##' 
-##' @export
-#clusterViewer2 <- function(SPADEResults,
-#                           samples       = NULL,
-#                           clusters      = NULL,
-#                           markers       = NULL,
-#                           show.mean     = "both"){
-#    
-#    if(show.mean != "none" && show.mean != "both" && show.mean != "only"){
-#        stop("Error : show.mean must be one of those : 'none' 'both' 'only' ")
-#    }
-#    data <- c()
-#    if(is.null(samples)){ 
-#        data  <- SPADEResults@marker.expressions
-#    }else{
-#        data  <- subset(SPADEResults@marker.expressions, name %in% names(samples[ samples == TRUE]) )
-#    }
-#    clusters.select <- c()
-#    if(!is.null(clusters)){
-#        clusters.select <- data[,"cluster"] %in% clusters
-#        data            <- data[clusters.select,]
-#    }
-#
-#    if(!is.null(markers)){
-#        data.marker <- data[,c("sample","cluster")]
-#        data <- cbind(data.marker,data[,markers])
-#    }
-#    markers <- colnames(data[, grep ("cluster|sample",colnames(data), invert = TRUE)])
-#    clustering.markers <- is.element(markers,SPADEResults@marker.names[SPADEResults@marker.clustering])
-#    bold.markers <- ifelse(clustering.markers,"bold","plain")
-#    
-#    plots <- list()
-#    
-#    for(i in 1:length(clusters)){
-#
-#        data.temp  <- data[data["cluster"] == clusters[i], colnames(data) != "cluster"]
-#
-#        print(data.temp)
-#        
-#        plots[[i]] <- GGally::ggparcoord(data = data.temp,  showPoints = FALSE,scale = "globalminmax", scaleSummary = "mean", centerObsID = 1, #missing = "exclude",
-#                                         splineFactor = FALSE, alphaLines = 1, boxplot = FALSE, groupColumn = "name", order = "allClass",
-#                                         shadeBox = NULL, mapping = NULL, title = paste("cluster ",clusters[i]," - Cluster Viewer",sep = ""))
-#                
-#    }
-#    
-#    return(plots)    
-#}
-#
-#
-#
-#
-#
-#

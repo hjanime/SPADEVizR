@@ -60,10 +60,16 @@ Results <- setClass("Results",
 #' @details 
 #' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'importSPADEResult()' function. 
-#' 
+#'
+#' @slot cells.count a dataframe containing the number of cells for each cluster of each sample
+#' @slot marker.expressions a numerical dataframe containing marker median expressions for each cluster of each sample
+#' @slot sample.names a character vector containing the sample names
+#' @slot marker.names a character vector containing the markers names
+#' @slot cluster.number a numeric specifying the number of cell clusters
 #' @slot use.raw.medians a logical specifying if the marker expressions correspond to the raw or transformed data
 #' @slot dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
 #' @slot marker.clustering a logical vector specifying marker that have been used during the clustering precedure
+#' @slot flowset a flowSet object containing the imported SPADE FCS file
 #' @slot fcs.files a character vector containing the absolute path of the original FCS files
 #' @slot quantiles a numeric data.frame containing the quantiles for each each markers of cluster
 #' @slot graph a igraph object containing the SPADE tree

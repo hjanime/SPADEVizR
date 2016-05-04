@@ -98,6 +98,7 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
                    ggplot2::theme(legend.text      = ggplot2::element_text(size = 4),
                                   panel.background = ggplot2::element_rect("white"),
                                   axis.text.x      = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1))
+                  
     if (!is.null(clustering.markers)){
         clustering.markers <- is.element(data.frame$markers, clustering.markers)
         bold.markers <- ifelse(clustering.markers,"bold","plain")
@@ -184,8 +185,8 @@ g_legend <- function(gplot){
 #' It is to note that 'x' and 'y' are mutuality excluded (both cannot be both TRUE) with priority to 'x'.
 #'
 #' @param gplot a 'ggplot' plot
-#' @param x a logical value specifying if the x-axis must be extract
-#' @param y a logical value specifying if the y-axis must be extract
+#' @param x.axis a logical value specifying if the x-axis must be extract
+#' @param y.axis a logical value specifying if the y-axis must be extract
 #' 
 #' @return a 'ggplot' axis object
 #'
@@ -197,9 +198,9 @@ g_axis <- function(gplot, x.axis =! y.axis, y.axis =! x.axis ){
     else {
         name <- "axis-l"
     }
-    
-    tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(gplot))
-    tmp <- gtable::gtable_filter(tmp, name)
+    built <- ggplot2::ggplot_build(gplot)
+    tmp   <- ggplot2::ggplot_gtable(built)
+    tmp   <- gtable::gtable_filter(tmp, name)
     return(tmp$grobs[[TRUE]])
 }
 
@@ -220,29 +221,30 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
     layout <- rbind(c(2,1,NA),
                     c(5,3,4),
                     c(NA,6,NA))
-    
+
+    legend <- g_legend(list$centre)
     x.axis <- g_axis(list$centre, x.axis = TRUE)        
     y.axis <- g_axis(list$centre, y.axis = TRUE)
-    legend <- g_legend(list$centre)
     
-    center.withoutlegend = list$centre + ggplot2::theme(axis.line        = ggplot2::element_blank(),
-                                                     axis.text.x      = ggplot2::element_blank(),
-                                                     axis.text.y      = ggplot2::element_blank(),
-                                                     axis.ticks       = ggplot2::element_blank(),
-                                                     axis.title.x     = ggplot2::element_blank(),
-                                                     axis.title.y     = ggplot2::element_blank(),
-                                                     legend.position  = "none",
-                                                     panel.background = ggplot2::element_blank(),
-                                                     panel.border     = ggplot2::element_blank(),
-                                                     panel.grid.major = ggplot2::element_blank(),
-                                                     panel.grid.minor = ggplot2::element_blank(),
-                                                     plot.background  = ggplot2::element_blank(),
-                                                     plot.margin      = grid::unit(c(0,0,0,0), "cm"),
-                                                     panel.margin     = grid::unit(c(0,0,0,0), "cm"))
+    
+    center.without_legend = list$centre + ggplot2::theme(axis.line        = ggplot2::element_blank(),
+                                                         axis.text.x      = ggplot2::element_blank(),
+                                                         axis.text.y      = ggplot2::element_blank(),
+                                                         axis.ticks       = ggplot2::element_blank(),
+                                                         axis.title.x     = ggplot2::element_blank(),
+                                                         axis.title.y     = ggplot2::element_blank(),
+                                                         legend.position  = "none",
+                                                         panel.background = ggplot2::element_blank(),
+                                                         panel.border     = ggplot2::element_blank(),
+                                                         panel.grid.major = ggplot2::element_blank(),
+                                                         panel.grid.minor = ggplot2::element_blank(),
+                                                         plot.background  = ggplot2::element_blank(),
+                                                         plot.margin      = grid::unit(c(0,0,0,0), "cm"),
+                                                         panel.margin     = grid::unit(c(0,0,0,0), "cm"))
                                              
     ret <- gridExtra::grid.arrange(list$col, #1 on the layout
                                    legend, #2 on the layout
-                                   center.withoutlegend, #3 on the layout
+                                   center.without_legend, #3 on the layout
                                    list$row, #4 on the layout
                                    y.axis, #5 on the layout
                                    x.axis, #6 on the layout
@@ -253,18 +255,34 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
     return(ret)
 }
 
-#' title Internal - Transforms data for a steam graph (from by ggTimeSeries : https://github.com/Ather-Energy/ggTimeSeries)
+
+
+
+
+#' @title Internal - Plot a steamgraph (from by ggTimeSeries : https://github.com/Ather-Energy/ggTimeSeries)
 #'
 #' @description xxx
 #'
 #' @details xxx
-#' 
-#' @param xxx
-#' 
+#'
+#' @param mapping xxx
+#' @param data xxx
+#' @param show.legend xxx
+#' @param inherit.aes xxx
+#' @param na.rm xxx
+#' @param ... xxx
+#'
 #' @return xxx
 #'
-#' @import data.table ggplot2
-statSteamgraph <- ggplot2::ggproto("statSteamgraph",
+#' @import ggplot2
+stat_steamgraph <- function(mapping     = NULL,
+                            data        = NULL,
+                            show.legend = NA,
+                            inherit.aes = TRUE,
+                            na.rm       = TRUE,
+                            ...) { 
+
+	statSteamgraph <- ggplot2::ggproto("statSteamgraph",
                                    ggplot2::Stat,
                                    required_aes = c("x", "y", "group"),
                                    setup_params = function(data, params) {
@@ -275,51 +293,23 @@ statSteamgraph <- ggplot2::ggproto("statSteamgraph",
                                  ranksdy := rank(sdy, ties.method = 'random')
                               ][ ranksdy %%2 == 0, ranksdy := -ranksdy]
             
-            data = merge(data,
-                         datasdorder,
-                         'group',
-                         all = T)
+            data = merge(data,datasdorder,'group',all = T)
             
             data.table::setkey(data, x, ranksdy)
             data[, ymax := cumsum(y) - (sum(y)/2), by = list(x, PANEL)]
             data[, ymin := ymax - y, by = list(x, PANEL)]
             
-            list(
-                    overalldata = data,
-                    na.rm = T
-            )
+            list(overalldata = data,na.rm = T)
             
         },
-        
+   
         compute_group = function(data, scales, overalldata) {
-
+            print("HERE")
             data = overalldata[group %in% data$group]
-            data.frame(
-                    x = data[, x],
-                    ymin = data[, ymin],
-                    ymax = data[, ymax]
-            )
-            
+            data.frame(x = data[, x],ymin = data[, ymin],ymax = data[, ymax])
         }
-)
+	)
 
-#' @title Internal - Plot a steamgraph (from by ggTimeSeries : https://github.com/Ather-Energy/ggTimeSeries)
-#'
-#' @description xxx
-#'
-#' @details xxx
-#'
-#' @param xxx
-#' 
-#' @return xxx
-#'
-#' @import ggplot2
-stat_steamgraph <- function(mapping     = NULL,
-                            data        = NULL,
-                            show.legend = NA,
-                            inherit.aes = TRUE,
-                            na.rm       = TRUE,
-                            ...) {  
     ggplot2::layer(stat = statSteamgraph, data = data, mapping = mapping, geom = 'ribbon',
                    position = 'identity', show.legend = show.legend, inherit.aes = inherit.aes,
                    params = list(na.rm = na.rm, ...)) 

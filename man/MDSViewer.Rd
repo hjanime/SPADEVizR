@@ -14,7 +14,7 @@ MDSViewer(Results, use.percentages = TRUE, assignments, clusters = NULL,
 
 \item{assignments}{a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment}
 
-\item{clusters}{specify the set of clusters to use}
+\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
 
 \item{space}{a caracter specifying the space ("clusters" or "samples", cluster by default)}
 

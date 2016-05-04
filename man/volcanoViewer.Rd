@@ -12,11 +12,9 @@ volcanoViewer(DEC = NULL, fc.log2 = TRUE, show.cluster.sizes = TRUE,
 
 \item{fc.log2}{a logicial specifing if fold-change or log2(fold-change) is use}
 
-\item{show.cluster.sizes}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster.sizes}{a logicial specifing if dot sizes are proportional to cell counts}
 
 \item{show.all_labels}{a logicial specifing if all cluster labels must be show or just significant cluster}
-
-\item{SPADEResults}{the SPADEViewer result object}
 }
 \value{
 a 'ggplot' object

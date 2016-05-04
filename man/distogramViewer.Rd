@@ -4,20 +4,22 @@
 \alias{distogramViewer}
 \title{Visualization of marker co-expressions}
 \usage{
-distogramViewer(Results, clusters = NULL, samples = NULL)
+distogramViewer(Results, clusters = NULL, samples = NULL, markers = NULL)
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
-\item{clusters}{xxx}
+\item{clusters}{a character vector containing the clusters names to be use (by default all clusters will be used)}
 
-\item{samples}{xxx}
+\item{samples}{a character vector specifying the samples to use}
+
+\item{markers}{a character vector specifying the markers to be displayed}
 }
 \value{
 a list of 'ggplot' objects
 }
 \description{
-Generate a distogram representation showing the marker co-expression.
+Generate a distogram representation showing the marker co-expressions.
 }
 \details{
 xxx
