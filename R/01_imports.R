@@ -11,11 +11,11 @@
 #' The computation of maker range quantiles can be approximated using 'quantile.approximation' parameter which is more efficient in term of loading time and memory usage.
 #'  
 #' @param path a character specify the path of SPADE results folder
-#' @param dict a two column dataframe providing the correspondance between the original marker names (first column) and the real marker names (second column)
-#' @param exclude.markers a character vector of markers to exclude (case insentive)
+#' @param dict a two column dataframe providing the correspondence between the original marker names (first column) and the real marker names (second column)
+#' @param exclude.markers a character vector of markers to exclude (case insensitive)
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute maker range quantiles. First is the lower bound and second is the upper bound.
-#' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)
-#' @param quantile.approximation a logicial specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
+#' @param use.raw.medians a logical specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)
+#' @param quantile.approximation a logical specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
 #' 
 #' @return a S4 object of class 'SPADEResults'
 #' 
@@ -162,7 +162,7 @@ importSPADEResults <- function(path,
 #' This function returns a 'Result' object.
 #' 
 #' @details
-#' The detailled format of 'cells.count' dataframe must be formated as following:
+#' The 'cells.count' dataframe must be formated as following:
 #' 
 #' \tabular{ccc}{
 #'    cluster \tab sample1 \tab sample1\cr
@@ -170,7 +170,7 @@ importSPADEResults <- function(path,
 #'    cluster2 \tab 450 \tab 412\cr
 #' }
 #' 
-#' The detailled format of 'marker.expressions' dataframe must be formated as following:
+#' The 'marker.expressions' dataframe must be formated as following:
 #' 
 #' \tabular{cccc}{
 #'    sample \tab cluster \tab marker1 \tab marker2\cr
@@ -180,7 +180,7 @@ importSPADEResults <- function(path,
 #'    sample2 \tab cluster2 \tab 1   \tab 1.3\cr
 #' }
 #' 
-#' @param cells.count a dataframe of cells abondances with clusters in row and samples in column 
+#' @param cells.count a dataframe of cells abundances with clusters in row and samples in column 
 #' @param marker.expressions a dataframe containing median marker expression values for each cluster of each sample. In additions of markers, the 2 two first columns are are dedicated to "cluster" and "sample" 
 #' 
 #' @return a S4 object of class 'Results'
@@ -191,8 +191,6 @@ importResults <- function(cells.count,
                       
     colnames(marker.expressions)[1] <- "sample"                 
     colnames(marker.expressions)[2] <- "cluster"
-    
-    colnames(cells.count)[1]        <- "cluster"
     
     res <- new("Results", 
                marker.expressions  = marker.expressions,
@@ -243,8 +241,8 @@ rename.markers <- function(header,dictionary){
 #' If the data parameter is a dataframe the colnames.FCS parameter is ignored but if the data parameter is a flowset, the colnames.FCS parameter is required.
 #' 
 #' @param data a numeric matrix or flowset
-#' @param exclude a character vector containing the cell markers to be excluded (case insentive)
-#' @param colnames.FCS a character vector containing colnames if data is a FCS flowset
+#' @param exclude a character vector containing the cell markers to be excluded (case intensive)
+#' @param colnames.FCS a character vector containing column names if data is a FCS flowset
 #' 
 #' @return a numeric matrix without the cell markers to exclude
 exclude.markers <- function(data,exclude, colnames.FCS = NULL){
@@ -272,7 +270,7 @@ exclude.markers <- function(data,exclude, colnames.FCS = NULL){
 #' This function is used internally to remove raw or transform medians from SPADE matrix. CVS medians are always removed.
 #' 
 #' @param data a SPADE matrix
-#' @param use.raw.medians a logicial specifying if "transformed" or "raw" medians will be use (FALSE by default)
+#' @param use.raw.medians a logical specifying if "transformed" or "raw" medians will be use (FALSE by default)
 #' 
 #' @return a numeric matrix without the cell markers to exclude
 filter.medians <- function(data,use.raw.medians = FALSE){

@@ -17,7 +17,7 @@ The 'cells.count' dataframe stores the number of cells associated with each clus
 
 The 'marker.expressions' dataframe stores the marker median expressions for each cluster. This dataframe has in the first the sample names, in the second column the cluster names, and the maker median expressions in the others columns.
 
-The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 This object is returned by the 'importX()' function.
 }
 \section{Slots}{

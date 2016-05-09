@@ -10,11 +10,11 @@ volcanoViewer(DEC = NULL, fc.log2 = TRUE, show.cluster.sizes = TRUE,
 \arguments{
 \item{DEC}{an object of class 'DEC' (object returned by the 'computeDEC()' function)}
 
-\item{fc.log2}{a logicial specifing if fold-change or log2(fold-change) is use}
+\item{fc.log2}{a logical specifying if fold-change or log2(fold-change) is use}
 
-\item{show.cluster.sizes}{a logicial specifing if dot sizes are proportional to cell counts}
+\item{show.cluster.sizes}{a logical specifying if dot sizes are proportional to cell counts}
 
-\item{show.all_labels}{a logicial specifing if all cluster labels must be show or just significant cluster}
+\item{show.all_labels}{a logical specifying if all cluster labels must be show or just significant cluster}
 }
 \value{
 a 'ggplot' object

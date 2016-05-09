@@ -1,24 +1,37 @@
 #' @title Generate a report including SPADEVizR plots.
 #'
-#' @description Generate a customizable report based on SPADEVizR vizualisation features.
-#'
+#' @description 
+#' Generate a customizable PDF report based on SPADEVizR vizualisation features.
+#' Available plots are :
+#' \itemize {
+#' \item "pheno" (included by default): Display an heatmap representation
+#' \item "kinetic": Display a kinetic representation for each cluster. This plot required to provide the 'assignment' parameter.
+#' \item "cluster" (included by default): Display a parallel coordinate representation showing for each cluster the marker median expression.
+#' \item "kinetic_cluster": Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster
+#' \item "tree" (included by default): Display a tree representation showing combined SPADE trees. 
+#' \item "disto" (included by default): Display a distogram representation showing the marker co-expressions.
+#' \item "stream" (included by default): Display a 
+#' \item "MDS_clusters" (included by default): Display a Multidimensional Scaling (MDS) representation showing the 
+#' \item "MDS_samples": Display a Multidimensional Scaling (MDS) representation showing the. This plot required to provide the 'assignment' parameter.
+#' }
+#' 
 #' @param Results a 'SPADEResults' or 'Result' object
-#' @param reports a character vector specifying the names and the order of the desired plots among: XXX.
+#' @param PDFfile a character specifying the output path
+#' @param plots.names a character vector specifying the names (see details) and the order of the desired plots
 #' @param clusters a character vector of clusters to include in the report (all will be included by default)
 #' @param markers a character vector of markers to include in the report (all will be included by default)
-#' @param assignments a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment
-#' @param stat.objects a list of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')
-#' @param profile.objects a list of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')
-#' @param PDFfile a character specifying the output path
+#' @param assignments a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment
+#' @param stat.objects a vector of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')
+#' @param profile.objects a vector of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')
 #' @param width a numeric specifying the plot width
 #' @param height a numeric specifying the plot height
 #'
 #' @import gridExtra
 #' 
 #' @export
-generateReport <- function(Results,
+generateReport <- function(results,
                            PDFfile,
-                           reports         = c("pheno", "kinetic", "cluster", "kinetic_cluster", "tree", "disto", "stream", "MDS_clusters"),
+                           plots.names     = c("pheno", "cluster", "tree", "disto", "stream", "MDS_clusters"),
                            clusters        = NULL,
                            markers         = NULL,
                            assignments     = NULL,
@@ -29,50 +42,50 @@ generateReport <- function(Results,
     
     message("[BEGIN]-report")
 
-    #print(Results)
+    #print(results)
     
     plots  <- list()
 
-    if (is.element(c("kinetic-cluster", "kinetic"), reports) && is.null(assignments)){
+    if (is.element(c("kinetic-cluster", "kinetic"), plots) && is.null(assignments)){
         stop("Error in generateReport : 'kinetic-cluster' and/or 'kinetic' report required assignments")
     }
     
-    for(i in 1:length(reports)){
-        switch(reports[i],
+    for(i in length(plots.names)){
+        switch(plots.names[i],
                MDS_clusters    = {
-                  plots <- c(plots, list(MDSViewer(Results, space = "clusters", clusters = clusters)))
+                  plots <- c(plots, list(MDSViewer(results, space = "clusters", clusters = clusters)))
                },
                MDS_samples     = {
-                  plots <- c(plots, list(MDSViewer(Results, space = "samples", clusters = clusters, assignments = assignments)))
+                  plots <- c(plots, list(MDSViewer(results, space = "samples", clusters = clusters, assignments = assignments)))
                },
                pheno           = {
-                  plots <- c(plots, list(phenoViewer(Results)))
+                  plots <- c(plots, list(phenoViewer(results)))
                },
                tree            = {
-                  plots <- c(plots, list(treeViewer(Results)))
+                  plots <- c(plots, list(treeViewer(results)))
                },
                kinetic_cluster = {
-                   kinetics.plots <- kineticsViewer(Results, clusters = clusters, assignments = assignments)
-                   cluster.plots  <- clusterViewer(Results, clusters = clusters, markers = markers)
+                   kinetics.plots <- kineticsViewer(results, clusters = clusters, assignments = assignments)
+                   cluster.plots  <- clusterViewer(results, clusters = clusters, markers = markers)
                    
                    for (i in 1:length(kinetics.plots)){
                        plots <- c(plots, list(gridExtra::arrangeGrob(kinetics.plots[[i]], cluster.plots[[i]], ncol = 2)))
                    }
                },
                kinetic         = {
-                   plots <- c(plots, kineticsViewer(Results, assignments = assignments, clusters = clusters))
+                   plots <- c(plots, kineticsViewer(results, assignments = assignments, clusters = clusters))
                },
                cluster         = {
-                   plots <- c(plots, clusterViewer(Results,clusters = clusters, markers = markers))
+                   plots <- c(plots, clusterViewer(results,clusters = clusters, markers = markers))
                },
                disto           = {
-                   plots <- c(plots, list(distogramViewer(Results)))
+                   plots <- c(plots, list(distogramViewer(results)))
                },
                stream          = {
-                   plots <- c(plots, list(streamgraphViewer(Results, clusters = clusters)))
+                   plots <- c(plots, list(streamgraphViewer(results, clusters = clusters)))
                },
                count           = {
-                   plots <- c(plots, list(countViewer(Results, clusters = clusters)))
+                   plots <- c(plots, list(countViewer(results, clusters = clusters)))
                })
        
     }

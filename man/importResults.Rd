@@ -7,7 +7,7 @@
 importResults(cells.count, marker.expressions)
 }
 \arguments{
-\item{cells.count}{a dataframe of cells abondances with clusters in row and samples in column}
+\item{cells.count}{a dataframe of cells abundances with clusters in row and samples in column}
 
 \item{marker.expressions}{a dataframe containing median marker expression values for each cluster of each sample. In additions of markers, the 2 two first columns are are dedicated to "cluster" and "sample"}
 }
@@ -19,7 +19,7 @@ The 'importX()' function imports cell clustering results from two dataframes ('c
 This function returns a 'Result' object.
 }
 \details{
-The detailled format of 'cells.count' dataframe must be formated as following:
+The 'cells.count' dataframe must be formated as following:
 
 \tabular{ccc}{
    cluster \tab sample1 \tab sample1\cr
@@ -27,7 +27,7 @@ The detailled format of 'cells.count' dataframe must be formated as following:
    cluster2 \tab 450 \tab 412\cr
 }
 
-The detailled format of 'marker.expressions' dataframe must be formated as following:
+The 'marker.expressions' dataframe must be formated as following:
 
 \tabular{cccc}{
    sample \tab cluster \tab marker1 \tab marker2\cr

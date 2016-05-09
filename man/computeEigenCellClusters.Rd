@@ -15,7 +15,7 @@ computeEigenCellClusters(data, eigencell.correlation.th = 0.8)
 a dataframe containing for each cluster, its name and class
 }
 \description{
-This function is used internally to classify clusters enrichment profilies or phenotype profiles using eigen vector decomposition.
+This function is used internally to classify clusters enrichment profiles or phenotype profiles using eigen vector decomposition.
 }
 \details{
 xxx

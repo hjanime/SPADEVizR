@@ -33,6 +33,6 @@
 none
 }
 \description{
-Show a previews for a SPADEVizR objects.
+Show a previews for a SPADEVizR object.
 }
 

@@ -1,12 +1,12 @@
 #' @title Identification of the Abundant Clusters
 #' 
 #' @description 
-#' This function is used to identifed the abundant clusters. That is to say clusters that have cell abundance statistically greather than a specific threshold.
+#' This function is used to identify the abundant clusters. That is to say clusters that have cell abundance statistically greater than a specific threshold.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
-#' @param condition a named vector providing the correspondence between a sample name (in rowname) and the logical value TRUE to test abondance for this sample or FALSE otherwise
+#' @param condition a named vector providing the correspondence between a sample name (in row names) and the logical value TRUE to test abundance for this sample or FALSE otherwise
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
-#' @param method a character specifying the statistical method used to identifed the abundant clusters. The parameter can take the values "t.test" or "wilcox.test"
+#' @param method a character specifying the statistical method used to identify the abundant clusters. The parameter can take the values "t.test" or "wilcox.test"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
 #' @param th.pvalue a numeric specifying the p-value threshold
 #' @param th.mean a numeric specifying the abundance mean threshold
@@ -75,11 +75,11 @@ identifyAC <- function(Results,
 #' @title Identification of the Differentially Enriched Clusters
 #' 
 #' @description
-#' This function is used to identifed differentially enriched clusters. 
-#' That is to say clusters that are differentially enriched two biologicals conditions.
+#' This function is used to identify differentially enriched clusters. 
+#' That is to say clusters that are differentially abundant between two biologicals conditions.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
-#' @param conditions a named vector providing the correspondence between a sample name (in rownames) and the condition of this sample : NA to exclude a sample from tests, 1 or 2 to attribute this sample, respectively to the first or second condition
+#' @param conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample : NA to exclude a sample from tests, 1 or 2 to attribute this sample, respectively to the first or second condition
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character specifying the name of the statistical test to use "t.test" or "wilcox.test"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
@@ -174,14 +174,14 @@ identifyDEC <- function(Results,
     return(DEC)
 }
 
-#' @title Identification of the correlation of SPADE cluster with a cynetics phenotype
+#' @title Identification of the correlation of SPADE cluster with a phenotype
 #' 
 #' @description 
-#' This function is used to identifed correlated clusters. 
+#' This function is used to identify correlated clusters. 
 #' That is to say clusters that correlate with a phenotypic variable.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
-#' @param variable a numerical named vector providing the correspondence between a sample name (in rowname) and the specific phenotype or NA to ignore a sample
+#' @param variable a numerical named vector providing the correspondence between a sample name (in rownames) and the specific phenotype or NA to ignore a sample
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character indicating the correlation method to use : "pearson", "spearman"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
@@ -259,22 +259,21 @@ identifyCC <- function(Results,
 #' \itemize{
 #' \item "hierarchical_k" 
 #' This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
-#' The hierarchical classification is cutted is order provided the desired number of classes. 
+#' The hierarchical classification is cutted in order to return the desired number of classes. 
 #' This number of classes must be provided as a numeric integer using the 'method.parameter' parameter.
-#' It is to note that negative correlations are considered as uncorrelated;
+#' It is to note that negative correlations are considered as uncorrelated
 #' \item "hierarchical_k" 
 #' This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
-#' This heigth is correlation threshold and must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' This heigth is a correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
 #' \item "eigencell" 
 #' This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
 #' Clusters which correlate above a specific threshold with the same eigen vector are classified together.
-#' This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' This correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
 #' \item "clique" 
-#' This method first compute the pearson correlation matrix and then use this matrix to generate an undirected graph.
+#' This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
 #' In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
-#' This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
-#' The largest cliques are then researched in this graph. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
-#' Finally the founded cliques are considered as classes of cluster.
+#' This correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 #' }
 #' 
 #' @param Results a Results or SPADEResults object
@@ -366,22 +365,21 @@ classifyPhenoProfiles <- function (Results,
 #' \itemize{
 #' \item "hierarchical_k" 
 #' This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
-#' The hierarchical classification is cutted is order provided the desired number of classes. 
+#' The hierarchical classification is cutted in order to return the desired number of classes. 
 #' This number of classes must be provided as a numeric integer using the 'method.parameter' parameter.
-#' It is to note that negative correlations are considered as uncorrelated;
+#' It is to note that negative correlations are considered as uncorrelated
 #' \item "hierarchical_k" 
 #' This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
-#' This heigth is correlation threshold and must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' This heigth is a correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
 #' \item "eigencell" 
 #' This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
 #' Clusters which correlate above a specific threshold with the same eigen vector are classified together.
-#' This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' This correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
 #' \item "clique" 
-#' This method first compute the pearson correlation matrix and then use this matrix to generate an undirected graph.
+#' This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
 #' In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
-#' This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
-#' The largest cliques are then researched in this graph. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
-#' Finally the founded cliques are considered as classes of cluster.
+#' This correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
+#' After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 #' }
 #' 
 #' @param Results a Results or SPADEResults object
@@ -457,10 +455,10 @@ classifyEnrichmentProfiles <- function(Results,
 #' @title Internal - Hierarchical classification
 #' 
 #' @description 
-#' This function is used internally to classify clusters enrichment profilies or phenotype profiles using a hierarchical algorithm. 
+#' This function is used internally to classify clusters enrichment profiles or phenotype profiles using a hierarchical algorithm. 
 #' 
 #' @details 
-#' This function compute the pearson correlation matrix associated to the provided matrix. 
+#' This function compute the Pearson correlation matrix associated to the provided matrix. 
 #' It is to note that negative correlations are considered as uncorrelated.
 #' This correlation matrix is used to performs a hierarchical classification.
 #' If 'class.number' is NULL, classification will be determined base on the cut height correlation threshold.
@@ -521,7 +519,7 @@ computeKmeans <- function(data,
 #' @title Internal - Eigen vector classification
 #' 
 #' @description 
-#' This function is used internally to classify clusters enrichment profilies or phenotype profiles using eigen vector decomposition. 
+#' This function is used internally to classify clusters enrichment profiles or phenotype profiles using eigen vector decomposition. 
 #' 
 #' @details 
 #' xxx
@@ -566,7 +564,7 @@ computeEigenCellClusters <- function(data,
 #' @title Internal - Clique percolation classification
 #' 
 #' @description 
-#' This function is used internally to classify clusters enrichment profilies or phenotype profiles using a clique percolation algorithm. 
+#' This function is used internally to classify clusters enrichment profiles or phenotype profiles using a clique percolation algorithm. 
 #' 
 #' @details 
 #' xxx

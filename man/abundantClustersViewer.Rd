@@ -10,9 +10,9 @@ abundantClustersViewer(AC, show.cluster_sizes = TRUE,
 \arguments{
 \item{AC}{an object of class AC (object returned by the 'computeAC()' function)}
 
-\item{show.cluster_sizes}{a logicial specifing if dot sizes are proportional to cell counts}
+\item{show.cluster_sizes}{a logical specifying if dot sizes are proportional to cell counts}
 
-\item{show.all_labels}{a logicial specifing if all cluster labels must be shown (or just significant clusters)}
+\item{show.all_labels}{a logical specifying if all cluster labels must be shown (or just significant clusters)}
 }
 \value{
 a 'ggplot' object

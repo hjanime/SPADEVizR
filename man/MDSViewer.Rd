@@ -10,13 +10,13 @@ MDSViewer(Results, use.percentages = TRUE, assignments, clusters = NULL,
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
-\item{use.percentages}{a logical specifying if the visualisation should be performed on percentage}
+\item{use.percentages}{a logical specifying if the visualization should be performed on percentage}
 
-\item{assignments}{a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment}
+\item{assignments}{a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment}
 
-\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
+\item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
-\item{space}{a caracter specifying the space ("clusters" or "samples", cluster by default)}
+\item{space}{a character specifying the space ("clusters" or "samples", cluster by default)}
 
 \item{dist.method}{a character string containing the name of the distance measure to use}
 }
@@ -27,6 +27,6 @@ a list of ggplot objects
 Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs phenotypes.
 }
 \details{
-xxx
+talk about space xxx
 }
 

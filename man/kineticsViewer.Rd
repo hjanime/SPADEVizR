@@ -10,17 +10,17 @@ kineticsViewer(Results, assignments, clusters = NULL,
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
-\item{assignments}{a 2 column data.frame with the samples names in rownames providing firstly the timepoints (numeric) and secondly the individuals (caracter) of the experiment}
+\item{assignments}{a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment}
 
-\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
+\item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
-\item{use.percentages}{a logical specifying if the visualisation should be performed on percentage}
+\item{use.percentages}{a logical specifying if the visualization should be performed on percentage}
 }
 \value{
 a 'ggplot' object
 }
 \description{
-Generates a kinetics plot representation showing for each cluster its enrichment profiles at each timepoint of each individual.
+Generates a kinetics plot representation showing for each cluster its enrichment profiles at each time-point of each individual.
 }
 \details{
 xxx

@@ -2,24 +2,25 @@
 % Please edit documentation in R/03_plots.R
 \name{phenoViewer}
 \alias{phenoViewer}
-\title{Pheno Viewer}
+\title{Visualization of all clusters phenotypes as an heatmap}
 \usage{
-phenoViewer(SPADEResults, pheno.table = NULL, num = 5)
+phenoViewer(SPADEResults, num = 5)
 }
 \arguments{
 \item{SPADEResults}{a SPADEResults object (Results object is not accepted)}
 
-\item{pheno.table}{a result of the function computePhenoTable}
-
-\item{num}{a numeric indicating the precision of computed expression scores}
+\item{num}{a numeric value specifying the number of markers expression categories to use}
 }
 \value{
 a list of ggplot objects
 }
 \description{
-Heatmap Viewer aims to xxx
+Generates an heatmap representation showing for all clusters the marker median expressions.
 }
 \details{
-xxx
+For each marker, median expressions are discretized in severals categories corresponding to the heat intensities. 
+This number of categories is provided using 'num' parameter.
+
+By default the 'pheno.table' parameter is null and will be automatically compute using the 'computePhenoTable' function.
 }
 

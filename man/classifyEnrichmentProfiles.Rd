@@ -25,22 +25,21 @@ The classification is done on cell abundances of each clusters and could be perf
 \itemize{
 \item "hierarchical_k" 
 This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
-The hierarchical classification is cutted is order provided the desired number of classes. 
+The hierarchical classification is cutted in order to return the desired number of classes. 
 This number of classes must be provided as a numeric integer using the 'method.parameter' parameter.
-It is to note that negative correlations are considered as uncorrelated;
+It is to note that negative correlations are considered as uncorrelated
 \item "hierarchical_k" 
 This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
-This heigth is correlation threshold and must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+This heigth is a correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
 \item "eigencell" 
 This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
 Clusters which correlate above a specific threshold with the same eigen vector are classified together.
-This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
+This correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
 \item "clique" 
-This method first compute the pearson correlation matrix and then use this matrix to generate an undirected graph.
+This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
 In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
-This correlation threshold must be a numeric double (between 0 and 1 included) provided using the 'method.parameter' parameter.
-The largest cliques are then researched in this graph. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
-Finally the founded cliques are considered as classes of cluster.
+This correlation threshold (a numeric double between 0 and 1 included) provided using the 'method.parameter' parameter.
+After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 }
 }
 

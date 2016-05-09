@@ -15,7 +15,7 @@ computeClique(data, clique.correlation.th = 0.7)
 a dataframe containing for each cluster, its name and class
 }
 \description{
-This function is used internally to classify clusters enrichment profilies or phenotype profiles using a clique percolation algorithm.
+This function is used internally to classify clusters enrichment profiles or phenotype profiles using a clique percolation algorithm.
 }
 \details{
 xxx

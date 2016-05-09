@@ -9,9 +9,9 @@ exclude.markers(data, exclude, colnames.FCS = NULL)
 \arguments{
 \item{data}{a numeric matrix or flowset}
 
-\item{exclude}{a character vector containing the cell markers to be excluded (case insentive)}
+\item{exclude}{a character vector containing the cell markers to be excluded (case intensive)}
 
-\item{colnames.FCS}{a character vector containing colnames if data is a FCS flowset}
+\item{colnames.FCS}{a character vector containing column names if data is a FCS flowset}
 }
 \value{
 a numeric matrix without the cell markers to exclude

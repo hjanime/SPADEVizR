@@ -4,17 +4,14 @@
 \alias{treeViewer}
 \title{Visualization of combined SPADE trees}
 \usage{
-treeViewer(SPADEResults, samples = NULL, stat.object = NULL,
-  vertex_size = c(1, 15))
+treeViewer(SPADEResults, samples = NULL, stat.object = NULL)
 }
 \arguments{
 \item{SPADEResults}{a SPADEResults object (Results object is not accepted)}
 
-\item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples for cell counting (all samples by default)}
+\item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
 
-\item{stat.object}{an AC, DEC or CC object to highligth significant clusters in the SPADE tree}
-
-\item{vertex_size}{a numeric vector of two values indicating the range of}
+\item{stat.object}{an AC, DEC or CC object to highligth identified significant clusters in the SPADE tree}
 }
 \value{
 a list of ggplot objects
@@ -23,6 +20,6 @@ a list of ggplot objects
 Generates a tree representation showing combined SPADE trees.
 }
 \details{
-xxx
+The size of tree nodes are related to the number of cells in each cluster.
 }
 

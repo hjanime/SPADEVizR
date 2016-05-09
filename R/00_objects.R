@@ -14,7 +14,7 @@ setOldClass("igraph") # give access to igraph class
 #' 
 #' The 'marker.expressions' dataframe stores the marker median expressions for each cluster. This dataframe has in the first the sample names, in the second column the cluster names, and the maker median expressions in the others columns.
 #' 
-#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'importX()' function.
 #' 
 #' @slot cells.count a dataframe containing the number of cells for each cluster of each sample
@@ -394,9 +394,9 @@ CC <- setClass("CC",
 #' This object contains all information about the classification method and parameters used.  
 #' 	
 #' @details 
-#' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can paramaterized using the 'method.parameter' parameter.
+#' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
 #'  
-#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'classifyPhenoProfiles()' function. 
 #' 
 #' @slot cluster.number a numeric providing the number of cluster
@@ -432,9 +432,9 @@ PhenoProfiles <- setClass("PhenoProfiles",
 #' This object contains all information about the classification method and parameters used.   
 #' 
 #' @details
-#' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can paramaterized using the 'method.parameter' parameter.
+#' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
 #' 
-#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'classifyEnrichmentProfiles()' function. 
 #' 
 #' @slot method a character specifying the method used to classify cluster
@@ -442,7 +442,7 @@ PhenoProfiles <- setClass("PhenoProfiles",
 #' @slot cluster.size a numeric vector with the number of cell in each cluster (sum of all samples)
 #' @slot cluster.number a numeric providing the number of cluster
 #' @slot class.number a numeric providing the number of classes
-#' @slot classes a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm 
+#' @slot classes a two column dataframe with the cluster in first column and corresponding class in the second column 
 #' 
 #' @name EnrichmentProfiles-class
 #' @rdname EnrichmentProfiles-class

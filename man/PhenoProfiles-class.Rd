@@ -12,9 +12,9 @@ The 'PhenoProfiles' is a S4 object containing the information related to the clu
 This object contains all information about the classification method and parameters used.
 }
 \details{
-Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can paramaterized using the 'method.parameter' parameter.
+Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
  
-The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 This object is returned by the 'classifyPhenoProfiles()' function.
 }
 \section{Slots}{

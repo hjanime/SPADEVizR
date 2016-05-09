@@ -1,7 +1,7 @@
 #' @title Internal - Generatate a matrix of marker expression scores describing phenotypes
 #' 
 #' @description 
-#' This function generate a numeric matrix of expression scores for each marker of each cluster.
+#' This function generate a numeric matrix of discrete expression scores for each marker of each cluster.
 #' 
 #' @details 
 #' XXX 
@@ -12,7 +12,6 @@
 #' @return a numeric matrix of expression scores
 #' 
 #' @import gtools
-#'
 computePhenoTable <- function(SPADEResults, num = 5){
     
     message("[START] - computing PhenoTable")
@@ -53,7 +52,7 @@ computePhenoTable <- function(SPADEResults, num = 5){
 #' This function is used internally to build the element needed for an heatmap
 #' 
 #' @param matrix a numeric matrix containing the markers expression categories
-#' @param dendrogram.type a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)
+#' @param dendrogram.type a character specifying the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)
 #' @param num a numeric value specifying the number of markers expression categories
 #' @param clustering.markers a character vector of clustering markers
 #' @return a list of 3 plots (top dendrogram, right dendrogram, heatmap)
@@ -162,7 +161,7 @@ g_dendro <- function(dist, row=!col, col=!row) {
 #' @title Internal - Extraction of ggplot legend
 #'
 #' @description 
-#' This function is used internally to extract the legend from a 'ggplot' objet.
+#' This function is used internally to extract the legend from a 'ggplot' object.
 #'
 #' @param gplot a 'ggplot' plot
 #' 
@@ -276,41 +275,139 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
 #'
 #' @import ggplot2
 stat_steamgraph <- function(mapping     = NULL,
-                            data        = NULL,
-                            show.legend = NA,
-                            inherit.aes = TRUE,
-                            na.rm       = TRUE,
-                            ...) { 
-
-	statSteamgraph <- ggplot2::ggproto("statSteamgraph",
-                                   ggplot2::Stat,
-                                   required_aes = c("x", "y", "group"),
-                                   setup_params = function(data, params) {
+        data        = NULL,
+        show.legend = NA,
+        inherit.aes = TRUE,
+        na.rm       = TRUE,
+        ...) { 
+    
+    statSteamgraph <- ggplot2::ggproto("statSteamgraph",
+            ggplot2::Stat,
+            required_aes = c("x", "y", "group"),
+            setup_params = function(data, params) {
+                
+                data.table::setDT(data)
+                print(data)
+                data[, ymax := cumsum(y) - (sum(y)/2), by = list(x, PANEL)]
+                data[, ymin := ymax - y, by = list(x, PANEL)]
+                
+                list(overalldata = data,na.rm = TRUE)
+                
+            },
             
-            data.table::setDT(data)
-            
-            datasdorder = data[, list(sdy = sd(y)), by = list(group)][,
-                                 ranksdy := rank(sdy, ties.method = 'random')
-                              ][ ranksdy %%2 == 0, ranksdy := -ranksdy]
-            
-            data = merge(data,datasdorder,'group',all = T)
-            
-            data.table::setkey(data, x, ranksdy)
-            data[, ymax := cumsum(y) - (sum(y)/2), by = list(x, PANEL)]
-            data[, ymin := ymax - y, by = list(x, PANEL)]
-            
-            list(overalldata = data,na.rm = T)
-            
-        },
-   
-        compute_group = function(data, scales, overalldata) {
-            print("HERE")
-            data = overalldata[group %in% data$group]
-            data.frame(x = data[, x],ymin = data[, ymin],ymax = data[, ymax])
-        }
-	)
-
+            compute_group = function(data, scales, overalldata) {
+                
+                data = overalldata[group %in% data$group]
+                data <- data.frame(x = data[, x],ymin = data[, ymin],ymax = data[, ymax])
+                
+                return(data)
+            }
+    )
+    
+    
     ggplot2::layer(stat = statSteamgraph, data = data, mapping = mapping, geom = 'ribbon',
-                   position = 'identity', show.legend = show.legend, inherit.aes = inherit.aes,
-                   params = list(na.rm = na.rm, ...)) 
+            position = 'identity', show.legend = show.legend, inherit.aes = inherit.aes,
+            params = list(na.rm = na.rm, ...))
+    
+}
+
+stat_steamgraph2 <- function(mapping     = NULL,
+        data        = NULL,
+        show.legend = NA,
+        inherit.aes = TRUE,
+        na.rm       = TRUE,
+        ...) {
+    statSteamgraph2 <- ggplot2::ggproto("statSteamgraph",
+            ggplot2::Stat,
+            required_aes = c("x", "y", "group"),
+            setup_params = function(data, params) {
+                
+                
+                data.table::setDT(data)
+                print(data)
+                data[, ymax := cumsum(y) - (sum(y)/2), by = list(x, PANEL)]
+                data[, ymin := ymax - y, by = list(x, PANEL)]
+                
+                list(overalldata = data,na.rm = TRUE)
+                
+                
+            },
+            
+            compute_group = function(data, scales, overalldata) {
+                
+                data = overalldata[group %in% data$group]
+                
+                
+                data <- data.frame(x = data[, x],y = unique(c(data[, ymin],data[, ymax])))
+                
+                return(data)
+            }
+    )
+    
+    ggplot2::layer(stat = statSteamgraph2, data = data, mapping = mapping, geom = 'point',
+            position = 'identity', show.legend = FALSE, inherit.aes = inherit.aes,
+            params = list(na.rm = na.rm, ...)) 
+}
+
+stat_steamgraph3 <- function(mapping     = NULL,
+        data        = NULL,
+        show.legend = NA,
+        inherit.aes = TRUE,
+        na.rm       = TRUE,
+        ...) {
+    statSteamgraph3 <- ggplot2::ggproto("statSteamgraph3",
+            ggplot2::Stat,
+            required_aes = c("x", "y"),
+            setup_params = function(data, params) {
+                
+                
+                data.table::setDT(data)
+                print(data)
+                data[, ymax := cumsum(y) - (sum(y)/2), by = list(x, PANEL)]
+                data[, ymin := ymax - y, by = list(x, PANEL)]
+                
+                list(overalldata = data,na.rm = TRUE)
+                
+                
+            },
+            
+            compute_group = function(data, scales, overalldata) {
+                
+                data = overalldata[group %in% data$group]
+                
+                y.coord <- c(data[, ymin],data[, ymax])
+                labels <- y.coord
+                
+                for (i in 1:nrow(data)){
+                    temp <- overalldata[overalldata$x == i,]
+                    
+                    min <- min(temp$ymin)
+                    # trans.label <- c(data[, ymin],data[, ymax]) - min
+                    # labels <- c(labels,trans.label)
+                    
+                    #print(paste(i,min))
+                }
+                
+                data <- data.frame(x = data[, x], y = y.coord, label = labels)
+                
+                for (i in 1:nrow(data)){
+                    temp <- overalldata[overalldata$x == data[i,"x"],]
+                    
+                    min <- min(temp$ymin)
+                    
+                    data[i,"label"] <- data[i,"label"] - min
+                    # trans.label <- c(data[, ymin],data[, ymax]) - min
+                    # labels <- c(labels,trans.label)
+                    
+                    #print(paste(i,min))
+                }
+                
+                
+                return(data)
+            }
+    )
+    
+    ggplot2::layer(stat = statSteamgraph3, data = data, mapping = mapping, geom = 'text',
+            position = 'identity', show.legend = FALSE, inherit.aes = inherit.aes,
+            params = list(na.rm = na.rm, ...)) 
 }

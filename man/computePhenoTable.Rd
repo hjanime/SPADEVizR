@@ -15,7 +15,7 @@ computePhenoTable(SPADEResults, num = 5)
 a numeric matrix of expression scores
 }
 \description{
-This function generate a numeric matrix of expression scores for each marker of each cluster.
+This function generate a numeric matrix of discrete expression scores for each marker of each cluster.
 }
 \details{
 XXX

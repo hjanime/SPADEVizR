@@ -12,9 +12,9 @@ The 'EnrichmentProfiles' is a S4 object containing the information related to th
 This object contains all information about the classification method and parameters used.
 }
 \details{
-Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can paramaterized using the 'method.parameter' parameter.
+Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
 
-The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 This object is returned by the 'classifyEnrichmentProfiles()' function.
 }
 \section{Slots}{
@@ -30,6 +30,6 @@ This object is returned by the 'classifyEnrichmentProfiles()' function.
 
 \item{\code{class.number}}{a numeric providing the number of classes}
 
-\item{\code{classes}}{a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm}
+\item{\code{classes}}{a two column dataframe with the cluster in first column and corresponding class in the second column}
 }}
 

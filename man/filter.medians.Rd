@@ -9,7 +9,7 @@ filter.medians(data, use.raw.medians = FALSE)
 \arguments{
 \item{data}{a SPADE matrix}
 
-\item{use.raw.medians}{a logicial specifying if "transformed" or "raw" medians will be use (FALSE by default)}
+\item{use.raw.medians}{a logical specifying if "transformed" or "raw" medians will be use (FALSE by default)}
 }
 \value{
 a numeric matrix without the cell markers to exclude

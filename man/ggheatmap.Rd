@@ -10,7 +10,7 @@ ggheatmap(matrix, dendrogram.type = "rectangle", num = 5,
 \arguments{
 \item{matrix}{a numeric matrix containing the markers expression categories}
 
-\item{dendrogram.type}{a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)}
+\item{dendrogram.type}{a character specifying the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)}
 
 \item{num}{a numeric value specifying the number of markers expression categories}
 

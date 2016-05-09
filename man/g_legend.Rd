@@ -13,6 +13,6 @@ g_legend(gplot)
 a 'ggplot' legend object
 }
 \description{
-This function is used internally to extract the legend from a 'ggplot' objet.
+This function is used internally to extract the legend from a 'ggplot' object.
 }
 

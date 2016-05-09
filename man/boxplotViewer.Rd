@@ -10,11 +10,11 @@ boxplotViewer(Results, conditions, clusters = NULL, use.percentages = TRUE,
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
-\item{conditions}{conditions a named vector providing the correspondence between a sample name (in rownames) and the condition of this sample : NA to exclude a sample from tests}
+\item{conditions}{conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample : NA to exclude a sample from tests}
 
-\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
+\item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
-\item{use.percentages}{a logical specifying if the visualisation must be performed on percentage}
+\item{use.percentages}{a logical specifying if the visualization must be performed on percentage}
 
 \item{show.legend}{a logical specifying if the legend must be displayed}
 

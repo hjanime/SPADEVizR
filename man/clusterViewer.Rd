@@ -10,7 +10,7 @@ clusterViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
 \arguments{
 \item{Results}{a SPADEResults or Result object}
 
-\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
+\item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
 \item{samples}{a named vector specifying the samples to used}
 
@@ -29,11 +29,11 @@ If 'Results' is an object of class 'SPADEResults' object then the quantile range
 
 The 'samples' parameter required a named vector providing the correspondence between a sample name (in rowname) and the logical value TRUE to show this sample or FALSE otherwise.
 
-The 'show.mean' parameter allows to vizualize three kinds of information:
+The 'show.mean' parameter allows to visualize three kinds of information:
 \itemize{
 \item "none" value will show marker median expressions for each selected samples;
 \item "only" value will show only the mean of median maker expressions for all selected samples (displayed as black dashed line);
-\item "both" value will show marker median expressions for each selected samples together with the mean of median maker expressionsons for all selected samples.
+\item "both" value will show marker median expressions for each selected samples together with the mean of median maker expressions for all selected samples.
 }
 }
 

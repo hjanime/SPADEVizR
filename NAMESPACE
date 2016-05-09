@@ -2,6 +2,7 @@
 
 export(MDSViewer)
 export(abundantClustersViewer)
+export(biplotViewer)
 export(boxplotViewer)
 export(classifyEnrichmentProfiles)
 export(classifyPhenoProfiles)

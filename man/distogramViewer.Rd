@@ -22,6 +22,8 @@ a list of 'ggplot' objects
 Generate a distogram representation showing the marker co-expressions.
 }
 \details{
-xxx
+A pearson correlation matrix is calculated between selected markers using selected clusters and samples.
+High positive correlated markers are shown by a green tile at their perpendicular intersection. 
+In the same way, absence of correlation are shown by black tiles and negative correlation by red tiles.
 }
 

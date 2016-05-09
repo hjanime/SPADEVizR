@@ -12,15 +12,15 @@ importSPADEResults(path, dict = data.frame(),
 \arguments{
 \item{path}{a character specify the path of SPADE results folder}
 
-\item{dict}{a two column dataframe providing the correspondance between the original marker names (first column) and the real marker names (second column)}
+\item{dict}{a two column dataframe providing the correspondence between the original marker names (first column) and the real marker names (second column)}
 
-\item{exclude.markers}{a character vector of markers to exclude (case insentive)}
+\item{exclude.markers}{a character vector of markers to exclude (case insensitive)}
 
 \item{probs}{a vector of probabilities with 2 values in [0,1] to compute maker range quantiles. First is the lower bound and second is the upper bound.}
 
-\item{use.raw.medians}{a logicial specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)}
+\item{use.raw.medians}{a logical specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)}
 
-\item{quantile.approximation}{a logicial specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
+\item{quantile.approximation}{a logical specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
 }
 \value{
 a S4 object of class 'SPADEResults'

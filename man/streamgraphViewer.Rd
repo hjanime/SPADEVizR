@@ -2,14 +2,14 @@
 % Please edit documentation in R/03_plots.R
 \name{streamgraphViewer}
 \alias{streamgraphViewer}
-\title{streamgraphViewer}
+\title{Visualization of cluster abundance dynamics}
 \usage{
 streamgraphViewer(Results, order = NULL, clusters = NULL)
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
-\item{order}{a named vector a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples in numeric (NA to exclude this sample)}
+\item{order}{a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples (NA to exclude a sample)}
 
 \item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
 }
@@ -17,7 +17,7 @@ streamgraphViewer(Results, order = NULL, clusters = NULL)
 a 'ggplot' object
 }
 \description{
-Generate a streamgraph representation showing the evolution of cell count in clusters across samples
+Generate a streamgraph representation showing the dynamic evolution of the number of cells in clusters across samples.
 }
 \details{
 xxx
