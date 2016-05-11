@@ -7,12 +7,14 @@
 #' \item "pheno" (included by default): Display an heatmap representation
 #' \item "kinetic": Display a kinetic representation for each cluster. This plot required to provide the 'assignment' parameter.
 #' \item "cluster" (included by default): Display a parallel coordinate representation showing for each cluster the marker median expression.
-#' \item "kinetic_cluster": Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster
+#' \item "boxplot": Display a boxplot representation. This plot required to provide the 'conditions' parameter.
+#' \item "kinetic_cluster": Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster.
+#' \item "boxplot_cluster": Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster.
 #' \item "tree" (included by default): Display a tree representation showing combined SPADE trees. 
 #' \item "disto" (included by default): Display a distogram representation showing the marker co-expressions.
 #' \item "stream" (included by default): Display a 
-#' \item "MDS_clusters" (included by default): Display a Multidimensional Scaling (MDS) representation showing the 
-#' \item "MDS_samples": Display a Multidimensional Scaling (MDS) representation showing the. This plot required to provide the 'assignment' parameter.
+#' \item "MDSclusters" (included by default): Display a Multidimensional Scaling (MDS) representation showing the
+#' \item "MDSsamples": Display a Multidimensional Scaling (MDS) representation showing the. This plot required to provide the 'assignment' parameter.
 #' }
 #' 
 #' @param Results a 'SPADEResults' or 'Result' object
@@ -31,10 +33,11 @@
 #' @export
 generateReport <- function(results,
                            PDFfile,
-                           plots.names     = c("pheno", "cluster", "tree", "disto", "stream", "MDS_clusters"),
+                           plots.names     = c("pheno", "cluster", "tree", "disto", "stream", "MDSclusters"),
                            clusters        = NULL,
                            markers         = NULL,
                            assignments     = NULL,
+                           conditions      = NULL,
                            stat.objects    = list(),
                            profile.objects = list(),
                            width           = 29.7,
@@ -46,25 +49,29 @@ generateReport <- function(results,
     
     plots  <- list()
 
-    if (is.element(c("kinetic-cluster", "kinetic"), plots) && is.null(assignments)){
-        stop("Error in generateReport : 'kinetic-cluster' and/or 'kinetic' report required assignments")
+    if (is.element(c("kinetic_cluster", "kinetic"), plots) && is.null(assignments)){
+        stop("Error in generateReport : 'kinetic_cluster' and/or 'kinetic' report required assignments")
+    }
+    
+    if (is.element(c("boxplot_cluster", "boxplot"), plots) && is.null(conditions)){
+        stop("Error in generateReport : 'boxplot_cluster' and/or 'boxplot' report required conditions")
     }
     
     for(i in length(plots.names)){
         switch(plots.names[i],
-               MDS_clusters    = {
+               "MDS_clusters"    = {
                   plots <- c(plots, list(MDSViewer(results, space = "clusters", clusters = clusters)))
                },
-               MDS_samples     = {
+               "MDS_samples"     = {
                   plots <- c(plots, list(MDSViewer(results, space = "samples", clusters = clusters, assignments = assignments)))
                },
-               pheno           = {
+               "pheno"           = {
                   plots <- c(plots, list(phenoViewer(results)))
                },
-               tree            = {
+               "tree"            = {
                   plots <- c(plots, list(treeViewer(results)))
                },
-               kinetic_cluster = {
+               "kinetic_cluster" = {
                    kinetics.plots <- kineticsViewer(results, clusters = clusters, assignments = assignments)
                    cluster.plots  <- clusterViewer(results, clusters = clusters, markers = markers)
                    
@@ -72,19 +79,30 @@ generateReport <- function(results,
                        plots <- c(plots, list(gridExtra::arrangeGrob(kinetics.plots[[i]], cluster.plots[[i]], ncol = 2)))
                    }
                },
-               kinetic         = {
+               "boxplot_cluster" = {
+                   boxplot.plots <- boxplotViewer(results, clusters = clusters, conditions = conditions)
+                   cluster.plots <- clusterViewer(results, clusters = clusters, markers = markers)
+                   
+                   for (i in 1:length(boxplot.plots)){
+                       plots <- c(plots, list(gridExtra::arrangeGrob(boxplot.plots[[i]], cluster.plots[[i]], ncol = 2)))
+                   }
+               },
+               "boxplot"         = {
+                   plots <- c(plots, boxplotViewer(results, clusters = clusters, conditions = conditions))
+               },
+               "kinetic"         = {
                    plots <- c(plots, kineticsViewer(results, assignments = assignments, clusters = clusters))
                },
-               cluster         = {
+               "cluster"         = {
                    plots <- c(plots, clusterViewer(results,clusters = clusters, markers = markers))
                },
-               disto           = {
+               "disto"           = {
                    plots <- c(plots, list(distogramViewer(results)))
                },
-               stream          = {
+               "stream"          = {
                    plots <- c(plots, list(streamgraphViewer(results, clusters = clusters)))
                },
-               count           = {
+               "count"           = {
                    plots <- c(plots, list(countViewer(results, clusters = clusters)))
                })
        
@@ -97,9 +115,7 @@ generateReport <- function(results,
         plots <- c(plots, list(plot(profile.object)))
     }
     
-    print(length(plots))
-    
-    plot(plots)
+
     pages.plots <- gridExtra::marrangeGrob(grobs = plots, nrow = 1, ncol = 1)
 
     ggplot2::ggsave(PDFfile, pages.plots, width = width, height = height)

@@ -4,7 +4,8 @@
 \alias{streamgraphViewer}
 \title{Visualization of cluster abundance dynamics}
 \usage{
-streamgraphViewer(Results, order = NULL, clusters = NULL)
+streamgraphViewer(Results, order = NULL, clusters = NULL,
+  use.relative = FALSE)
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
@@ -12,6 +13,8 @@ streamgraphViewer(Results, order = NULL, clusters = NULL)
 \item{order}{a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples (NA to exclude a sample)}
 
 \item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
+
+\item{use.relative}{a logical specifying if the visualization should be performed on relative abundance}
 }
 \value{
 a 'ggplot' object

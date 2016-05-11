@@ -5,9 +5,9 @@
 \title{Generate a report including SPADEVizR plots.}
 \usage{
 generateReport(results, PDFfile, plots.names = c("pheno", "cluster", "tree",
-  "disto", "stream", "MDS_clusters"), clusters = NULL, markers = NULL,
-  assignments = NULL, stat.objects = list(), profile.objects = list(),
-  width = 29.7, height = 21)
+  "disto", "stream", "MDSclusters"), clusters = NULL, markers = NULL,
+  assignments = NULL, conditions = NULL, stat.objects = list(),
+  profile.objects = list(), width = 29.7, height = 21)
 }
 \arguments{
 \item{PDFfile}{a character specifying the output path}
@@ -37,12 +37,14 @@ Available plots are :
 \item "pheno" (included by default): Display an heatmap representation
 \item "kinetic": Display a kinetic representation for each cluster. This plot required to provide the 'assignment' parameter.
 \item "cluster" (included by default): Display a parallel coordinate representation showing for each cluster the marker median expression.
-\item "kinetic_cluster": Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster
+\item "boxplot": Display a boxplot representation. This plot required to provide the 'conditions' parameter.
+\item "kinetic_cluster": Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster.
+\item "boxplot_cluster": Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster.
 \item "tree" (included by default): Display a tree representation showing combined SPADE trees. 
 \item "disto" (included by default): Display a distogram representation showing the marker co-expressions.
 \item "stream" (included by default): Display a 
-\item "MDS_clusters" (included by default): Display a Multidimensional Scaling (MDS) representation showing the 
-\item "MDS_samples": Display a Multidimensional Scaling (MDS) representation showing the. This plot required to provide the 'assignment' parameter.
+\item "MDSclusters" (included by default): Display a Multidimensional Scaling (MDS) representation showing the
+\item "MDSsamples": Display a Multidimensional Scaling (MDS) representation showing the. This plot required to provide the 'assignment' parameter.
 }
 }
 

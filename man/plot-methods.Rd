@@ -6,8 +6,8 @@
 \alias{plot,AC,missing-method}
 \alias{plot,CC,missing-method}
 \alias{plot,DEC,missing-method}
-\alias{plot,EnrichmentProfiles,ANY-method}
-\alias{plot,PhenoProfiles,ANY-method}
+\alias{plot,EnrichmentProfiles,missing-method}
+\alias{plot,PhenoProfiles,missing-method}
 \title{Graphical representation for some SPADEVizR objects}
 \usage{
 plot(x, y = NULL, ...)
@@ -18,9 +18,9 @@ plot(x, y = NULL, ...)
 
 \S4method{plot}{CC,missing}(x, y = NULL, ...)
 
-\S4method{plot}{PhenoProfiles,ANY}(x, y = NULL, ...)
+\S4method{plot}{PhenoProfiles,missing}(x, y = NULL, ...)
 
-\S4method{plot}{EnrichmentProfiles,ANY}(x, y = NULL, ...)
+\S4method{plot}{EnrichmentProfiles,missing}(x, y = NULL, ...)
 }
 \arguments{
 \item{x}{a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object}

@@ -4,7 +4,8 @@
 \alias{treeViewer}
 \title{Visualization of combined SPADE trees}
 \usage{
-treeViewer(SPADEResults, samples = NULL, stat.object = NULL)
+treeViewer(SPADEResults, samples = NULL, stat.object = NULL,
+  marker = NULL)
 }
 \arguments{
 \item{SPADEResults}{a SPADEResults object (Results object is not accepted)}
@@ -12,6 +13,8 @@ treeViewer(SPADEResults, samples = NULL, stat.object = NULL)
 \item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
 
 \item{stat.object}{an AC, DEC or CC object to highligth identified significant clusters in the SPADE tree}
+
+\item{marker}{a character specifying the marker name to display}
 }
 \value{
 a list of ggplot objects
@@ -20,6 +23,8 @@ a list of ggplot objects
 Generates a tree representation showing combined SPADE trees.
 }
 \details{
-The size of tree nodes are related to the number of cells in each cluster.
+The size of tree nodes are related to the number of cells in each cluster. 
+If the 'stat.object' parameter is provided node outlines are colored according to clusters signifiance.
+If the 'marker' parameter is provided, the nodes are colored according to mean expression for the selected marker using selected samples.
 }
 

@@ -11,7 +11,7 @@
 #' The computation of maker range quantiles can be approximated using 'quantile.approximation' parameter which is more efficient in term of loading time and memory usage.
 #'  
 #' @param path a character specify the path of SPADE results folder
-#' @param dict a two column dataframe providing the correspondence between the original marker names (first column) and the real marker names (second column)
+#' @param dictionary a two column dataframe providing the correspondence between the original marker names (first column) and the real marker names (second column)
 #' @param exclude.markers a character vector of markers to exclude (case insensitive)
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute maker range quantiles. First is the lower bound and second is the upper bound.
 #' @param use.raw.medians a logical specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)
@@ -23,7 +23,7 @@
 #'
 #' @export 
 importSPADEResults <- function(path,
-                               dict               = data.frame(),
+                               dictionary         = data.frame(),
                                exclude.markers    = c("cell_length", "FileNum", "density", "time"),
                                probs              = c(0.05,0.95),
                                use.raw.medians    = FALSE,
@@ -33,28 +33,9 @@ importSPADEResults <- function(path,
     message(paste0(basename(path),"\n"))
     path <- normalizePath(path,"/")
     
-    message("FCS files import:")
-    fcs.files         <- dir(path, full.names = TRUE, pattern = ".fcs.density.fcs.cluster.fcs$")
-    samples.names     <- gsub(".fcs.density.fcs.cluster.fcs", "", basename(fcs.files))
-    fcs.files         <- dir(path, full.names = TRUE, pattern = ".fcs.density.fcs.cluster.fcs$")
-    flowset           <- flowCore::read.flowSet(fcs.files, emptyValue = TRUE)
-    flowCore::sampleNames(flowset) <- samples.names
-
-    if(nrow(dict)>0){
-        flowset@colnames <- rename.markers(flowset@colnames, dict)
-        flowset    <- flowset[,1:length(flowset@colnames)]
-    }
+    fcs.files <- dir(path, full.names = TRUE, pattern = ".fcs.density.fcs.cluster.fcs$")
+    flowset   <- load.flowSet(fcs.files = fcs.files, dictionary = dictionary, exclude.markers = exclude.markers)
     
-    if (!is.null(exclude.markers)){
-        flowset <- exclude.markers(flowset, exclude.markers, colnames.FCS = flowset@colnames)
-    }
-    message("\tarchsin transform...")
-    
-    transform.arcsinh <- flowCore::arcsinhTransform(a=0, b=0.2) #a and b match SPADE a and b
-    marker.toTransform <- setdiff(flowset@colnames, c("cluster"))
-    transformations <- flowCore::transformList(marker.toTransform, transform.arcsinh)
-    flowset <- flowCore::transform(flowset, transformations)
-
     message("\tcompute quantiles...")
     
     if(quantile.approximation){
@@ -65,7 +46,7 @@ importSPADEResults <- function(path,
     }
     gc()    
     message("\treading SPADE results...")
-
+    
     files <- dir(paste(path,"/tables/bySample/",sep=""),full.names = TRUE)
     
     path.clusters.table   <- paste(path,"clusters.table",sep = "/")
@@ -116,8 +97,8 @@ importSPADEResults <- function(path,
     clustering.markers.indices <- grep("_clust",marker.expressions.header)
     marker.expressions.header  <- gsub("_clust","",marker.expressions.header)
 
-    if(nrow(dict)>0){           
-        colnames(marker.expressions)  <- rename.markers(marker.expressions.header,dict)    
+    if(nrow(dictionary)>0){           
+        colnames(marker.expressions)  <- rename.markers(marker.expressions.header,dictionary)    
     }else{
         colnames(marker.expressions)  <- marker.expressions.header
     }
@@ -137,9 +118,9 @@ importSPADEResults <- function(path,
     res <- new("SPADEResults", 
                marker.expressions  = marker.expressions,
                use.raw.medians     = use.raw.medians,
-               dictionary          = dict,
+               dictionary          = dictionary,
                cells.count         = cells.count,
-               sample.names        = samples.names,
+               sample.names        = flowCore::sampleNames(flowset),
                marker.names        = markers.names,
                marker.clustering   = markers.names %in% clustering.markers,
                cluster.number      = nrow(cells.count),
@@ -357,4 +338,66 @@ computeQuantile.approximation <- function(flowset,probs = c(0.05,0.95)){
     
     return (as.data.frame(bounds))
     
+}
+
+#' @title Load FCS files object into a 'SPADEResult' object
+#'
+#' @description 
+#' This function loads the FCS files to the 'flowset' slot of the 'SPADEResult' object.
+#' @details
+#' If a 'SPADEResult' object is provided, others parameters ('fcs.files', 'dictionary', 'exclude.markers') will be ignored.
+#' @param SPADEResult a SPADEResult object (optional)
+#' @param fcs.files a character vector containing the absolute path of the original FCS files
+#' @param dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
+#' @param exclude.markers a character vector of markers to exclude (case insensitive)
+#' 
+#' @return a S4 'flowSet' object
+#' 
+#' @import flowCore 
+#'
+#' @export 
+load.flowSet <- function(SPADEResult = NULL, fcs.files, dictionary, exclude.markers){
+    
+    message("FCS files loading:")
+    
+    if (!is.null(SPADEResult)){
+        dictionary <- SPADEResult@dictionary
+        fcs.files  <- SPADEResult@fcs.files
+    }
+    
+    flowset           <- flowCore::read.flowSet(fcs.files, emptyValue = TRUE)
+    samples.names     <- gsub(".fcs.density.fcs.cluster.fcs", "", basename(fcs.files))
+    flowCore::sampleNames(flowset) <- samples.names
+        
+    if(nrow(dictionary)>0){
+        flowset@colnames <- rename.markers(flowset@colnames, dictionary)
+    }
+    
+    if (!is.null(SPADEResult)){
+        exclude.markers <- setdiff(flowset@colnames, c(SPADEResult@marker.names, "cluster"))
+    }
+    
+    if (!is.null(exclude.markers)){
+        flowset <- exclude.markers(flowset, exclude.markers, colnames.FCS = flowset@colnames)
+    }
+    message("\tarchsin transform...")
+    
+    transform.arcsinh <- flowCore::arcsinhTransform(a=0, b=0.2) #a and b match SPADE a and b
+    marker.toTransform <- setdiff(flowset@colnames, c("cluster"))
+    transformations <- flowCore::transformList(marker.toTransform, transform.arcsinh)
+    flowset <- flowCore::transform(flowset, transformations)
+    
+}
+
+#' @title Unload 'flowSet' object from a 'SPADEResult' object
+#'
+#' @description 
+#' This function unloads the 'flowSet' object in a 'SPADEResult' object.
+#' @param SPADEResult a SPADEResult object (optional)
+#' @return The new 'SPADEResult' object
+#' @export 
+unload.flowSet <- function(SPADEResult){
+    SPADEResult@flowset <- NULL
+    gc()
+    return(SPADEResult)
 }

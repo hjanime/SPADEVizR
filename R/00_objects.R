@@ -61,11 +61,6 @@ Results <- setClass("Results",
 #' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'importSPADEResult()' function. 
 #'
-#' @slot cells.count a dataframe containing the number of cells for each cluster of each sample
-#' @slot marker.expressions a numerical dataframe containing marker median expressions for each cluster of each sample
-#' @slot sample.names a character vector containing the sample names
-#' @slot marker.names a character vector containing the markers names
-#' @slot cluster.number a numeric specifying the number of cell clusters
 #' @slot use.raw.medians a logical specifying if the marker expressions correspond to the raw or transformed data
 #' @slot dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
 #' @slot marker.clustering a logical vector specifying marker that have been used during the clustering precedure
@@ -85,13 +80,17 @@ SPADEResults <- setClass("SPADEResults",
 	                     slots=c(use.raw.medians    = "logical",#check the best name
                                  dictionary         = "data.frame",
                                  marker.clustering  = "logical",
-                                 flowset            = "flowSet",
+                                 flowset            = "ANY",
                 		         fcs.files          = "character",#TODO think about storing flowset rather than fcs.files
                                  quantiles          = "data.frame",
                 		         graph              = "igraph",
                 		         graph.layout       = "matrix"),
                          validity = function(object){
-                                                          
+                             
+                             if( !is.null(object@flowset) && (class(object@flowset)[1] != "flowSet")){
+                                 message("Object SPADEResults, Error : flowset must be of class flowSet or null")
+                                 return (FALSE)
+                             }                             
                              if((length(object@sample.names) * object@cluster.number) != nrow(object@marker.expressions)){
                                  message(paste0("Object SPADEResults, Error : sample.names length (",
                                                 length(object@sample.names),") and cluster.number ("

@@ -339,9 +339,12 @@ classifyPhenoProfiles <- function (Results,
                 }
                 classes <- computeClique(table.wide, method.parameter)
             })
+    
     classes$class <- as.numeric(classes$class)
     classes       <- classes[ order(classes$class), ]
-    cluster.size  <- apply(Results@cells.count, 1, sum)
+    
+    cluster.size        <- apply(Results@cells.count, 1, sum)
+    names(cluster.size) <- rownames(Results@cells.count)
     
     pheno <- new ("PhenoProfiles",
                   method                   = method,
@@ -438,7 +441,9 @@ classifyEnrichmentProfiles <- function(Results,
             })
    classes$class <- as.numeric(classes$class)
    classes       <- classes[ order(classes$class), ]
-   cluster.size  <- apply(Results@cells.count,1,sum)
+   
+   cluster.size        <- apply(Results@cells.count,1,sum)
+   names(cluster.size) <- rownames(Results@cells.count)
    
    enrich <- new ("EnrichmentProfiles",
                   method                   = method,

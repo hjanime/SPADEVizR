@@ -133,7 +133,7 @@ results  <- importSPADEResults("C:/Users/gg248485/Desktop/SPADEVizR.data/ImMemor
 							   exclude.markers        = c("empty-Rh103", "empty-Rh103", "empty-Rh103", "empty-Rh103"))
 ## [START] - extracting SPADE results
 ## ImMemoryB-#00008_[MARKERSET10]_K070_P025
-## FCS files import:
+## FCS files loading:
 ## 	archsin transform...
 ## 	compute quantiles...
 ## 	reading SPADE results...
@@ -189,21 +189,21 @@ names(condition) <- results@sample.names
 resultsAC <- identifyAC(results, condition = condition, th.pvalue = 0.01, th.mean = 1)
 ## [START] - computing ACs
 ## Sampled used :
-## PBD008H00_MPBF_BB078_CD20__PBD008_BB078
-## PBD008H00_MPBF_BB231_CD20__PBD008_BB231
-## PBD008H00_MPBF_BC641_CD20__PBD008_BC641
-## PBD008H00_MPBF_BD619_CD20__PBD008_BD619
-## PBD008H00_MPBF_BD620_CD20__PBD008_BD620
-## PBD028H00_MPBF_BB078_CD20__PBD028_BB078
-## PBD028H00_MPBF_BB231_CD20__PBD028_BB231
-## PBD028H00_MPBF_BD620_CD20__PBD028_BD620
-## PPD000H00_MPBF_BB078_CD20__PPD000_BB078
-## PPD000H00_MPBF_BB231_CD20__PPD000_BB231
-## PPD000H00_MPBF_BD620_CD20__PPD000_BD620
+## CD20_PBD008_BB078
+## CD20_PBD008_BB231
+## CD20_PBD008_BC641
+## CD20_PBD008_BD619
+## CD20_PBD008_BD620
+## CD20_PBD028_BB078
+## CD20_PBD028_BB231
+## CD20_PBD028_BD620
+## CD20_PPD000_BB078
+## CD20_PPD000_BB231
+## CD20_PPD000_BD620
 ## [END] - computing ACs
 print(resultsAC)
 ## Object class: Abundant Clusters (AC)
-## Samples: PBD008H00_MPBF_BB078_CD20__PBD008_BB078; PBD008H00_MPBF_BB231_CD20__PBD008_BB231; PBD008H00_MPBF_BC641_CD20__PBD008_BC641; PBD008H00_MPBF_BD619_CD20__PBD008_BD619; PBD008H00_MPBF_BD620_CD20__PBD008_BD620; PBD028H00_MPBF_BB078_CD20__PBD028_BB078; PBD028H00_MPBF_BB231_CD20__PBD028_BB231; PBD028H00_MPBF_BD620_CD20__PBD028_BD620; PPD000H00_MPBF_BB078_CD20__PPD000_BB078; PPD000H00_MPBF_BB231_CD20__PPD000_BB231; PPD000H00_MPBF_BD620_CD20__PPD000_BD620
+## Samples: CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620; CD20_PBD028_BB078; CD20_PBD028_BB231; CD20_PBD028_BD620; CD20_PPD000_BB078; CD20_PPD000_BB231; CD20_PPD000_BD620
 ## Use matrix of percent: TRUE
 ## Statistical test used is: t.test
 ## Adjusted: none
@@ -220,31 +220,31 @@ The `identifyDEC()` function returns a plotable `DEC` object (see [Volcano Viewe
 ```r
 conditions <- c(1,1,NA,NA,1,1,1,2,2,NA,NA,2,2,2,2)
 names(conditions) <- results@sample.names
-resultsDEC <- identifyDEC(results,conditions = conditions, th.pvalue = 0.01, th.fc = 2)
+resultsDEC <- identifyDEC(results,conditions = conditions, th.pvalue = 0.1, th.fc = 2)
 ## [START] - computing DECs
 ## cond1:
-## PBD008H00_MPBF_BB078_CD20__PBD008_BB078
-## PBD008H00_MPBF_BB231_CD20__PBD008_BB231
-## PBD008H00_MPBF_BD620_CD20__PBD008_BD620
-## PBD028H00_MPBF_BB078_CD20__PBD028_BB078
-## PBD028H00_MPBF_BB231_CD20__PBD028_BB231
+## CD20_PBD008_BB078
+## CD20_PBD008_BB231
+## CD20_PBD008_BD620
+## CD20_PBD028_BB078
+## CD20_PBD028_BB231
 ## cond2:
-## PBD028H00_MPBF_BC641_CD20__PBD028_BC641
-## PBD028H00_MPBF_BD619_CD20__PBD028_BD619
-## PPD000H00_MPBF_BB231_CD20__PPD000_BB231
-## PPD000H00_MPBF_BC641_CD20__PPD000_BC641
-## PPD000H00_MPBF_BD619_CD20__PPD000_BD619
-## PPD000H00_MPBF_BD620_CD20__PPD000_BD620
+## CD20_PBD028_BC641
+## CD20_PBD028_BD619
+## CD20_PPD000_BB231
+## CD20_PPD000_BC641
+## CD20_PPD000_BD619
+## CD20_PPD000_BD620
 ## [END] - computing DECs
 print(resultsDEC)
 ## Object class: Differentially Enriched Clusters (DEC)
-## Sample of Condition 1: PBD008H00_MPBF_BB078_CD20__PBD008_BB078; PBD008H00_MPBF_BB231_CD20__PBD008_BB231; PBD008H00_MPBF_BD620_CD20__PBD008_BD620; PBD028H00_MPBF_BB078_CD20__PBD028_BB078; PBD028H00_MPBF_BB231_CD20__PBD028_BB231
-## Sample of Condition 2: PBD028H00_MPBF_BC641_CD20__PBD028_BC641; PBD028H00_MPBF_BD619_CD20__PBD028_BD619; PPD000H00_MPBF_BB231_CD20__PPD000_BB231; PPD000H00_MPBF_BC641_CD20__PPD000_BC641; PPD000H00_MPBF_BD619_CD20__PPD000_BD619; PPD000H00_MPBF_BD620_CD20__PPD000_BD620
+## Sample of Condition 1: CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BD620; CD20_PBD028_BB078; CD20_PBD028_BB231
+## Sample of Condition 2: CD20_PBD028_BC641; CD20_PBD028_BD619; CD20_PPD000_BB231; CD20_PPD000_BC641; CD20_PPD000_BD619; CD20_PPD000_BD620
 ## Use matrix of percent: TRUE
 ## Statistical test used is: t.test
 ## Adjusted: none
 ## Paired: FALSE
-## P-value threshold:  0.01
+## P-value threshold:  0.1
 ## Fold-change threshold:  2
 ```
 ## <a name="stat_function_identifyCC"/> XX Computation of correlated clusters
@@ -262,7 +262,7 @@ resultsCC <- identifyCC(results, variable = variable, th.pvalue = 0.001, th.corr
 ## [END] - computing CCs
 print(resultsCC)
 ## Object class: Correlated Clusters (CC)
-## Samples: PBD008H00_MPBF_BB078_CD20__PBD008_BB078; PBD008H00_MPBF_BB231_CD20__PBD008_BB231; PBD008H00_MPBF_BC641_CD20__PBD008_BC641; PBD008H00_MPBF_BD619_CD20__PBD008_BD619; PBD008H00_MPBF_BD620_CD20__PBD008_BD620; PBD028H00_MPBF_BB078_CD20__PBD028_BB078; PBD028H00_MPBF_BB231_CD20__PBD028_BB231; PBD028H00_MPBF_BC641_CD20__PBD028_BC641; PBD028H00_MPBF_BD619_CD20__PBD028_BD619; PBD028H00_MPBF_BD620_CD20__PBD028_BD620; PPD000H00_MPBF_BB078_CD20__PPD000_BB078; PPD000H00_MPBF_BB231_CD20__PPD000_BB231; PPD000H00_MPBF_BC641_CD20__PPD000_BC641; PPD000H00_MPBF_BD619_CD20__PPD000_BD619; PPD000H00_MPBF_BD620_CD20__PPD000_BD620
+## Samples: CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620; CD20_PBD028_BB078; CD20_PBD028_BB231; CD20_PBD028_BC641; CD20_PBD028_BD619; CD20_PBD028_BD620; CD20_PPD000_BB078; CD20_PPD000_BB231; CD20_PPD000_BC641; CD20_PPD000_BD619; CD20_PPD000_BD620
 ## Phenotypic variables: 8; 1.7; 4; 23; 10; 8; 1.7; 4; 23; 10; 8; 1.7; 4; 23; 10
 ## Use matrix of percent: TRUE
 ## Statistical test used is: pearson
@@ -388,7 +388,7 @@ The `boxplotViewer` function aims to compare cell enrichment of a cluster across
 
 
 ```r
-conditions <- c(1,1,NA,NA,1,1,1,2,2,NA,NA,2,2,2,2)
+conditions <- c("0 jours","0 jours","0 jours","0 jours",NA,"8 jours","8 jours","8 jours","8 jours",NA,"28 jours","28 jours","28 jours","28 jours",NA)
 names(conditions) <- results@sample.names
 gridExtra::grid.arrange(grobs = boxplotViewer(results, show.legend = TRUE, conditions = conditions, clusters=c("1","3")))
 ## These clusters will be compute:
@@ -403,8 +403,8 @@ The `kineticsViewer` function aims to represent the evolution of cells abundance
 
 ```r
 assignments <- data.frame(row.names = results@sample.names,
-						  timepoints = c(1,5,10,15,20,1,5,10,15,20,1,5,10,15,20), 
-						  individuals = c("HUMAN","HUMAN","HUMAN","HUMAN","HUMAN","MACAQUE","MACAQUE","MACAQUE","MACAQUE","MACAQUE","OTHER","OTHER","OTHER","OTHER","OTHER"))
+						  timepoints = c(0,0,0,0,0,8,8,8,8,8,28,28,28,28,28), 
+						  individuals = c("BB078","BB231","BC641","BD619","BD620","BB078","BB231","BC641","BD619","BD620","BB078","BB231","BC641","BD619","BD620"))
 
 gridExtra::grid.arrange(grobs = kineticsViewer(results, assignments = assignments, clusters=c("1","3")))
 ## These clusters will be compute :
