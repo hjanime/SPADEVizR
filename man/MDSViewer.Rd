@@ -2,7 +2,7 @@
 % Please edit documentation in R/04_Viewers.R
 \name{MDSViewer}
 \alias{MDSViewer}
-\title{Visualization of SPADE cluster similarities using MDS}
+\title{Visualization of SPADE cluster or sample similarities using MDS}
 \usage{
 MDSViewer(Results, use.percentages = TRUE, assignments, clusters = NULL,
   space = "clusters", dist.method = "euclidean")
@@ -16,7 +16,7 @@ MDSViewer(Results, use.percentages = TRUE, assignments, clusters = NULL,
 
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
-\item{space}{a character specifying the space ("clusters" or "samples", cluster by default)}
+\item{space}{a character specifying the space ("clusters" or "samples", "cluster" by default)}
 
 \item{dist.method}{a character string containing the name of the distance measure to use}
 }
@@ -24,9 +24,10 @@ MDSViewer(Results, use.percentages = TRUE, assignments, clusters = NULL,
 a list of ggplot objects
 }
 \description{
-Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs phenotypes.
+Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs enrichment.
 }
 \details{
-talk about space xxx
+The 'space' parameter specifying if the cluster or sample similarities will be determined using MDS.
+When the 'space' parameter is equal to 'sample', the 'assignements' parameter is required.
 }
 

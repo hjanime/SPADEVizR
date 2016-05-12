@@ -11,26 +11,18 @@ Guillaume Gautreau, David Pejoski, Ludovic Platon, Roger Le Grand, Antonio Cosma
 3. [Importing automatic gating results](#loading_data)
 	1. [Importing automatic gating results from SPADE](#loading_SPADE_data)
 	2. [Importing automatic gating results from other algorithms](#loading_other_data)
-4. [Object structures](#object_structures)
-	1. [Results object](#object_structure_results)
-	2. [SPADEResults object](#object_structure_SPADE_results)
-	3. [Abundant clusters (AC object)](#object_structure_AC)
-	4. [Differentially enriched clusters (DEC object)](#object_structure_DEC)
-	5. [Correlated clusters (CC object)](#object_structure_CC)
-	6. [Classification of clusters based on their phenotype profiles (PhenoProfiles object)](#object_structure_PhenoProfiles)
-	7. [Classification of clusters based on their enrichment profiles (EnrichmentProfiles object)](#object_structure_EnrichmentProfiles)
-5. [Statistical analyses](#stat_functions)
+4. [Statistical analyses](#stat_functions)
 	1. [Computation of abundant clusters](#stat_function_identifyAC)
 	2. [Computation of differentially enriched clusters](#stat_function_identifyDEC)
 	3. [Computation of correlated Clusters](#stat_function_identifyCC)
 	4. [Classification of phenotype profiles](#stat_function_classifyPhenoProfiles)
 	5. [Classification of enrichment profiles](#stat_function_classifyEnrichmentProfiles)
-6. [Visualization of statistical results](#viewer_functions)
+5. [Visualization of statistical results](#viewer_functions)
 	1. [Abundant Clusters Viewer](#abundant_clusters_viewer_function)
 	2. [Volcano Viewer](#volcano_viewer_function)
 	3. [Correlated Clusters Viewer](#correlated_clusters_viewer_function)
 	4. [Profile Viewer](#profile_viewer_function)
-7. [Miscellaneous visualizations](#viewer_functions)
+6. [Miscellaneous visualizations](#viewer_functions)
 	1. [Cluster Viewer](#cluster_viewer_function)
 	2. [Pheno Viewer](#pheno_viewer_function)
 	3. [Tree Viewer](#tree_viewer_function)
@@ -38,6 +30,14 @@ Guillaume Gautreau, David Pejoski, Ludovic Platon, Roger Le Grand, Antonio Cosma
 	4. [Distogram Viewer](#distogram_viewer_function)
 	5. [Streamgraph Viewer](#streamgraph_viewer_function)
 	6. [Boxplot Viewer](#boxplot_viewer_function)
+7. [Object structures](#object_structures)
+	1. [Results object](#object_structure_results)
+	2. [SPADEResults object](#object_structure_SPADE_results)
+	3. [Abundant clusters (AC object)](#object_structure_AC)
+	4. [Differentially enriched clusters (DEC object)](#object_structure_DEC)
+	5. [Correlated clusters (CC object)](#object_structure_CC)
+	6. [Classification of clusters based on their phenotype profiles (PhenoProfiles object)](#object_structure_PhenoProfiles)
+	7. [Classification of clusters based on their enrichment profiles (EnrichmentProfiles object)](#object_structure_EnrichmentProfiles)
 8. [Generate report](#generate_report_function)
 9. [Export](#generate_report_function)
 10. [License](#license)
@@ -45,20 +45,22 @@ Guillaume Gautreau, David Pejoski, Ludovic Platon, Roger Le Grand, Antonio Cosma
 
 # <a name="package_overview"/> 1. Package overview
 
-Flow and mass cytometry are experimental techniques used for the characterization of cell phenotypes. With the increase of usable cell markers (up to 40 markers), the identification of cell populations through manual gating is impossible. These high-dimensional data require new computational algorithms to automatically identify cell clusters. The SPADE algorithm has been proposed as a new way to analysis and explore mass-cytometry data. This algorithm performs a density-based down-sampling combined with an agglomerative hierarchical clustering.
+Flow and mass cytometry are experimental techniques used for the characterization of cell phenotypes. With the increase of usable cell markers (up to 50 markers), the identification of cell populations through manual gating is impossible. These high-dimensional data require new computational algorithms to automatically identify cell clusters. The SPADE algorithm has been proposed as a new way to analysis and explore mass-cytometry data. This algorithm performs a density-based down-sampling combined with an agglomerative hierarchical clustering.
 
-The SPADE~\cite{spade} algorithm, which stands for Spanning Tree Progression of Density Normalized Events, was developed to identify clusters of cells having similar phenotypes in mass cytometry data.
+The SPADE[1] algorithm, which stands for Spanning Tree Progression of Density Normalized Events, was developed to identify clusters of cells having similar phenotypes in mass cytometry data.
 SPADE is an hierarchical clustering-based algorithm combined to a density-based down-sampling procedure. 
 In summary, SPADE is working as the following: 
-(i) firstly, all cytometry profiles are down-sampled and merged into a single matrix;
-(ii) a hierarchical agglomerative clustering is performed to identify cluster of cell having similar profiles for selected cell markers;
-(iii) a tree structure is computed where each node represent a cluster linked using a minimal spanning tree procedure;
-and (iv) all cells of the dataset are associated to their closest cell cluster (up-sampling). 
+
+ 1. Firstly, all cytometry profiles are down-sampled and merged into a single matrix;
+ 2. A hierarchical agglomerative clustering is performed to identify cluster of cell having similar profiles for selected cell markers;
+ 3. A tree structure is computed where each node represent a cluster linked using a minimal spanning tree procedure;
+ 4. All cells of the dataset are associated to their closest cell cluster (up-sampling). 
+ 
 SPADE results can be summary by two main matrices.
 The cluster phenotype matrix contains the marker median expression for each cluster.
 The count matrix contains the number of cell associated for each sample to each cluster.
 
-SPADE offers new opportunities to deal with high dimensional cytometry data in order to identify cell populations but does not provide strong visualization features and statistical approaches. SPADEVizR aims to improve the biological analysis of SPADE results with new visualization approaches. We extended the original SPADE visualization outputs with visualization techniques such as parallel coordinates, multidimensional scaling, volcano plots or streamgraph representations as ggplot2[6]. In addition, SPADEVizR can perform analyses to automatically identify cell populations (clusters) with 3 kinds of relevant biological behaviors. Firstly, this package allows to identify clusters with an abondance statistically greater than a specific threshold for a given condition. Secondly, it allows to identify clusters differentially enriched between two biological condition. Finnaly it is possible to find clusters correlated with an external biological variable.
+SPADE offers new opportunities to deal with high dimensional cytometry data in order to identify cell populations but does not provide strong visualization features and statistical approaches. SPADEVizR aims to improve the biological analysis of SPADE results with new visualization approaches. We extended the original SPADE visualization outputs with visualization techniques such as parallel coordinates, multidimensional scaling, volcano plots or streamgraph representations as ggplot2[6]. In addition, SPADEVizR can perform analyses to automatically identify cell populations (clusters) with 3 kinds of relevant biological behaviors. Firstly, this package allows to identify clusters with an abondance statistically greater than a specific threshold for a given condition. Secondly, it allows to identify clusters differentially enriched between two biological conditions. Finnaly it is possible to find clusters correlated with an external biological variable.
 
 # <a name="package_installation"/> 2. Package installation
 The `data.table`, `ggdendro`, `ggnetwork`, `ggplot2`, `ggrepel`, `grid`, `gridExtra`, `gtools`, `igraph`, `MASS`, `reshape2`,  R packages as well as the `flowCore` [7] Bioconductor packages are required for running SPADEVizR. These packages can be installed using the following commands:
@@ -76,7 +78,6 @@ install.packages('igraph')
 install.packages('MASS')
 install.packages('scales')
 install.packages('reshape2')
-#install.packages('ggtimeseries')
 
 source("http://bioconductor.org/biocLite.R")
 biocLite(suppressUpdates=TRUE)
@@ -103,34 +104,39 @@ library("SPADEVizR")
 
 ## <a name="loading_SPADE_data"/> XX Importing automatic gating results from SPADE
 
-The `importSPADEResults()` function allows you to import cell clustering results generated by the SPADE algorythm. The function returns a `Results` object. Such import can be done using the following command:
-
-
-
-
-*Optional:* The markers of SPADE results can be renamed using a dataframe (called dictionary). Such kind of dataframe must have in the first column the original marker names and have in the second column the new marker names. For instance, a dictionary can be loaded using the following command: 
+The `importSPADEResults()` function allows you to import cell clustering results generated by the SPADE algorithm. The function returns a `Results` object. Such import can be done using the following command:
 
 
 ```r
-dict <- read.table("C:/Users/gg248485/Downloads/headerMAC.txt",sep="\t",header = TRUE)
-head(dict, n = 4)
+SPADEResults  <- importSPADEResults("C:/Users/gg248485/Desktop/SPADEVizR.data/ImMemoryB-#00008_[MARKERSET10]_K070_P025")
+```
+
+*Optional:* The markers of SPADE results can be renamed using a dataframe (called dictionary). Such kind of dataframe must have in the first column the original marker names (metals or fluorochromes) and have in the second column the new marker names (protein markers). For instance, a dictionary can be loaded using the following command:
+
+
+```r
+dictionary <- read.table("C:/Users/gg248485/Downloads/headerB.txt",sep="\t",header = TRUE)
+head(dictionary, n = 5)
 ```
 
 ```
 ##         metal      marker
 ## 1        Time        time
 ## 2 Cell_length cell_length
-## 3   (Rh103)Di empty-Rh103
-## 4   (Xe131)Di empty-Xe131
+## 3        Cell      length
+## 4   (Rh103)Di        Live
+## 5   (Ce140)Di    beads140
 ```
 
-Once a dictionary has been defined, SPADE cell clustering results can be loaded in the same way as above and by using the `dictionary` parameter. Specific markers can be excluded from the import procedure by providing their names to the `exclude.markers` parameter. The `quantile.approximation` parameter (set by default to `TRUE`) can be used to approximate the computation of maker range quantiles. For instance, an import of a SPADE using a dictionary and by excluding the "empty-Rh103", "empty-Rh103", "empty-Rh103" and "empty-Rh103" markers can be done using the following command:
+Once a dictionary has been defined, SPADE cell clustering results can be loaded in the same way as above using in addition the `dictionary` parameter. Specific markers can be excluded from the import procedure by providing their names to the `exclude.markers` parameter. By default these four markers are excluded: "cell_length", "FileNum", "density", "time". The `quantile.approximation` parameter (set by default to `FALSE`) can be used to approximate the computation of maker range quantiles. By this way the importation will be more efficient in term of loading time and memory usage. 
+
+For instance, an import of a SPADE result using a dictionary and by excluding the "cell_length", "FileNum", "density", "time", and "Live" markers can be done using the following command:
 
 ```r
 results  <- importSPADEResults("C:/Users/gg248485/Desktop/SPADEVizR.data/ImMemoryB-#00008_[MARKERSET10]_K070_P025",
-							   dict                   = dict,
+							   dictionary             = dictionary,
 							   quantile.approximation = TRUE,
-							   exclude.markers        = c("empty-Rh103", "empty-Rh103", "empty-Rh103", "empty-Rh103"))
+							   exclude.markers        = c("cell_length", "FileNum", "density", "time", "Live"))
 ## [START] - extracting SPADE results
 ## ImMemoryB-#00008_[MARKERSET10]_K070_P025
 ## FCS files loading:
@@ -141,12 +147,9 @@ results  <- importSPADEResults("C:/Users/gg248485/Desktop/SPADEVizR.data/ImMemor
 ```
 
 ## <a name="loading_other_data"/> XX Importing automatic gating results from other algorithms
-Moreover, SPADEVizR functionnalities can be used from results obtained from any cell clustering algorithms, using the `importX()` function. This function return a `Results` object. The function takes 2 dataframes in parameters: `cells.count` and `marker.expressions`.
+SPADEVizR functionnalities can be used from results obtained from any cell clustering algorithms, using the `importX()` function. This function returns a `Results` object and takes 2 dataframes in parameters: `cells.count` and `marker.expressions`.
 
-## <a name="loading_other_data"/> 3.2 Importing automatic gating results from other algorithms
-Moreover, SPADEVizR functionalities can be used from results obtained from any cell clustering algorithms, using the `importX()` function. This function return a `Results` object. The function takes 2 dataframes in parameters: `cells.count` and `marker.expressions`.
-
- * `cells.count` is a dataframe containing the number of cells for each cluster of each sample. **This dataframe must be formated with cluster names in rownames** as bellow: 
+ * `cells.count` is a dataframe containing the number of cells for each cluster of each sample. This dataframe must be formated **with cluster names in rownames** as bellow: 
 
 | sample1 | sample2| ...
 |---------|--------|----
@@ -164,12 +167,12 @@ sample2  | cluster1 | 0.5      | 2.3    | ...
 sample2  | cluster2 | 1        | 1.3    | ...
 ...      | ...      | ...      | ...    | ...
 
-For instance, an import of cell clustering results obtained from as previously described can be done using the follwing command:
+For instance, an import of cell clustering results obtained from as previously described can be done using the following command:
 
 ```r
-#marker.expressions <- read.delim("PATH")
-#cells.count        <- read.delim("PATH")
-#results_other      <- importX(cells.count =  cells.count, marker.expressions = marker.expressions)
+marker.expressions <- read.delim("PATH")
+cells.count        <- read.delim("PATH")
+results_other      <- importX(cells.count =  cells.count, marker.expressions = marker.expressions)
 ```
 
 `Results` objects can be used by all functions excepting the `TreeViewer()`, `PhenoViewer()` (Heatmap viewer) and `classifyPhenoProfiles()` which only accept a `SPADEResult` object.
@@ -177,11 +180,12 @@ For instance, an import of cell clustering results obtained from as previously d
 # <a name="stat_functions"/> XX Statistical analysis
 
 ## <a name="stat_function_identifyAC"/> 5.1 Computation of abundant clusters
-The `identifyAC()` function identify clusters with a number of associated cells statistically different from zero in a biological condition. 
+The `identifyAC()` function identify clusters with a number of associated cells statistically greater than a specific threshold in a biological condition. 
 
 The `identifyAC()` function takes as parameter a `SPADEResult` object and a named logical vector `condition` specifying the samples to use in the statistical computation. This named vector must provide the correspondence between samples (in names) and logical values (`TRUE` or `FALSE`). Significant abundant clusters are characterized by two thresholds: the p-value threshold (`th.pvalue` parameter, set by default to `0.05`) and the mean abundance threshold (`th.mean` parameter, set by default to `0`).
 
 The`identifyAC()` function returns a plotable `AC` object (see [Abundant Clusters Viewer](#abundant_clusters_viewer_function)).
+For instance, the identification of clusters statistically greater than 1% of all clusters in the selected samples with a p-value < 0.01 can be done using the following command:
 
 ```r
 condition <- c(TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE)
@@ -216,6 +220,7 @@ The `identifyDEC()` function identify clusters with a number of associated cells
 The `identifyDEC()` function takes as parameter, a `SPADEResult` object and a named numeric vector `conditions` specifying the samples to consider in the two conditions. This named vector must provide the correspondence between samples (in names) and conditions (`1` to specify the first biological condition, `2` to indicate the second biological condition and `NA` otherwise). Differentially enriched clusters are characterized by two thresholds: the p-value threshold (`th.pvalue` parameter, set by default to `0.05`) and the fold-change threshold (`th.fc` parameter, set by default to `1`).
 
 The `identifyDEC()` function returns a plotable `DEC` object (see [Volcano Viewer()](#volcano_viewer_function)).
+For instance, the identification of clusters differentially enriched with a foldchange greather than 2 in the selected conditions with a p-value < 0.1 can be done using the following command:
 
 ```r
 conditions <- c(1,1,NA,NA,1,1,1,2,2,NA,NA,2,2,2,2)
@@ -250,9 +255,10 @@ print(resultsDEC)
 ## <a name="stat_function_identifyCC"/> XX Computation of correlated clusters
 The `identifyCC()` function identify clusters correlated with an external biological variable. 
 
-The `identifyCC()` function takes as parameter, a `SPADEResult` object and a named numeric vector `variable` specifying the expression values of the external biological variable. This named vector must provide the correspondence between samples (in names) and the expression values (`NA` to exclude this sample from analysis). Significant correlated clusters are caracterized by two thresholds: the p-value threshold (`th.pvalue` parameter, set by default to `0.05`) and the correlation (R) threshold (`th.correlation` parameter, set by default to `0.7`).
+The `identifyCC()` function takes as parameter, a `SPADEResult` object and a named numeric vector `variable` specifying the expression values of the external biological variable. This named vector must provide the correspondence between samples (in names) and the expression values (`NA` to exclude this sample from analysis). Significant correlated clusters are caracterized by two thresholds: the p-value threshold (`th.pvalue` parameter, set by default to `0.05`) and the coefficient of correlation (R) threshold (`th.correlation` parameter, set by default to `0.7`).
 
 The `identifyCC()` function returns a plotable `CC` object (see [Correlated Clusters Viewer](#correlated_clusters_viewer_function))
+For instance, the identification of clusters statistically correlated with the provided numerical vector above a coefficient of correlation of 0.8 and with a p-value < 0.001 can be done using the following command:
 
 ```r
 variable <- c(8,1.7,4,23,10,8,1.7,4,23,10,8,1.7,4,23,10)
@@ -272,40 +278,87 @@ print(resultsCC)
 ## Correlation threshold: 
 ##  0.8
 ```
+
 ## <a name="stat_function_classifyPhenoProfiles"/> XX Classification of clusters based on their phenotype profiles
-The `classifyPhenoProfiles()` function classifies each cluster in different classes based on their marker expressions. Differents clustering methods are available among hierarchical clustering, k-means, eigen vector decomposition, clique clustering. This function can only handle `SPADEResults` objects (but not a `Results` object). 
+The `classifyPhenoProfiles()` function classifies each cluster in different classes based on their marker expressions. Differents clustering methods are available among hierarchical classification, k-means, eigen vector decomposition, clique classification. This function can only handle `SPADEResults` objects (but not a `Results` object). 
 
 The `classifyPhenoProfiles()` function takes a `SPADEResults` object and a `method` parameter among:
 
- * "hierarchical_k" (by default): performs a hierarchical clustering by specifying the desired number of classes. The number of desired classes needs to be specify using the `class.number` parameter.
- * "hierarchical_h" performs a hierarchical clustering by specifying the cut height. The height where the hierarchical tree should be cut needs to be specify using the `hierarchical.correlation.th` parameter.
- * "k-means": performs a k-means clustering. The number of desired classes needs to specify using the `class.number` parameter.
- * "eigencell": performs a eigen vector decomposition. The correlation coefficient cutoff needs to be specify using the `eigencell.correlation.th` parameter.
- * "clique": performs a clique clustering. The correlation coefficient cutoff needs to be specify using the `clique.correlation.th` parameter.
+ * `hierarchical_k`:
+This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
+The hierarchical classification is cutted in order to return the desired number of classes. 
+This number of classes must be provided as a numeric integer using the `method.parameter` parameter.
+*It is to note that negative correlations are considered as uncorrelated*
+ * `hierarchical_h` (by default):
+This method works in the same way than `hierarchical_k` but the height where the hierarchical tree is specified. 
+This heigth is a correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the `method.parameter` parameter.
+ * `eigencell`:
+This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
+Clusters which correlate above a specific threshold with the same eigen vector are classified together.
+This correlation threshold (a numeric double between 0 and 1 included, default is 0.8) provided using the `method.parameter` parameter.
+ * `clique`:
+This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
+In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
+This correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the `method.parameter` parameter.
+After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 
-For instance, a classification of cell clusters based on their phenotypes can be performed using the following command: 
+For instance, a classification of cell clusters based on their phenotypes using a hierarchical classification to identify 9 classes of cells clusters can be performed using the following command: 
 
 ```r
-#PhenoProfiles <- classifyPhenoProfiles(results, method.name = "k-means", class.number = 10)
-#print(PhenoProfiles)
+PhenoProfiles <- classifyPhenoProfiles(results, method = "hierarchical_k", method.parameter = 9)
+## [START] - computing classifyPhenoProfiles
+## [START] - computing PhenoTable
+## [END] - computing PhenoTable
+## [END] - computing classifyPhenoProfiles
+print(PhenoProfiles)
+## Object class: PhenoProfiles
+## Clustering method used: hierarchical_k
+## Parameter used:  = 9
+## Number of cluster: 70
+## Number of class: 9
 ```
 The `classifyPhenoProfiles()` function returns a `PhenoProfiles` object containing mainly the cluster associations.
+
 ## <a name="stat_function_classifyEnrichmentProfiles"/> XX Classification of clusters based on enrichment profiles
-The `classifyEnrichmentProfiles` function classifies each cluster in different classes based on their the number of cells associated with each sample (enrichment profiles). Differents clustering methods are available among hierarchical clustering, k-means, eigen vector decomposition, clique clustering.
+The `classifyEnrichmentProfiles` function classifies each cluster in different classes based on their the number of cells associated with each sample (enrichment profiles). Differents clustering methods are available among hierarchical classification, k-means, eigen vector decomposition, clique classification.
 
 The `classifyEnrichmentProfiles` function takes a `Results` or `SPADEResult` object and a `method` parameter among:
 
- * "hierarchical_k" (by default): performs a hierarchical clustering by specifying the desired number of classes. The number of desired classes needs to be specify using the `class.number` parameter.
- * "hierarchical_h" performs a hierarchical clustering by specifying the cut height. The height where the hierarchical tree should be cut needs to be specify using the `hierarchical.correlation.th` parameter.
- * "k-means": performs a k-means clustering. The number of desired classes needs to be specify using the `class.number` parameter.
- * "eigencell": performs a eigen vector decomposition. The correlation coefficient cutoff needs to be specify using the `eigencell.correlation.th` parameter.
- * "clique": performs a clique clustering. The correlation coefficient cutoff needs to be specify using the `clique.correlation.th` parameter.
+ * `hierarchical_k`:
+This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
+The hierarchical classification is cutted in order to return the desired number of classes. 
+This number of classes must be provided as a numeric integer using the `method.parameter` parameter.
+*It is to note that negative correlations are considered as uncorrelated*
+ * `hierarchical_h` (by default):
+This method works in the same way than `hierarchical_k` but the height where the hierarchical tree is specified. 
+This heigth is a correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the `method.parameter` parameter.
+ * `eigencell`:
+This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
+Clusters which correlate above a specific threshold with the same eigen vector are classified together.
+This correlation threshold (a numeric double between 0 and 1 included, default is 0.8) provided using the `method.parameter` parameter.
+ * `clique`:
+This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
+In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
+This correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the `method.parameter` parameter.
+After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 
-For instance, a classification of cell clusters based on their enrichment profiles can be performed using the following command: 
+For instance, a classification of cell clusters based on their enrichment profiles using an eigen cell decomposition with a correlation threshold greater than 0.9 can be performed using the following command:
 
 ```r
-#EnrichmentProfiles <- classifyEnrichmentProfiles(results, method.name = "k-means", class.number = 10)
-#print(EnrichmentProfiles)
+EnrichmentProfiles <- classifyEnrichmentProfiles(results, method = "eigencell", method.parameter = 0.9)
+## [START] - computing classifyEnrichmentProfiles
+##  [1] "1"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10" "11" "12" "13" "14" "15"
+## [15] "16" "17" "18" "19" "21" "22" "24" "25" "26" "27" "28" "29" "30" "31"
+## [29] "32" "33" "34" "35" "36" "37" "38" "39" "40" "41" "42" "43" "44" "45"
+## [43] "46" "47" "48" "49" "50" "51" "52" "53" "54" "55" "56" "57" "58" "59"
+## [57] "60" "61" "62" "63" "64" "65" "66" "67" "68" "69" "70"
+## [END] - computing classifyEnrichmentProfiles
+print(EnrichmentProfiles)
+## Object class: EnrichmentProfiles
+## Clustering method used: eigencell
+## Parameter used:  = 0.9
+## Number of cluster: 70
+## Number of class: 1
 ```
 The `classifyEnrichmentProfiles` function returns a `EnrichmentProfiles` object containing mainly the cluster associations.
 
@@ -313,7 +366,7 @@ The `classifyEnrichmentProfiles` function returns a `EnrichmentProfiles` object 
 
 ## <a name="abundant_clusters_viewer_function"/> XX Abundant Clusters Viewer
 
-The `abundantClustersViewer` function is used to visualize identified abundant clusters, that is to say results contained in an [AC objet](#object_structure_AC). This representation displays the p-value (shown as -log10(p-value) in X-axis) and the mean (Y-axis) of cells abundance in a two dimensional visualization. Each dot represents a cluster and abundant clusters are shown in red. The size of dots is proportional to the number of associated cells (--all samples are considered--).
+The `abundantClustersViewer()` function is used to visualize identified abundant clusters, that is to say results contained in an [AC objet](#object_structure_AC). This representation displays the p-value (shown as -log10(p-value) in X-axis) and the mean (Y-axis) of cells abundance in a two dimensional visualization. Each dot represents a cluster and abundant clusters are shown in red. The size of dots is proportional to the number of associated cells in the condition considered. 
 
 For instance, results contained in an `AC` object can be shown using the following command:
 
@@ -324,7 +377,7 @@ plot(resultsAC)
 <img src="README.figures/AbundantClusters-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="volcano_viewer_function"/> XX Volcano Viewer
 
-The `volcanoViewer` function is used to visualize identifed differentially enriched clusters, that is to say results contained in a [DEC objet](#object_structure_DEC). The volcano plot [9] representation displays the p-value (shown as -log10(p-value) in Y-axis) and the fold-change (in X-axis) of abundance cells in a two dimensional visualization. By default, the fold-change is represented with a log2 transformation (which can be change using the `fc.log2` parameter). Each dot represents a cluster and differentially enriched clusters are shown in red. The size of dots is proportional to the number of associated cells (--all samples are considered--).
+The `volcanoViewer()` function is used to visualize identifed differentially enriched clusters, that is to say results contained in a [DEC objet](#object_structure_DEC). The volcano plot [9] representation displays the p-value (shown as -log10(p-value) in Y-axis) and the fold-change (in X-axis) of abundance cells in a two dimensional visualization. By default, the fold-change is represented with a log2 transformation (which can be change using the `fc.log2` parameter). Each dot represents a cluster and differentially enriched clusters are shown in red. The size of dots is proportional to the number of associated cells (--all samples are considered--).
 
 For instance, results contained in an `DEC` object can be shown using the following command:
 
@@ -344,27 +397,48 @@ plot(resultsCC)
 ```
 
 <img src="README.figures/CorrelatedClusters-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="profile_viewer_function"/> XX Profile Viewer
 
-The `Profile Viewer` function is used to visualize classification results. This function can be used either on `EnrichmentProfiles` object or `PhenoProfiles` object and show classes of as a graph. In this graph, nodes represent clusters and edges connect clusters sharing the same class. The size of nodes is proportional to the number of associated cells.
-
--- how to display clique cluster of eigen cell clustering ? --
+The `Profile Viewer` function is used to visualize classification results. This function can be either used on an `EnrichmentProfiles` object or a `PhenoProfiles` object and show classes of as a graph. In this graph, nodes represent clusters and edges connect clusters sharing the same class. 
 
 For instance, a `EnrichmentProfiles` object or `PhenoProfiles` object can be shown using the following command:
 
 ```r
-#plot(EnrichmentProfiles)
+profilesViewer(PhenoProfiles)
+## Loading required package: sna
+## sna: Tools for Social Network Analysis
+## Version 2.3-2 created on 2014-01-13.
+## copyright (c) 2005, Carter T. Butts, University of California-Irvine
+##  For citation information, type citation("sna").
+##  Type help(package="sna") to get started.
+## Loading required package: network
+## network: Classes for Relational Data
+## Version 1.13.0 created on 2015-08-31.
+## copyright (c) 2005, Carter T. Butts, University of California-Irvine
+##                     Mark S. Handcock, University of California -- Los Angeles
+##                     David R. Hunter, Penn State University
+##                     Martina Morris, University of Washington
+##                     Skye Bender-deMoll, University of Washington
+##  For citation information, type citation("network").
+##  Type help("network-package") to get started.
+## 
+## Attaching package: 'network'
+## The following object is masked from 'package:sna':
+## 
+##     %c%
 ```
+
+<img src="README.figures/ProfileViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 # <a name="#viewer_functions"/> XX Miscellaneous vizualisations
 
 ## <a name="tree_viewer_function"/> XX Tree Viewer
 
-The `treeViewer` function improve the SPADE tree showing the number of cells for each cluster (node of the tree) and if DEC, AC or CC object is provided (with parameter: `stat.object`), it highlights significant clusters. This function can only handle `SPADEResults` objects (but not a `Results` object). 
-
+The `treeViewer` function improve the SPADE tree showing the number of cells for each cluster (node of the tree) and if DEC, AC or CC object is provided (with parameter: `stat.object`), it highlights significant clusters (node border). The cluster nodes can also be colored by the marker median expression of a selected marker using the `marker` parameter. This function can only handle `SPADEResults` objects (but not a `Results` object). 
 
 ```r
-treeViewer(results, stat.object = resultsDEC)
+treeViewer(results, stat.object = resultsDEC, marker = "HLADR")
 ```
 
 <img src="README.figures/TreeViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
@@ -373,7 +447,6 @@ treeViewer(results, stat.object = resultsDEC)
 The `phenoViewer` function returns an heatmap of expression scores for each marker of each cluster.
 For each marker, median expressions are discretized in severals categories corresponding to the heat intensities.
 This function can only handle `SPADEResults` objects (but not a `Results` object). 
-
 
 ```r
 phenoViewer(results)
@@ -386,7 +459,6 @@ phenoViewer(results)
 
 The `boxplotViewer` function aims to compare cell enrichment of a cluster across several biological conditions. Biological `conditions` are encoded in a named vector with samples in rownames providing correspondence with a biological condition (numeric or character are allowed). 
 
-
 ```r
 conditions <- c("0 jours","0 jours","0 jours","0 jours",NA,"8 jours","8 jours","8 jours","8 jours",NA,"28 jours","28 jours","28 jours","28 jours",NA)
 names(conditions) <- results@sample.names
@@ -398,8 +470,7 @@ gridExtra::grid.arrange(grobs = boxplotViewer(results, show.legend = TRUE, condi
 <img src="README.figures/BoxplotViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="kinetic_viewer_function"/> XX Kinetic Viewer
 
-The `kineticsViewer` function aims to represent the evolution of cells abundance for each cluster across the time for one or several individuals. It needs the `SPADEResult` object and to specify the `assignments` parameter. This parameter needs a dataframe with sample names in row names and 2 others column providing the timepoints and individuals associated with samples. 
-
+The `kineticsViewer` function aims to represent the evolution of cells abundance for each cluster across the timepoints for one or several individuals. It needs the `SPADEResult` object and to specify the `assignments` parameter. This parameter needs a dataframe with sample names in row names and 2 others column providing the timepoints and individuals associated with samples. 
 
 ```r
 assignments <- data.frame(row.names = results@sample.names,
@@ -453,34 +524,18 @@ streamgraphViewer(results,order = order, clusters = c("1","2","3","14","5"))
 ## 1	2	3	14	5
 ```
 
-<img src="README.figures/StreamgraphViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="README.figures/StreamgraphViewer_absolute-1.png" title="" alt="" style="display: block; margin: auto;" />
+The same could be done in a relative manner using the `use.relative` parameter
+
+```r
+streamgraphViewer(results,order = order, clusters = c("1","2","3","14","5"), use.relative = TRUE)
+## These clusters will be compute :
+## 1	2	3	14	5
+```
+
+<img src="README.figures/StreamgraphViewer_percent-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="MDS_viewer_function"/> XX MDS Viewer (Multidimensional Scaling)
-
-MDS methods aim to represent the similarities and differences among high dimensionality objects into a space of a lower dimensions, generally in two or three dimensions for visualization purposes [8]. In MDS representations, the Kruskal Stress (KS) indicates the amount of information lost during the dimensionality reduction process.
-
-The `MDSViewer` function generates a MDS (Multidimensional Scaling) representation either of clusters or samples depending of `space` parameter. If `space = "sample"`, `assignments` is required (as for [Kinetic Viewer](kinetic_viewer_function)).
-
-
-```r
-MDSViewer(results, space = "clusters", assignments = assignments,clusters = c("2","3","4","5","6","7","9"))
-## These clusters will be compute :
-## 2	3	4	5	6	7	9
-## MDS computation
-## done
-```
-
-<img src="README.figures/MDSViewer_clusters-1.png" title="" alt="" style="display: block; margin: auto;" />
-
-
-```r
-MDSViewer(results, space = "samples", assignments = assignments, clusters = c("2","3","4","5","6","7","9"))
-## These clusters will be compute :
-## 2	3	4	5	6	7	9
-## MDS computation
-## done
-```
-
-<img src="README.figures/MDSViewer_samples-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="count_viewer_function"/> XX Count Viewer
 
 The `CountViewer` function aims to visualize the number of cells in each cluster. This representation displays the clusters (in X-axis) and the number of cells (Y-axis) in a two dimensional visualization. The function computes the sum of all samples by default but allows to select the samples (using `samples` parameter) which are used to calculate the number of cells in each cluster. By default, all clusters will be displayed but a vector of cluster can be provided to select desired cluster (using `clusters` parameter).
@@ -496,7 +551,7 @@ countViewer(results,samples = samples, clusters = c("1","8","7","4","5","6","3",
 <img src="README.figures/CountViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="biplot_viewer_function"/> XX Biplot Viewer
 
-The `biplot` function can be use to visualize a two dimensions plot with an x-axis marker (`x.marker`) and a y axis marker (`y.marker`). It allows to filter cells by clusters and samples with `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or with a facet for each sample.
+The `biplotViewer` function can be used to visualize a two dimensional representation with the chosen markers (x-axis marker using the `x.marker` parameter and y axis marker using the `y.marker` parameter). It allows to filter cells by clusters and samples using the `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or with a facet for each sample.
 When too cells dots are displayed, it can require some seconds. In order to seep up the computation, it is possible to reduce the number of cells displayed (downsampling) using the `resample.ratio` parameter.  
 
 This function can only handle `SPADEResults` objects (but not a `Results` object). 
@@ -504,7 +559,7 @@ This function can only handle `SPADEResults` objects (but not a `Results` object
 ```r
 samples <- c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE)
 names(samples) <- results@sample.names
-biplotViewer(results, x.marker = "CD3", y.marker = "CD8", samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"))
+biplotViewer(results, x.marker = "CD20", y.marker = "HLADR", samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"))
 ```
 
 <img src="README.figures/biplot-1.png" title="" alt="" style="display: block; margin: auto;" />
@@ -513,21 +568,23 @@ The `export()` function is available for all objects of this package. Use this f
 
 
 ```r
-export(AC,filename = "DESIRED_PATH.txt")
+export(AC,filename = "export.txt")
 ```
 
 # <a name="license"/> XX Generate report 
 The `generateReport()` function allows to easily generate a PDF file containing all desired plots. In order to select the plots to include in the report, you could provided a character vector containing the names of desired plots among: 
 
-#TO MODIFY
- * "pheno" to include Pheno Viewer
- * "kinetic" to include Kinetic Viewer (need to provide the `assignment` parameter in the same way as [Kinetic Viewer](kinetic_viewer_function) function)
- * "cluster" to include Cluster Viewer
- * "kinetic_cluster" to include Kinetic Viewer juxtaposed with Cluster Viewer
- * "tree" to include Tree Viewer
- * "disto" to include Distogram Viewer
- * "stream" to include Streamgraph Viewer
- * "MDS" to include MDS Viewer (if `assignement` parameter is provide, it will plot the 2 spaces: "clusters" and "samples" of MDS representation, else only "clusters" space will be plotted)
+ * "[pheno](#)" (included by default): Display an heatmap representation
+ * "[kinetics](#)": Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter.
+ * "[cluster](#)" (included by default): Display a parallel coordinate representation showing for each cluster the marker median expression.
+ * "[boxplot](#)": Display a boxplot representation. This plot required to provide the 'conditions' parameter.
+ * "kinetics_cluster": Display a "[kinetics](#)" and "[cluster](#)" representation juxtaposed (are arranged one on the side of the other) for each cluster.
+ * "boxplot_cluster": Display a "[boxplot](#)" and "[cluster](#)" representation juxtaposed (are arranged one on the side of the other) for each cluster.
+ * "[tree](#)" (included by default): Display a tree representation showing combined SPADE trees using selected samples.
+ * "[disto](#)" (included by default): Display a distogram representation showing the marker co-expressions.
+ * "[stream](#)" (included by default): Display a 
+ * "[MDSclusters](#)" (included by default): Display a Multidimensional Scaling (MDS) representation showing the
+ * "[MDSsamples](#)": Display a Multidimensional Scaling (MDS) representation showing the. This plot required to provide the 'assignment' parameter.
 
 The report will follows the order of plots names in the vector.
 
@@ -537,7 +594,7 @@ You can also provided a vector of stat objects (AC, DEC, CC) with the `stat.obje
 ```r
 generateReport(results,PDFfile = "DESIRED_PATH.pdf", assignments = assignments, report = c("pheno", "kinetic_cluster","tree", "disto","stream","MDS"))
 ```
-
+-- integrate a exemple of report ? --
 *Generating a big report can take a minute or more.*
 
 # <a name="object_structures"/> XX Object structures
@@ -626,7 +683,7 @@ th.correlation     | a numeric value specifying the correlation threshold (R)
 th.pvalue          | a numeric value specifying the p-value threshold
 result             | a data.frame containing for each cluster (first column): the coefficiant of correlation R (second column) , the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.
 
-## <a name="object_structure_PhenoProfiles"/> XX Classification of clusters based on their phenotype profiles (PhenoProfiles object)
+## <a name="object_structure_PhenoProfiles"/> XX Classification of clusters based on theirs phenotype profiles (PhenoProfiles object)
 The `PhenoProfiles` object is a S4 object containing the main information related of the cluster classification obtained by the [`classifyPhenoProfiles()`](#stat_function_classifyPhenoProfiles) function.
 
 Different slots are available for a given `PhenoProfiles` object:
@@ -640,7 +697,7 @@ cluster.size       | a numeric vector containing the number of cells associated 
 (XXX) cluster.number| a numeric value specifying the number of clusters
 classes            | a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
 
-## <a name="object_structure_EnrichmentProfiles"/> XX Classification of clusters based on their enrichment profiles (EnrichmentProfiles object)
+## <a name="object_structure_EnrichmentProfiles"/> XX Classification of clusters based on theirs enrichment profiles (EnrichmentProfiles object)
 The `EnrichmentProfiles` object is a S4 object containing the main information related of the cluster classification obtained by the [`classifyEnrichmentProfiles`](#stat_function_classifyEnrichmentProfiles)  
 
 Different slots are available for a given `PhenoProfiles` object:

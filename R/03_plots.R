@@ -226,7 +226,7 @@ correlatedClustersViewer <- function(CC,
 #' 
 #' @return a 'ggplot' object
 #' 
-#' @import ggplot2 ggnetwork network 
+#' @import ggplot2 ggnetwork network
 #' 
 #' @export
 #' 
@@ -239,7 +239,7 @@ profilesViewer <- function (profile.object){
     plots <- list()
     
     for (i in all.sorted.classes){
-        print(i)
+
         same.class <- classes[classes$class == i,]
         
         if (nrow(same.class) >= 2){
@@ -258,15 +258,8 @@ profilesViewer <- function (profile.object){
             y[1] <- previous 
             
             graph <- network::network.initialize(nrow(same.class), directed = FALSE)
-
-            network::set.vertex.attribute(x = graph, attrname = "cluster", value = same.class$cluster)
             
-            profile.object@cluster.size[same.class$cluster]
-            
-            if (show.cluster.sizes){
-                print(profile.object@cluster.size[same.class$cluster])
-                network::set.vertex.attribute(x = graph, attrname = "size", value = profile.object@cluster.size[same.class$cluster])
-            }
+            network::set.vertex.attribute(x = graph, attrname = "cluster", value = as.character(same.class$cluster))
 
             graph <- network::add.edges(graph,x,y)
             graph <- ggnetwork::ggnetwork(graph, layout = "circle")
@@ -276,8 +269,8 @@ profilesViewer <- function (profile.object){
                               ggnetwork::geom_edges(linetype = "twodash", color = "grey90", size = 1, curvature = 0.1) +
                               ggnetwork::geom_nodes(size = 6, fill = "grey", color = "black", shape = 21, stroke = 3) +
                               ggnetwork::geom_nodetext(ggplot2::aes_string(label = "cluster"), size = 2) +
-                              ggnetwork::theme_blank()      
-        }
+                              ggnetwork::theme_blank()
+          }
     }
 
     ret <- gridExtra::grid.arrange(grobs = plots, top = paste0("Profiles Viewer (",names(profile.object)," using ",profile.object@method," method)"))

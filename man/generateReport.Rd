@@ -34,17 +34,17 @@ generateReport(results, PDFfile, plots.names = c("pheno", "cluster", "tree",
 Generate a customizable PDF report based on SPADEVizR vizualisation features.
 Available plots are :
 \itemize {
-\item "pheno" (included by default): Display an heatmap representation
-\item "kinetics": Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter.
-\item "cluster" (included by default): Display a parallel coordinate representation showing for each cluster the marker median expression.
-\item "boxplot": Display a boxplot representation. This plot required to provide the 'conditions' parameter.
-\item "kinetics_cluster": Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster.
-\item "boxplot_cluster": Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster.
-\item "tree" (included by default): Display a tree representation showing combined SPADE trees. 
-\item "disto" (included by default): Display a distogram representation showing the marker co-expressions.
-\item "stream" (included by default): Display a 
-\item "MDSclusters" (included by default): Display a Multidimensional Scaling (MDS) representation showing the
-\item "MDSsamples": Display a Multidimensional Scaling (MDS) representation showing the. This plot required to provide the 'assignment' parameter.
+\item {"pheno" (included by default):}{Display an heatmap representation}
+\item {"kinetics":}{Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter}
+\item {"cluster" (included by default):}{Display a parallel coordinate representation showing for each cluster the marker median expression}
+\item {"boxplot":}{Display a boxplot representation. This plot required to provide the 'conditions' parameter}
+\item {"kinetics_cluster":}{Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
+\item {"boxplot_cluster":}{Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
+\item {"tree" (included by default):}{Display a tree representation showing combined SPADE trees}
+\item {"disto" (included by default):}{Display a distogram representation showing the marker co-expressions}
+\item {"stream" (included by default):}{Display a streamgraphViewer representation showing the evolution of cells abundance}
+\item {"MDSclusters" (included by default):}{Display the cluster similarities using MDS}
+\item {"MDSsamples":}{Display the samples similarities using MDS. This plot required to provide the 'assignment' parameter}
 }
 }
 

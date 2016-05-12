@@ -61,8 +61,6 @@ computePhenoTable <- function(SPADEResults, num = 5){
 #' @import ggplot2 reshape2 grDevices
 ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering.markers = NULL ) {#TO ADD, dists = c("euclidian","euclidian")
 
-    print(matrix)
-    
     row.hc <- hclust(dist(matrix), "ward.D")
     col.hc <- hclust(dist(t(matrix)), "ward.D")
     
@@ -98,7 +96,7 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
                    ggplot2::theme(legend.text      = ggplot2::element_text(size = 4),
                                   panel.background = ggplot2::element_rect("white"),
                                   axis.text.x      = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1))
-                  
+
     if (!is.null(clustering.markers)){
         clustering.markers <- is.element(data.frame$markers, clustering.markers)
         bold.markers <- ifelse(clustering.markers,"bold","plain")

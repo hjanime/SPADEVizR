@@ -198,15 +198,15 @@ rename.markers <- function(header,dictionary){
     dictionary[,1] <- as.vector(dictionary[,1])
     dictionary[,2] <- as.vector(dictionary[,2])
     
-    if(length(unique(dictionary[,1]))!=length(dictionary[,1])){
-        stop("Duplicate in dictionary 'original marker names'")
+    if(length(unique(dictionary[,1])) != length(dictionary[,1])){
+        stop(paste0("Duplicate in dictionary 'original marker names': ", setdiff(dictionary[,1], unique(dictionary[,1]))))
     }
-    if(length(unique(dictionary[,2]))!=length(dictionary[,2])){
-        stop("Duplicate in dictionary 'new marker names'")
+    if(length(unique(dictionary[,2])) != length(dictionary[,2])){
+        stop(paste0("Duplicate in dictionary 'new marker names': ", setdiff(dictionary[,2], unique(dictionary[,2]))))
     }
     header.old <- header
     for(i in 1:nrow(dictionary)){
-        header[which(header==dictionary[i,1])[1]] <- dictionary[i,2]
+        header[which(header == dictionary[i, 1])[1]] <- dictionary[i, 2]
     }
     
     return(header)
