@@ -223,16 +223,14 @@ correlatedClustersViewer <- function(CC,
 #' xxx
 #'
 #' @param profile.object a PhenoProfiles object or an EnrichmentProfiles object
-#' @param show.cluster.sizes a logical specifying if dot sizes are proportional to cell counts
 #' 
 #' @return a 'ggplot' object
 #' 
-#' @import ggplot2 ggnetwork grDevices network 
+#' @import ggplot2 ggnetwork network 
 #' 
 #' @export
 #' 
-profilesViewer <- function (profile.object,
-                            show.cluster.sizes = TRUE){
+profilesViewer <- function (profile.object){
 
     classes <- profile.object@classes    
     classes <- na.omit(classes)
@@ -389,7 +387,7 @@ clusterViewer <- function(Results,
         cells.count <- Results@cells.count[,c(names(samples[ samples == TRUE] )), drop = FALSE]
     }
 
-    data <- na.omit(data)
+    data <- na.omit(data)# NA values are removed, generate a warning ?
     
     if(!is.null(clusters)){
         if (typeof(clusters) != "character"){
@@ -728,7 +726,7 @@ countViewer <- function(Results,
 #' 
 #' @return a 'ggplot' object
 #' 
-#' @import reshape2 ggplot2
+#' @import reshape2 ggalt ggplot2
 #' 
 #' @export
 kineticsViewer <- function(Results,
@@ -792,7 +790,7 @@ kineticsViewer <- function(Results,
         plots[[i]] <- ggplot2::ggplot(data = data.temp, ggplot2::aes_string(x = "as.factor(timepoints)", y = "value", group = "individuals", color = "individuals")) +
                       ggplot2::ggtitle(paste("cluster ",current.cluster," - Kinetics Viewer (", format(cells.number, big.mark = " "), " cells)",sep = "")) +
                       ggplot2::geom_line() +
-                      #ggalt:::geom_xspline(size = 1, na.rm = TRUE) + #add smooth curve with spline function
+                      ggalt::geom_xspline(size = 1, na.rm = TRUE) + #add smooth curve with spline function
                       ggplot2::geom_point(na.rm = TRUE) +
                       ggplot2::scale_x_discrete(expand = c(0,0.05))
        if(use.percentages){    
@@ -963,7 +961,7 @@ distogramViewer <- function(Results,
         data <- cbind(data[,markers])
     }
        
-    data <- na.omit(data)# NA values are removed
+    data <- na.omit(data)# NA values are removed, generate a warning ?
     
     cormat <- round(cor(data), 2)
     dist <- as.dist(1 - cormat)

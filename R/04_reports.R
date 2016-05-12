@@ -43,7 +43,7 @@ generateReport <- function(results,
                            width           = 29.7,
                            height          = 21){
     
-    message("[BEGIN]-report")
+    message("[BEGIN] - report")
 
     #print(results)
     
@@ -57,7 +57,7 @@ generateReport <- function(results,
         stop("Error in generateReport : 'boxplot_cluster' and/or 'boxplot' report required conditions")
     }
     
-    for(i in length(plots.names)){
+    for(i in 1:length(plots.names)){
         switch(plots.names[i],
                "MDS_clusters"    = {
                   plots <- c(plots, list(MDSViewer(results, space = "clusters", clusters = clusters)))
@@ -119,7 +119,7 @@ generateReport <- function(results,
     pages.plots <- gridExtra::marrangeGrob(grobs = plots, nrow = 1, ncol = 1)
 
     ggplot2::ggsave(PDFfile, pages.plots, width = width, height = height)
-    message("[END]-report")
+    message("[END] - report")
 
 }
 
