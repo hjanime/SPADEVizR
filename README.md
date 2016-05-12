@@ -496,14 +496,18 @@ countViewer(results,samples = samples, clusters = c("1","8","7","4","5","6","3",
 <img src="README.figures/CountViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="biplot_viewer_function"/> XX Biplot Viewer
 
-The `biplot` function can be use to visualize a two dimensions plot with an x-axis marker (`x.marker1`) and a y axis marker (`y.marker2`). It allows to filter cells point by clusters and samples with `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or with a facet for each sample.
-When too cells dots are displayed, it can require heavy computation, to resolve this issue, you can re-sample your data to show less points with the `resample.ratio` parameter.
+The `biplot` function can be use to visualize a two dimensions plot with an x-axis marker (`x.marker`) and a y axis marker (`y.marker`). It allows to filter cells by clusters and samples with `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or with a facet for each sample.
+When too cells dots are displayed, it can require some seconds. In order to seep up the computation, it is possible to reduce the number of cells displayed (downsampling) using the `resample.ratio` parameter.  
 
 This function can only handle `SPADEResults` objects (but not a `Results` object). 
 
 ```r
-#gridExtra::grid.arrange(biplot())
+samples <- c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE)
+names(samples) <- results@sample.names
+biplotViewer(results, x.marker = "CD3", y.marker = "CD8", samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"))
 ```
+
+<img src="README.figures/biplot-1.png" title="" alt="" style="display: block; margin: auto;" />
 # <a name="license"/> XX Export 
 The `export()` function is available for all objects of this package. Use this function to export an object to a tab separated file able to be open with Microsoft Excel&copy; or with Libre Office Calc.
 
@@ -515,6 +519,7 @@ export(AC,filename = "DESIRED_PATH.txt")
 # <a name="license"/> XX Generate report 
 The `generateReport()` function allows to easily generate a PDF file containing all desired plots. In order to select the plots to include in the report, you could provided a character vector containing the names of desired plots among: 
 
+#TO MODIFY
  * "pheno" to include Pheno Viewer
  * "kinetic" to include Kinetic Viewer (need to provide the `assignment` parameter in the same way as [Kinetic Viewer](kinetic_viewer_function) function)
  * "cluster" to include Cluster Viewer

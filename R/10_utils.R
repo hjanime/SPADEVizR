@@ -16,7 +16,9 @@ computePhenoTable <- function(SPADEResults, num = 5){
     
     message("[START] - computing PhenoTable")
     
-    data.melted           <- data.frame(reshape2::melt(SPADEResults@marker.expressions[colnames(SPADEResults@marker.expressions)], id.vars = c("sample","cluster")))
+    data <- SPADEResults@marker.expressions[colnames(SPADEResults@marker.expressions)]
+    data <- na.omit(data)# NA values are removed, generate a warning ?
+    data.melted <- reshape2::melt(data, id.vars = c("sample","cluster"))
     
     colnames(data.melted) <- c("sample","cluster","marker","value")
 
@@ -26,20 +28,19 @@ computePhenoTable <- function(SPADEResults, num = 5){
     colnames(means)       <- c("cluster","marker","value")
 
     for(i in 1:nrow(means)){
+        
         cluster <- means[i,"cluster"]
         value   <- means[i,"value"]
         min     <- SPADEResults@quantiles[1,means[i,"marker"]]
         max     <- SPADEResults@quantiles[2,means[i,"marker"]]
         seq     <- seq(from = min,to = max,length.out = num)
-        if(!is.na(value)){
-            res              <- which.min(abs(value - seq))
-            means[i,"value"] <- res
-        }else{
-            means[i,"value"] <- as.numeric(NA)
-        }
+        
+        means[i,"value"] <- which.min(abs(value - seq))
+        
     }
     
     means <- means[gtools::mixedsort(colnames(means))]
+
     message("[END] - computing PhenoTable")
     return(means)
     
@@ -60,13 +61,13 @@ computePhenoTable <- function(SPADEResults, num = 5){
 #' @import ggplot2 reshape2 grDevices
 ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering.markers = NULL ) {#TO ADD, dists = c("euclidian","euclidian")
 
-    colnames(matrix) <- 1:ncol(matrix)
+    print(matrix)
     
-    row.hc <- hclust(dist(matrix), "ward.D")# change to eucledian or correlation
-    col.hc <- hclust(dist(t(matrix)), "ward.D")# change to eucledian or correlation
+    row.hc <- hclust(dist(matrix), "ward.D")
+    col.hc <- hclust(dist(t(matrix)), "ward.D")
     
-    row.dendro <- ggdendro::dendro_data(as.dendrogram(row.hc),type = dendrogram.type)
-    col.dendro <- ggdendro::dendro_data(as.dendrogram(col.hc),type = dendrogram.type)
+    row.dendro <- ggdendro::dendro_data(as.dendrogram(row.hc), type = dendrogram.type)
+    col.dendro <- ggdendro::dendro_data(as.dendrogram(col.hc), type = dendrogram.type)
     
     col.plot <- g_dendro(col.dendro, col=TRUE)
     row.plot <- g_dendro(row.dendro, row=TRUE)
@@ -78,14 +79,14 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
 
     data.frame           <- as.data.frame(mat.ordered)
     data.frame$markers   <- rownames(mat.ordered)
-    data.frame$markers   <- with(data.frame, factor(markers, levels=markers, ordered=TRUE))
+    data.frame$markers   <- with(data.frame, factor(markers, levels = markers, ordered=TRUE))
     melted.data.frame    <- reshape2::melt(data.frame, id.vars="markers")
         
-    colfunc <- grDevices::colorRampPalette(c("#FFFFFF","#ECE822","#F9A22B","#EE302D","#A32D33"))#white -> yellow -> orange -> red -> brown
+    colfunc <- grDevices::colorRampPalette(c("#FFFFFF", "#ECE822", "#F9A22B", "#EE302D", "#A32D33"))#white -> yellow -> orange -> red -> brown
 
     melted.data.frame$value <- as.factor(melted.data.frame$value)
     
-    centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable",y = "markers")) + 
+    centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable", y = "markers")) + 
                    ggplot2::geom_tile(ggplot2::aes_string(fill = "value"), colour = "black") +
                    ggplot2::scale_fill_manual(values = colfunc(num), guide = ggplot2::guide_legend(direction      = "horizontal",
                                                                                                    ncol           = 10,
