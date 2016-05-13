@@ -9,7 +9,6 @@ License: GPL-3
 Imports:
     data.table,
     flowCore,
-	ggalt,
     ggdendro,
     ggnetwork,
     ggplot2,
@@ -18,7 +17,6 @@ Imports:
 	gtable,
     gtools,
     igraph,
-	methods,
     MASS,
 	network,
     plyr,

@@ -15,12 +15,12 @@
 #' 
 #' @export
 identifyAC <- function(Results,
-                      condition,
-                      use.percentages = TRUE,
-                      method          = "t.test",
-                      method.adjust   = NULL,
-                      th.pvalue       = 0.05,
-                      th.mean         = 0){
+        condition,
+        use.percentages = TRUE,
+        method          = "t.test",
+        method.adjust   = NULL,
+        th.pvalue       = 0.05,
+        th.mean         = 0){
     
     message("[START] - computing ACs")
     
@@ -32,18 +32,14 @@ identifyAC <- function(Results,
     }else{
         data   <- data
     }
-            
+    
     message("Sampled used :")
     message(paste0(colnames(data),"\n"))
     
     pv <- apply(data, 1, function(x){
-                                          return(do.call(method,
-                                                         args = list(x           = x,
-                                                                     alternative = "greater",
-                                                                     mu          = th.mean
-                                                         ))$p.value
-                                                 )
-                                    })
+                    res <- do.call(method, args = list(x = x, alternative = "greater", mu = th.mean))$p.value
+                    return(res)
+               })
     
     if(!is.null(method.adjust)){
         pv <- p.adjust(pv, method = method.adjust)
@@ -53,22 +49,22 @@ identifyAC <- function(Results,
                          mean    = apply(data,1,mean),
                          sd      = apply(data,1,sd),
                          pvalue  = pv)
-   
-   result$significance <- ifelse(result$pvalue < th.pvalue, TRUE , FALSE)
-   result$significance <- ifelse(abs(result$mean) > th.mean, result$significance , FALSE) 
-
-    AC <- new ("AC",
-               sample.names    = colnames(data),
-               cluster.size    = apply(cells.count,1,sum),
-               use.percentages = use.percentages,
-               method          = method,
-               method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust),#TODO think about another way
-               th.mean         = th.mean,
-               th.pvalue       = th.pvalue,
-               result          = result)
+    
+    result$significance <- ifelse(result$pvalue < th.pvalue, TRUE , FALSE)
+    result$significance <- ifelse(abs(result$mean) > th.mean, result$significance , FALSE) 
+    
+    AC <- methods::new("AC",
+                       sample.names    = colnames(data),
+                       cluster.size    = apply(cells.count,1,sum),
+                       use.percentages = use.percentages,
+                       method          = method,
+                       method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust),#TODO think about another way
+                       th.mean         = th.mean,
+                       th.pvalue       = th.pvalue,
+                       result          = result)
     
     message("[END] - computing ACs")
-	
+    
     return(AC)
 }
 
@@ -91,13 +87,13 @@ identifyAC <- function(Results,
 #' 
 #' @export
 identifyDEC <- function(Results,
-                       conditions,
-                       use.percentages = TRUE,
-                       method          = "t.test",
-                       method.adjust   = NULL,
-                       method.paired   = FALSE,
-                       th.pvalue       = 0.05,
-                       th.fc           = 1){
+        conditions,
+        use.percentages = TRUE,
+        method          = "t.test",
+        method.adjust   = NULL,
+        method.paired   = FALSE,
+        th.pvalue       = 0.05,
+        th.fc           = 1){
     
     message("[START] - computing DECs\n")
     
@@ -115,7 +111,7 @@ identifyDEC <- function(Results,
     }else{
         data   <- data
     }
-        
+    
     message("cond1:")
     message(paste0(colnames(data.cond1),"\n"))
     message("cond2:")
@@ -124,51 +120,46 @@ identifyDEC <- function(Results,
     s1 <- ncol(data.cond1)
     
     pv <- apply(data, 1, function(x){
-                return(do.call(method, args   = list(x = x[1:s1],
-                                       y      = x[-(1:s1)],
-                                       paired = method.paired)
-                        )$p.value
-                )
-            }
-    )
+                res <- do.call(method, args = list(x = x[1:s1], y = x[-(1:s1)], paired = method.paired))$p.value
+                return(res)
+                })
     
     if(!is.null(method.adjust)){
         pv <- p.adjust(pv, method = method.adjust)
     }
     
     fc <- apply(data, 1, function(x){
-                fc <- mean(x[1:s1])/mean(x[-(1:s1)])
-                if(!is.na(fc) && fc < 1){
-                    fc <- (-1/fc)
-                }
-                return(fc)
-            }
-    )
-
+                    fc <- mean(x[1:s1])/mean(x[-(1:s1)])
+                    if(!is.na(fc) && fc < 1){
+                        fc <- (-1/fc)
+                    }
+                    return(fc)
+               })
+    
     result <- data.frame(cluster     = rownames(Results@cells.count),
-                         mean.cond1  = apply(data.cond1,1,mean),
-                         sd.cond1    = apply(data.cond1,1,sd),
-                         mean.cond2  = apply(data.cond2,1,mean),
-                         sd.cond2    = apply(data.cond2,1,sd),
-                         fold.change = fc,
-                         pvalue      = pv)
-             
+            mean.cond1  = apply(data.cond1,1,mean),
+            sd.cond1    = apply(data.cond1,1,sd),
+            mean.cond2  = apply(data.cond2,1,mean),
+            sd.cond2    = apply(data.cond2,1,sd),
+            fold.change = fc,
+            pvalue      = pv)
+    
     result$significance <- ifelse(result$pvalue < th.pvalue, TRUE , FALSE)
     result$significance <- ifelse(abs(result$fold.change) > th.fc, result$significance , FALSE)       
-        
+    
     thresholds <- c(pvalue = th.pvalue,fc = th.fc)
-
-    DEC <- new ("DEC",
-                sample.cond1    = colnames(data.cond1),
-                sample.cond2    = colnames(data.cond2),
-                cluster.size    = apply(cells.count,1,sum),
-                use.percentages = use.percentages,
-                method          = method,
-                method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust), #TODO think about another way
-                method.paired   = method.paired,
-                th.fc           = th.fc,
-                th.pvalue       = th.pvalue,
-                result          = result)
+    
+    DEC <- methods::new("DEC",
+            sample.cond1    = colnames(data.cond1),
+            sample.cond2    = colnames(data.cond2),
+            cluster.size    = apply(cells.count,1,sum),
+            use.percentages = use.percentages,
+            method          = method,
+            method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust), #TODO think about another way
+            method.paired   = method.paired,
+            th.fc           = th.fc,
+            th.pvalue       = th.pvalue,
+            result          = result)
     
     message("[END] - computing DECs")
     
@@ -193,15 +184,15 @@ identifyDEC <- function(Results,
 #'
 #' @export
 identifyCC <- function(Results,
-                      variable,
-                      use.percentages = TRUE,
-                      method          = "pearson",
-                      method.adjust   = NULL,
-                      th.pvalue       = 0.05,
-                      th.correlation  = 0.75){
-                  
+        variable,
+        use.percentages = TRUE,
+        method          = "pearson",
+        method.adjust   = NULL,
+        th.pvalue       = 0.05,
+        th.correlation  = 0.75){
+    
     message("[START] - computing CCs")
-
+    
     cells.count <- Results@cells.count
     variable    <- na.omit(variable) 
     cells.count <- cells.count[, names(variable), drop = FALSE]
@@ -229,25 +220,25 @@ identifyCC <- function(Results,
     }
     
     result <- data.frame(cluster     = rownames(Results@cells.count),
-                         correlation = cor.estimate,
-                         pvalue      = cor.pvalue)
-        
+            correlation = cor.estimate,
+            pvalue      = cor.pvalue)
+    
     result$significance <- ifelse(result$pvalue < th.pvalue, TRUE, FALSE)
     result$significance <- ifelse(abs(result$correlation) > th.correlation, result$significance , FALSE)       
-
-    CC <- new("CC",
-              sample.names    = colnames(data),
-              variable        = variable,
-              cluster.size    = apply(cells.count,1,sum),
-              use.percentages = use.percentages,
-              method          = method,
-              method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust),#TODO think about another way
-              th.correlation  = th.correlation,
-              th.pvalue       = th.pvalue,
-              result          = result)
-              
+    
+    CC <- methods::new("CC",
+            sample.names    = colnames(data),
+            variable        = variable,
+            cluster.size    = apply(cells.count,1,sum),
+            use.percentages = use.percentages,
+            method          = method,
+            method.adjust   = ifelse(is.null(method.adjust),"none",method.adjust),#TODO think about another way
+            th.correlation  = th.correlation,
+            th.pvalue       = th.pvalue,
+            result          = result)
+    
     message("[END] - computing CCs")
-	
+    
     return(CC)
 }
 
@@ -286,8 +277,8 @@ identifyCC <- function(Results,
 #'
 #' @export
 classifyPhenoProfiles <- function (Results,
-                                   method           = "hierarchical_h",
-                                   method.parameter = NULL){
+        method           = "hierarchical_h",
+        method.parameter = NULL){
     default.eigencell.correlation.th    <- 0.8
     default.clique.correlation.th       <- 0.7
     default.hierarchical.correlation.th <- 0.7                           
@@ -300,16 +291,12 @@ classifyPhenoProfiles <- function (Results,
     
     table <- computePhenoTable(Results)
     
-    #print(table)
-    
     table.wide <- reshape2::dcast(table, cluster~marker)
     table.wide <- table.wide[, colnames(table.wide) != "cluster"]
     rownames(table.wide) <- rownames(Results@cells.count)   
-
-    table.wide <- na.omit(table.wide) 
-
-    #print(table.wide)
     
+    table.wide <- stats::na.omit(table.wide) # NA values are removed, generate a warning ?
+
     switch(method,
             "hierarchical_h" = {
                 if (is.null(method.parameter)){
@@ -348,13 +335,13 @@ classifyPhenoProfiles <- function (Results,
     cluster.size           <- apply(Results@cells.count, 1, sum)
     names(cluster.size) <- rownames(Results@cells.count)
     
-    pheno <- new ("PhenoProfiles",
-                  method                   = method,
-                  method.parameter         = method.parameter,
-                  cluster.size             = cluster.size,
-                  cluster.number           = Results@cluster.number,
-                  class.number             = length(unique(classes[,2])),
-                  classes                  = classes)
+    pheno <- methods::new("PhenoProfiles",
+            method                   = method,
+            method.parameter         = method.parameter,
+            cluster.size             = cluster.size,
+            cluster.number           = Results@cluster.number,
+            class.number             = length(unique(classes[,2])),
+            classes                  = classes)
     
     message("[END] - computing classifyPhenoProfiles")
     return(pheno)    
@@ -395,13 +382,13 @@ classifyPhenoProfiles <- function (Results,
 #'
 #' @export
 classifyEnrichmentProfiles <- function(Results,
-                                       method           = "hierarchical_h",
-                                       method.parameter = NULL){ # think about select sample ?
- 
+        method           = "hierarchical_h",
+        method.parameter = NULL){ # think about select sample ?
+    
     default.eigencell.correlation.th    <- 0.8
     default.clique.correlation.th       <- 0.7
     default.hierarchical.correlation.th <- 0.7                                 
-     
+    
     message("[START] - computing classifyEnrichmentProfiles")
     
     if (!is.element(method,c("hierarchical_h", "hierarchical_k", "k-means", "eigencell", "clique"))){
@@ -441,20 +428,20 @@ classifyEnrichmentProfiles <- function(Results,
                 }
                 classes <- computeClique(data, method.parameter)
             })
-   classes$class <- as.numeric(classes$class)
-   classes       <- classes[ order(classes$class), ]
-   
-   cluster.size        <- apply(Results@cells.count,1,sum)
-   names(cluster.size) <- rownames(Results@cells.count)
-   
-   enrich <- new ("EnrichmentProfiles",
-                  method                   = method,
-                  method.parameter         = method.parameter,
-                  cluster.size             = cluster.size,
-                  cluster.number           = Results@cluster.number,
-                  class.number             = length(unique(classes[,2])),
-                  classes                  = classes)
-                 
+    classes$class <- as.numeric(classes$class)
+    classes       <- classes[ order(classes$class), ]
+    
+    cluster.size        <- apply(Results@cells.count,1,sum)
+    names(cluster.size) <- rownames(Results@cells.count)
+    
+    enrich <- methods::new("EnrichmentProfiles",
+            method                   = method,
+            method.parameter         = method.parameter,
+            cluster.size             = cluster.size,
+            cluster.number           = Results@cluster.number,
+            class.number             = length(unique(classes[,2])),
+            classes                  = classes)
+    
     message("[END] - computing classifyEnrichmentProfiles")
     return(enrich)  
 }
@@ -477,11 +464,10 @@ classifyEnrichmentProfiles <- function(Results,
 #' @return a dataframe containing for each cluster, its name and class
 #' 
 computeHierarchicalClustering <- function (data,
-                                           class.number                = NULL,
-                                           hierarchical.correlation.th = 0.8){
-
+        class.number                = NULL,
+        hierarchical.correlation.th = 0.8){
+    
     cor.data <- cor(t(data))
-    #print(head(cor.data))
     
     cor.data[cor.data < 0] <- 0
     cor.data               <- 1 - cor.data
@@ -515,10 +501,10 @@ computeHierarchicalClustering <- function (data,
 #' @return a dataframe containing for each cluster, its name and class
 #' 
 computeKmeans <- function(data,
-                          k = NULL){
+        k = NULL){
     kmeans <- kmeans(data, centers = k)    
     result <- data.frame(cluster = as.character(rownames(data)), class = as.numeric(kmeans$cluster))
-        
+    
     return(result)
 }
 
@@ -537,7 +523,7 @@ computeKmeans <- function(data,
 #' @return a dataframe containing for each cluster, its name and class
 #' 
 computeEigenCellClusters <- function(data, 
-                                     eigencell.correlation.th = 0.80){
+        eigencell.correlation.th = 0.80){
     
     svd     <- svd(data)
     eigenCC <- t(svd$v)
@@ -550,7 +536,7 @@ computeEigenCellClusters <- function(data,
             }
         }
     }
-
+    
     res <- as.data.frame(res)
     colnames(res) <- c("cluster","class")
     
@@ -562,9 +548,9 @@ computeEigenCellClusters <- function(data,
     }
     
     unclassified <- setdiff(rownames(data), res$cluster)
-    print(unclassified)
-    res <- rbind(res, data.frame(cluster = unclassified, class = rep(NA, length(unclassified))))
 
+    res <- rbind(res, data.frame(cluster = unclassified, class = rep(NA, length(unclassified))))
+    
     return(res)
 }
 
@@ -582,7 +568,7 @@ computeEigenCellClusters <- function(data,
 #' @return a dataframe containing for each cluster, its name and class
 #' 
 computeClique <- function(data,
-                          clique.correlation.th = 0.7){
+        clique.correlation.th = 0.7){
     
     res     <- c()
     for(i in 1:(nrow(data)-1)){
@@ -597,7 +583,7 @@ computeClique <- function(data,
     res <- data.frame(res)
     
     graph <- igraph::graph.data.frame(res, directed=FALSE)
-
+    
     lists <- igraph::largest.cliques(graph)
     
     res <- data.frame()
@@ -606,12 +592,12 @@ computeClique <- function(data,
         cluster <- as.character(rownames(data[names(lists[[i]]),]))
         res <- rbind(res, cbind(cluster, i))
     }
-
+    
     colnames(res) <- c("cluster", "class")
     
     unclassified <- setdiff(rownames(data), res$cluster)
     res <- rbind(res, data.frame(cluster = unclassified, class = rep(NA, length(unclassified))))
-
+    
     return(res)
     
 }

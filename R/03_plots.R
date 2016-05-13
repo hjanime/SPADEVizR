@@ -12,7 +12,7 @@
 #' 
 #' @return a 'ggplot' object
 #' 
-#' @import ggplot2 ggrepel
+#' @import ggplot2 ggrepel grid
 #' 
 #' @export
 abundantClustersViewer <- function(AC,
@@ -82,7 +82,7 @@ abundantClustersViewer <- function(AC,
 #'
 #' @return a 'ggplot' object
 #'  
-#' @import ggplot2
+#' @import ggplot2 grid
 #' 
 #' @export
 volcanoViewer <- function(DEC                = NULL,
@@ -161,7 +161,7 @@ volcanoViewer <- function(DEC                = NULL,
 #' 
 #' @return a 'ggplot' object
 #' 
-#' @import ggplot2 ggrepel
+#' @import ggplot2 ggrepel grid
 #' 
 #' @export
 correlatedClustersViewer <- function(CC,
@@ -212,8 +212,6 @@ correlatedClustersViewer <- function(CC,
     return(plot)
 }
 
-
-
 #' @title profilesViewer
 #'
 #' @description 
@@ -226,8 +224,8 @@ correlatedClustersViewer <- function(CC,
 #' 
 #' @return a 'ggplot' object
 #' 
-#' @import ggplot2 ggnetwork network
-#' 
+#' @import ggplot2 ggnetwork network gridExtra
+#' @importFrom network set.vertex.attribute add.edges
 #' @export
 #' 
 profilesViewer <- function (profile.object){
@@ -255,15 +253,23 @@ profilesViewer <- function (profile.object){
                 previous <- j
                 
             }
-            y[1] <- previous 
+            y[1] <- previous
             
+            
+#            temp <- base::tempfile()
+#            sink(temp) 
             graph <- network::network.initialize(nrow(same.class), directed = FALSE)
-            
             network::set.vertex.attribute(x = graph, attrname = "cluster", value = as.character(same.class$cluster))
-
-            graph <- network::add.edges(graph,x,y)
+            network::add.edges(x = graph, tail = x, head = y)
+            
             graph <- ggnetwork::ggnetwork(graph, layout = "circle")
-
+#            sink()
+#            
+#            if (file.info(temp)$size > 0){
+#                cat(file = temp)
+#            }
+#            file.remove(temp) 
+            
             index <- length(plots) + 1
             plots[[index]] <- ggplot2::ggplot(data = graph, ggplot2::aes_string(x = "x", y = "y", xend = "xend", yend = "yend")) + 
                               ggnetwork::geom_edges(linetype = "twodash", color = "grey90", size = 1, curvature = 0.1) +
@@ -285,6 +291,8 @@ profilesViewer <- function (profile.object){
 #' This function generates a graphical representation for 'AC', 'DEC', 'CC', 'PhenoProfiles' and 'EnrichmentProfiles' objects.
 #'
 #' @param x a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object
+#' @param y a supplementary parameter transmited to 'AC', 'DEC' or 'CC' object
+#' @param ... some supplementaries parameters transmited to 'AC', 'DEC' or 'CC' object
 #' 
 #' @return a 'ggplot' object
 #'  

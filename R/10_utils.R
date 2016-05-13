@@ -1,17 +1,17 @@
-#' @title Internal - Generatate a matrix of marker expression scores describing phenotypes
+#' @title Internal - Generatate marker expression scores describing phenotypes
 #' 
 #' @description 
-#' This function generate a numeric matrix of discrete expression scores for each marker of each cluster.
+#' This function is used internally to generate a melted numeric matrix of discrete expression scores for each marker of each cluster.
 #' 
 #' @details 
-#' XXX 
+#' NA values are removed 
 #' 
 #' @param SPADEResults a SPADEResults object
 #' @param num a numeric value specifying the number of markers expression categories
 #'  
 #' @return a numeric matrix of expression scores
 #' 
-#' @import gtools
+#' @import gtools plyr
 computePhenoTable <- function(SPADEResults, num = 5){
     
     message("[START] - computing PhenoTable")
@@ -122,7 +122,7 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
 #' 
 #' @return a 'ggplot' dendrogram object
 #'
-#' @import ggplot2 ggdendro
+#' @import ggplot2 ggdendro grid
 g_dendro <- function(dist, row=!col, col=!row) {
 
     tangle <- if(row) { 0 } else { 90 }

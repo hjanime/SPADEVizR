@@ -2,7 +2,7 @@
 % Please edit documentation in R/10_utils.R
 \name{computePhenoTable}
 \alias{computePhenoTable}
-\title{Internal - Generatate a matrix of marker expression scores describing phenotypes}
+\title{Internal - Generatate marker expression scores describing phenotypes}
 \usage{
 computePhenoTable(SPADEResults, num = 5)
 }
@@ -15,9 +15,9 @@ computePhenoTable(SPADEResults, num = 5)
 a numeric matrix of expression scores
 }
 \description{
-This function generate a numeric matrix of discrete expression scores for each marker of each cluster.
+This function is used internally to generate a melted numeric matrix of discrete expression scores for each marker of each cluster.
 }
 \details{
-XXX
+NA values are removed
 }
 

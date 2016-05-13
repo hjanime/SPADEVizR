@@ -24,6 +24,10 @@ plot(x, y = NULL, ...)
 }
 \arguments{
 \item{x}{a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object}
+
+\item{y}{a supplementary parameter transmited to 'AC', 'DEC' or 'CC' object}
+
+\item{...}{some supplementaries parameters transmited to 'AC', 'DEC' or 'CC' object}
 }
 \value{
 a 'ggplot' object

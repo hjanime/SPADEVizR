@@ -113,7 +113,6 @@ SPADEResults  <- importSPADEResults("C:/Users/gg248485/Desktop/SPADEVizR.data/Im
 
 *Optional:* The markers of SPADE results can be renamed using a dataframe (called dictionary). Such kind of dataframe must have in the first column the original marker names (metals or fluorochromes) and have in the second column the new marker names (protein markers). For instance, a dictionary can be loaded using the following command:
 
-
 ```r
 dictionary <- read.table("C:/Users/gg248485/Downloads/headerB.txt",sep="\t",header = TRUE)
 head(dictionary, n = 5)
@@ -313,7 +312,7 @@ PhenoProfiles <- classifyPhenoProfiles(results, method = "hierarchical_k", metho
 print(PhenoProfiles)
 ## Object class: PhenoProfiles
 ## Clustering method used: hierarchical_k
-## Parameter used:  = 9
+## Parameter used = 9
 ## Number of cluster: 70
 ## Number of class: 9
 ```
@@ -347,16 +346,11 @@ For instance, a classification of cell clusters based on their enrichment profil
 ```r
 EnrichmentProfiles <- classifyEnrichmentProfiles(results, method = "eigencell", method.parameter = 0.9)
 ## [START] - computing classifyEnrichmentProfiles
-##  [1] "1"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10" "11" "12" "13" "14" "15"
-## [15] "16" "17" "18" "19" "21" "22" "24" "25" "26" "27" "28" "29" "30" "31"
-## [29] "32" "33" "34" "35" "36" "37" "38" "39" "40" "41" "42" "43" "44" "45"
-## [43] "46" "47" "48" "49" "50" "51" "52" "53" "54" "55" "56" "57" "58" "59"
-## [57] "60" "61" "62" "63" "64" "65" "66" "67" "68" "69" "70"
 ## [END] - computing classifyEnrichmentProfiles
 print(EnrichmentProfiles)
 ## Object class: EnrichmentProfiles
 ## Clustering method used: eigencell
-## Parameter used:  = 0.9
+## Parameter used = 0.9
 ## Number of cluster: 70
 ## Number of class: 1
 ```
@@ -375,6 +369,7 @@ plot(resultsAC)
 ```
 
 <img src="README.figures/AbundantClusters-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="volcano_viewer_function"/> XX Volcano Viewer
 
 The `volcanoViewer()` function is used to visualize identifed differentially enriched clusters, that is to say results contained in a [DEC objet](#object_structure_DEC). The volcano plot [9] representation displays the p-value (shown as -log10(p-value) in Y-axis) and the fold-change (in X-axis) of abundance cells in a two dimensional visualization. By default, the fold-change is represented with a log2 transformation (which can be change using the `fc.log2` parameter). Each dot represents a cluster and differentially enriched clusters are shown in red. The size of dots is proportional to the number of associated cells (--all samples are considered--).
@@ -386,6 +381,7 @@ plot(resultsDEC, fc.log2 = FALSE)
 ```
 
 <img src="README.figures/VolcanoViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="correlated_clusters_viewer_function"/> XX Correlated Clusters Viewer
 
 The `correlatedClustersViewer` function is used to visualize identifed correlated clusters, that is to say results contained in a [CC objet](#object_structure_CC). This representation show the p-value (shown as -log10(p-value) in Y-axis) and the correlation coefficient (shown in X-axis) of correlated clusters in a two dimensional visualization. Each dot represents a cluster and correlated clusters are shown in red. The size of dots is proportional to the number of associated cells (--all samples are considered--).
@@ -433,20 +429,40 @@ profilesViewer(PhenoProfiles)
 
 # <a name="#viewer_functions"/> XX Miscellaneous vizualisations
 
+## <a name="count_viewer_function"/> XX Count Viewer
+
+The `CountViewer` function aims to visualize the number of cells in each cluster. This representation displays the clusters (in X-axis) and the number of cells (Y-axis) in a two dimensional visualization. The function computes the sum of all samples by default but allows to select the samples (using `samples` parameter) which are used to calculate the number of cells in each cluster. By default, all clusters will be displayed but a vector of cluster can be provided to select desired clusters (using `clusters` parameter).
+
+For instance, the following command describe how to select samples and clusters and then visualize the number of cells in each cluster:
+
+```r
+samples <- c(TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE)
+names(samples) <- results@sample.names
+countViewer(results,samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"))
+```
+
+<img src="README.figures/CountViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="tree_viewer_function"/> XX Tree Viewer
 
-The `treeViewer` function improve the SPADE tree showing the number of cells for each cluster (node of the tree) and if DEC, AC or CC object is provided (with parameter: `stat.object`), it highlights significant clusters (node border). The cluster nodes can also be colored by the marker median expression of a selected marker using the `marker` parameter. This function can only handle `SPADEResults` objects (but not a `Results` object). 
+The `treeViewer` function improve the SPADE tree showing the number of cells for each cluster (node of the tree) and if a `DEC`, `AC` or `CC` object is provided (with parameter: `stat.object`), it highlights significant clusters (node border). The cluster nodes can also be colored by the marker median expression of a selected marker using the `marker` parameter. This function can only handle `SPADEResults` objects (but not a `Results` object). 
+
+For instance, the following command describe how to visualize a combined SPADE tree of all samples which highlight significant differentially enriched clusters and the expression of one marker :
 
 ```r
 treeViewer(results, stat.object = resultsDEC, marker = "HLADR")
 ```
 
-<img src="README.figures/TreeViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="README.figures/TreeViewer1-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="pheno_viewer_function"/> XX Pheno Viewer
 
-The `phenoViewer` function returns an heatmap of expression scores for each marker of each cluster.
+The `phenoViewer` function returns an heatmap of expressions for each marker of each cluster.
 For each marker, median expressions are discretized in severals categories corresponding to the heat intensities.
-This function can only handle `SPADEResults` objects (but not a `Results` object). 
+In the heatmap, all clusters and markers are ordered based on a Ward distance followed by a hierarchical classification.
+
+This function can only handle `SPADEResults` objects (but not a `Results` object).
+For instance, the following command describe how to generate the heatmap:
 
 ```r
 phenoViewer(results)
@@ -455,9 +471,14 @@ phenoViewer(results)
 ```
 
 <img src="README.figures/PhenoViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="boxplot_viewer_function"/> XX Boxplot Viewer
 
-The `boxplotViewer` function aims to compare cell enrichment of a cluster across several biological conditions. Biological `conditions` are encoded in a named vector with samples in rownames providing correspondence with a biological condition (numeric or character are allowed). 
+The `boxplotViewer` function aims to compare cell enrichment of a cluster across several biological conditions. Biological `conditions` are encoded in a named vector with samples in rownames providing correspondence with a biological condition (numeric or character are allowed). The abundance could be displayed based on the percentage across all clusters or based on the number of cells using the `use.percentages = FALSE` parameter (TRUE by default).
+
+*This function returns a list of plots (one by selected cluster)* 
+
+For instance, the following command describe how to compare cell abundances in 3 conditions:
 
 ```r
 conditions <- c("0 jours","0 jours","0 jours","0 jours",NA,"8 jours","8 jours","8 jours","8 jours",NA,"28 jours","28 jours","28 jours","28 jours",NA)
@@ -468,13 +489,18 @@ gridExtra::grid.arrange(grobs = boxplotViewer(results, show.legend = TRUE, condi
 ```
 
 <img src="README.figures/BoxplotViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="kinetic_viewer_function"/> XX Kinetic Viewer
 
-The `kineticsViewer` function aims to represent the evolution of cells abundance for each cluster across the timepoints for one or several individuals. It needs the `SPADEResult` object and to specify the `assignments` parameter. This parameter needs a dataframe with sample names in row names and 2 others column providing the timepoints and individuals associated with samples. 
+The `kineticsViewer` function aims to represent the evolution of cells abundance for each cluster across the timepoints for one or several individuals. It needs the `SPADEResult` object and to specify the `assignments` parameter. This parameter needs a dataframe with sample names in row names and 2 other columns providing the timepoints and individuals associated with samples. The abundance could be displayed based on the percentage across all clusters or based on the number of cells using the `use.percentages = FALSE` parameter (TRUE by default).
+
+*This function returns a list of plots (one by selected cluster)* 
+
+For instance, the following command describe how to vizualize kinetics across 3 timepoints for 5 individuals:
 
 ```r
 assignments <- data.frame(row.names = results@sample.names,
-						  timepoints = c(0,0,0,0,0,8,8,8,8,8,28,28,28,28,28), 
+						  timepoints = c(0,0,0,0,0,8,8,8,8,8,28,28,28,28,28),
 						  individuals = c("BB078","BB231","BC641","BD619","BD620","BB078","BB231","BC641","BD619","BD620","BB078","BB231","BC641","BD619","BD620"))
 
 gridExtra::grid.arrange(grobs = kineticsViewer(results, assignments = assignments, clusters=c("1","3")))
@@ -483,38 +509,12 @@ gridExtra::grid.arrange(grobs = kineticsViewer(results, assignments = assignment
 ```
 
 <img src="README.figures/KineticViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-## <a name="cluster_viewer_function"/> XX Cluster Viewer
 
-The `clusterViewer` function returns a parallel coordinates respresentation for each cluster of each marker (clustering markers are shown in bold). This visualization allows to compare marker expressions between clusters and also with mean and quantiles expressions. 
-
-The `show.mean` parameter specify the kind of information to display in the cluster viewer. The available values for this parameter are : 
-
- * "only" value will show only the mean of median maker expressions for all selected samples (displayed as black dashed line)
- * "none" value will show marker median expressions for each selected samples.
- * "both" value will show marker median expressions for each selected samples together with the mean of median maker expressions for all selected samples 
- 
-In order to restrain visualization to specific markers and cluster, it is possible to provide a vector of marker names to `markers` parameter or in the same way a vector of clusters to `clusters` parameter.
-For instance, the following command describe how to visualize cluster 1 and 8 :
-
-```r
-gridExtra::grid.arrange(grobs = clusterViewer(results,clusters = c("1","8"),show.mean = "both"))
-```
-
-<img src="README.figures/ClusterViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
-## <a name="distogram_viewer_function"/> XX Distogram Viewer
-
-The `distogramViewer` function displays markers co-expression based on the pearson correlation.
-
-
-```r
-distogramViewer(results)
-```
-
-<img src="README.figures/DistogramViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 ## <a name="streamgraph_viewer_function"/> XX Streamgraph Viewer
 
 The `streamgraphViewer` function aims to represent the evolution of cells abundance of all clusters selected using `clusters` parameter. To select and order sample, you should provide to `order` parameter, a named vector with samples in rownames providing correspondence with a position (integer) or NA to exclude a sample. 
 
+For instance, the following command describe how to ordering samples and visualize a streamgraph using the selected clusters:
 
 ```r
 order <- c(1,3,NA,2,4,5,6,NA,9,NA,15,14,12,11,13)
@@ -525,7 +525,7 @@ streamgraphViewer(results,order = order, clusters = c("1","2","3","14","5"))
 ```
 
 <img src="README.figures/StreamgraphViewer_absolute-1.png" title="" alt="" style="display: block; margin: auto;" />
-The same could be done in a relative manner using the `use.relative` parameter
+The same could be done in a relative manner using the `use.relative = TRUE` parameter
 
 ```r
 streamgraphViewer(results,order = order, clusters = c("1","2","3","14","5"), use.relative = TRUE)
@@ -535,26 +535,67 @@ streamgraphViewer(results,order = order, clusters = c("1","2","3","14","5"), use
 
 <img src="README.figures/StreamgraphViewer_percent-1.png" title="" alt="" style="display: block; margin: auto;" />
 
-## <a name="MDS_viewer_function"/> XX MDS Viewer (Multidimensional Scaling)
-## <a name="count_viewer_function"/> XX Count Viewer
+## <a name="cluster_viewer_function"/> XX Cluster Viewer
 
-The `CountViewer` function aims to visualize the number of cells in each cluster. This representation displays the clusters (in X-axis) and the number of cells (Y-axis) in a two dimensional visualization. The function computes the sum of all samples by default but allows to select the samples (using `samples` parameter) which are used to calculate the number of cells in each cluster. By default, all clusters will be displayed but a vector of cluster can be provided to select desired cluster (using `clusters` parameter).
+The `clusterViewer` function returns a parallel coordinates respresentation for each cluster of marker median expressions (clustering markers are shown in bold). This visualization allows to obtain an overview of marker median expressions for each cluster in addition with mean and maker range expressions. 
 
-For instance, the following command describe how to select samples and clusters and then visualize the number of cells in each cluster :
+The `show.mean` parameter specify the kind of information to display in the cluster viewer. The available values for this parameter are : 
+
+ * "only" value will show only the mean of median maker expressions for all selected samples (displayed as black dashed line)
+ * "none" value will show marker median expressions for each selected samples.
+ * "both" value will show marker median expressions for each selected samples together with the mean of median maker expressions for all selected samples 
+ 
+In order to restrain visualization to specific markers and cluster, it is possible to provide a vector of marker names to `markers` parameter or in the same way a vector of clusters to `clusters` parameter.
+
+*This function returns a list of plots (one by selected cluster)* 
+
+For instance, the following command describe how to visualize cluster 1 and 8:
 
 ```r
-samples <- c(TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE)
-names(samples) <- results@sample.names
-countViewer(results,samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"))
+gridExtra::grid.arrange(grobs = clusterViewer(results,clusters = c("1","8"),show.mean = "both"))
 ```
 
-<img src="README.figures/CountViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="README.figures/ClusterViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+
+## <a name="MDS_viewer_function"/> XX MDS Viewer (Multidimensional Scaling)
+Multidimensional Scaling (MDS) methods aim to represent the similarities and differences among high dimensionality objects into a space of a lower dimensions, generally in two or three dimensions for visualization purposes [8]. In MDS representations, the Kruskal Stress (KS) indicates the percentage of information lost during the dimensionality reduction process.
+
+The `MDSViewer` function computes the cell abundances to generates a MDS representation either of clusters or samples depending on `space` parameter ("sample" or "cluster"). If the `space` is equal to "sample", the `assignments` parameter is required (as for [Kinetic Viewer](kinetic_viewer_function)). This parameter needs a dataframe with sample names in row names and 2 other columns providing the timepoints and individuals associated with samples. 
+
+For instance, the following command describe how to visualize the distances between all selected clusters:
+
+```r
+MDSViewer(results, space = "clusters", clusters = c("2","3","4","5","6","7","9"))
+## These clusters will be compute :
+## 2	3	4	5	6	7	9
+## MDS computation
+## done
+```
+
+<img src="README.figures/MDSViewer_clusters-1.png" title="" alt="" style="display: block; margin: auto;" />
+And the following command describe how to visualize the distances between all samples associated with the contextual informations provided in the `assignments` parameter:
+
+```r
+assignments <- data.frame(row.names = results@sample.names,
+						  timepoints = c(0,0,0,0,0,8,8,8,8,8,28,28,28,28,28),
+						  individuals = c("BB078","BB231","BC641","BD619","BD620","BB078","BB231","BC641","BD619","BD620","BB078","BB231","BC641","BD619","BD620"))
+MDSViewer(results, space = "samples", assignments = assignments, clusters = c("2","3","4","5","6","7","9"))
+## These clusters will be compute :
+## 2	3	4	5	6	7	9
+## MDS computation
+## done
+```
+
+<img src="README.figures/MDSViewer_samples-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 ## <a name="biplot_viewer_function"/> XX Biplot Viewer
 
-The `biplotViewer` function can be used to visualize a two dimensional representation with the chosen markers (x-axis marker using the `x.marker` parameter and y axis marker using the `y.marker` parameter). It allows to filter cells by clusters and samples using the `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or with a facet for each sample.
+The `biplotViewer` function can be used to visualize a two dimensional representation showing two selected cell markers (X-axis marker using the `x.marker` parameter and Y-axis marker using the `y.marker` parameter). This function allows to filter cells by clusters and samples using the `clusters` and `samples` parameters. Moreover, cells can be shown for of all samples merged or by default separated using a facet for each sample.
 When too cells dots are displayed, it can require some seconds. In order to seep up the computation, it is possible to reduce the number of cells displayed (downsampling) using the `resample.ratio` parameter.  
 
-This function can only handle `SPADEResults` objects (but not a `Results` object). 
+This function can only handle `SPADEResults` objects (but not a `Results` object).
+
+For instance, the following command describe how to visualize the biplots using "CD20" and "HLADR" markers filtered by the selected sample and clusters:
 
 ```r
 samples <- c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE)
@@ -563,7 +604,22 @@ biplotViewer(results, x.marker = "CD20", y.marker = "HLADR", samples = samples, 
 ```
 
 <img src="README.figures/biplot-1.png" title="" alt="" style="display: block; margin: auto;" />
-# <a name="license"/> XX Export 
+
+## <a name="distogram_viewer_function"/> XX Distogram Viewer
+
+The `distogramViewer` function displays markers co-expression based on the pearson correlation. This function allows to filter marker medians expressions by clusters, samples and markers using the `clusters`, `samples` and `markers` parameters.
+
+For instance, a distogram can be shown filtered by the selected sample, clusters and markers using the following command:
+
+```r
+samples <- c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE)
+names(samples) <- results@sample.names
+distogramViewer(results, samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"), markers = results@marker.names[1:15])
+```
+
+<img src="README.figures/DistogramViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
+
+# <a name="export"/> XX Export 
 The `export()` function is available for all objects of this package. Use this function to export an object to a tab separated file able to be open with Microsoft Excel&copy; or with Libre Office Calc.
 
 
@@ -571,30 +627,34 @@ The `export()` function is available for all objects of this package. Use this f
 export(AC,filename = "export.txt")
 ```
 
-# <a name="license"/> XX Generate report 
-The `generateReport()` function allows to easily generate a PDF file containing all desired plots. In order to select the plots to include in the report, you could provided a character vector containing the names of desired plots among: 
+# <a name="report"/> XX Generate report 
+The `generateReport()` function allows to easily generate a PDF file containing all desired plots. In order to select the plots to include in the report, you could provided a character vector containing the names of desired plots to the `plot.names` parameter among: 
 
+ * "[count](#)" (included by default): Display an representation showing the number of cells for each cluster
+ * "[tree](#)" (included by default): Display a tree representation showing combined SPADE trees
  * "[pheno](#)" (included by default): Display an heatmap representation
- * "[kinetics](#)": Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter.
- * "[cluster](#)" (included by default): Display a parallel coordinate representation showing for each cluster the marker median expression.
- * "[boxplot](#)": Display a boxplot representation. This plot required to provide the 'conditions' parameter.
+ * "[boxplot](#)": Display a boxplot representation. This plot required to provide the 'conditions' parameter
+ * "[kinetics](#)": Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter
+ * "[stream](#)" (included by default): Display a streamgraphViewer representation showing the evolution of cells abundance
+ * "[cluster](#)" (included by default): Display a parallel coordinate representation showing for each cluster the marker median expression
+ * "[MDSclusters](#)" (included by default): Display the cluster similarities using MDS
+ * "[MDSsamples](#)": Display the samples similarities using MDS. This plot required to provide the 'assignment' parameter
+ * "[disto](#)" (included by default): Display a distogram representation showing the marker co-expressions
  * "kinetics_cluster": Display a "[kinetics](#)" and "[cluster](#)" representation juxtaposed (are arranged one on the side of the other) for each cluster.
  * "boxplot_cluster": Display a "[boxplot](#)" and "[cluster](#)" representation juxtaposed (are arranged one on the side of the other) for each cluster.
- * "[tree](#)" (included by default): Display a tree representation showing combined SPADE trees using selected samples.
- * "[disto](#)" (included by default): Display a distogram representation showing the marker co-expressions.
- * "[stream](#)" (included by default): Display a 
- * "[MDSclusters](#)" (included by default): Display a Multidimensional Scaling (MDS) representation showing the
- * "[MDSsamples](#)": Display a Multidimensional Scaling (MDS) representation showing the. This plot required to provide the 'assignment' parameter.
 
-The report will follows the order of plots names in the vector.
+The report will follows the order of plot names in the vector.
 
-You can also provided a vector of stat objects (AC, DEC, CC) with the `stat.objects` parameter and a vector of profile.objects (`PhenoProfile` and `EnrichmentProfile`) with the `profile.objects` parameter
+You can also provided a vector of stat objects (`AC`, `DEC` and `CC` objects) with the `stat.objects` parameter and a vector of profile.objects (`PhenoProfile` and `EnrichmentProfile` objects) with the `profile.objects` parameter
 
 
 ```r
-generateReport(results,PDFfile = "DESIRED_PATH.pdf", assignments = assignments, report = c("pheno", "kinetic_cluster","tree", "disto","stream","MDS"))
+generateReport(results, PDFfile = "report.pdf", assignments = assignments, plot.names = c("count","pheno", "kinetics_cluster","tree", "disto","stream","MDSsamples","MDSclusters"), stat.objects = c(resultsAC, resultsDEC, resultsCC), profile.objects = EnrichmentProfiles)
 ```
--- integrate a exemple of report ? --
+
+
+The generated PDF using this command can be download here <a href="report.pdf"> report.pdf </a>
+
 *Generating a big report can take a minute or more.*
 
 # <a name="object_structures"/> XX Object structures
