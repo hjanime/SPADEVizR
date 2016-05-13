@@ -3,7 +3,7 @@ Guillaume Gautreau, David Pejoski, Ludovic Platon, Roger Le Grand, Antonio Cosma
 
 
 
-![](logoSPADEVizR.png)
+![](README.figures/logoSPADEVizR.png)
 
 # Table of Contents
 1. [Package overview](#package_overview)
@@ -453,7 +453,7 @@ For instance, the following command describe how to visualize a combined SPADE t
 treeViewer(results, stat.object = resultsDEC, marker = "HLADR")
 ```
 
-<img src="README.figures/TreeViewer1-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="README.figures/TreeViewer-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 ## <a name="pheno_viewer_function"/> XX Pheno Viewer
 
@@ -758,7 +758,7 @@ cluster.size       | a numeric vector containing the number of cells associated 
 classes            | a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
 
 ## <a name="object_structure_EnrichmentProfiles"/> XX Classification of clusters based on theirs enrichment profiles (EnrichmentProfiles object)
-The `EnrichmentProfiles` object is a S4 object containing the main information related of the cluster classification obtained by the [`classifyEnrichmentProfiles`](#stat_function_classifyEnrichmentProfiles)  
+The `EnrichmentProfiles` object is a S4 object containing the main information related of the cluster classification obtained by the [`classifyEnrichmentProfiles()`](#stat_function_classifyEnrichmentProfiles) function. 
 
 Different slots are available for a given `PhenoProfiles` object:
 

@@ -115,20 +115,20 @@ importSPADEResults <- function(path,
 
     markers.names <- colnames(marker.expressions[, grep ("cluster|sample",colnames(marker.expressions), invert = TRUE)])
     
-    res <- new("SPADEResults", 
-               marker.expressions  = marker.expressions,
-               use.raw.medians     = use.raw.medians,
-               dictionary          = dictionary,
-               cells.count         = cells.count,
-               sample.names        = flowCore::sampleNames(flowset),
-               marker.names        = markers.names,
-               marker.clustering   = markers.names %in% clustering.markers,
-               cluster.number      = nrow(cells.count),
-               flowset             = flowset,
-               fcs.files           = fcs.files,
-               quantiles           = quantiles,
-               graph.layout        = graph.layout,
-               graph               = graph)
+    res <- methods::new("SPADEResults", 
+                        marker.expressions  = marker.expressions,
+                        use.raw.medians     = use.raw.medians,
+                        dictionary          = dictionary,
+                        cells.count         = cells.count,
+                        sample.names        = flowCore::sampleNames(flowset),
+                        marker.names        = markers.names,
+                        marker.clustering   = markers.names %in% clustering.markers,
+                        cluster.number      = nrow(cells.count),
+                        flowset             = flowset,
+                        fcs.files           = fcs.files,
+                        quantiles           = quantiles,
+                        graph.layout        = graph.layout,
+                        graph               = graph)
     
     message("[END] - extracting SPADE results")
     
@@ -173,12 +173,12 @@ importResults <- function(cells.count,
     colnames(marker.expressions)[1] <- "sample"                 
     colnames(marker.expressions)[2] <- "cluster"
     
-    res <- new("Results", 
-               marker.expressions  = marker.expressions,
-               cells.count         = cells.count,
-               sample.names        = as.character(setdiff(unique(marker.expressions$sample),"cluster")),
-               marker.names        = colnames(marker.expressions)[3:length(marker.expressions)],
-               cluster.number      = length(unique(marker.expressions$cluster)))    
+    res <- methods::new("Results", 
+                        marker.expressions  = marker.expressions,
+                        cells.count         = cells.count,
+                        sample.names        = as.character(setdiff(unique(marker.expressions$sample),"cluster")),
+                        marker.names        = colnames(marker.expressions)[3:length(marker.expressions)],
+                        cluster.number      = length(unique(marker.expressions$cluster)))    
 }
 
 #' @title Internal - Renaming cell markers
@@ -211,7 +211,6 @@ rename.markers <- function(header,dictionary){
     
     return(header)
 }
-
 
 #' @title Internal - Removing of cell markers to exclude from a matrix
 #'

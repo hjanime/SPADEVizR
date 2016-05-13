@@ -46,7 +46,7 @@ countViewer <- function(Results,
     data <- cbind("cluster" = rownames(data), data)
     
     if (sort){
-        data <- transform(data, "cluster" = reorder(cluster, -sum.of.samples))
+        data <- base::transform(data, "cluster" = reorder(cluster, -sum.of.samples))
     }else{
         data$cluster <- as.factor(data$cluster)
     }
@@ -558,7 +558,7 @@ clusterViewer <- function(Results,
         cells.count <- Results@cells.count[,c(names(samples[ samples == TRUE] )), drop = FALSE]
     }
     
-    data <- na.omit(data)# NA values are removed, generate a warning ?
+    data <- stats::na.omit(data)# NA values are removed, generate a warning ?
     
     if(!is.null(clusters)){
         if (typeof(clusters) != "character"){
