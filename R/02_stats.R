@@ -15,12 +15,12 @@
 #' 
 #' @export
 identifyAC <- function(Results,
-        condition,
-        use.percentages = TRUE,
-        method          = "t.test",
-        method.adjust   = NULL,
-        th.pvalue       = 0.05,
-        th.mean         = 0){
+                       condition,
+                       use.percentages = TRUE,
+                       method          = "t.test",
+                       method.adjust   = NULL,
+                       th.pvalue       = 0.05,
+                       th.mean         = 0){
     
     message("[START] - computing ACs")
     
@@ -87,13 +87,13 @@ identifyAC <- function(Results,
 #' 
 #' @export
 identifyDEC <- function(Results,
-        conditions,
-        use.percentages = TRUE,
-        method          = "t.test",
-        method.adjust   = NULL,
-        method.paired   = FALSE,
-        th.pvalue       = 0.05,
-        th.fc           = 1){
+                        conditions,
+                        use.percentages = TRUE,
+                        method          = "t.test",
+                        method.adjust   = NULL,
+                        method.paired   = FALSE,
+                        th.pvalue       = 0.05,
+                        th.fc           = 1){
     
     message("[START] - computing DECs\n")
     
@@ -184,12 +184,12 @@ identifyDEC <- function(Results,
 #'
 #' @export
 identifyCC <- function(Results,
-        variable,
-        use.percentages = TRUE,
-        method          = "pearson",
-        method.adjust   = NULL,
-        th.pvalue       = 0.05,
-        th.correlation  = 0.75){
+                       variable,
+                       use.percentages = TRUE,
+                       method          = "pearson",
+                       method.adjust   = NULL,
+                       th.pvalue       = 0.05,
+                       th.correlation  = 0.75){
     
     message("[START] - computing CCs")
     
@@ -258,8 +258,10 @@ identifyCC <- function(Results,
 #' \item "hierarchical_h" (default method)
 #' This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
 #' This heigth is a correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the 'method.parameter' parameter.
+#' \item "kmeans"
+#' This method works as described in the R stats documentation (?kmeans) using the 'method.parameter' parameter to specify the desired number of classes.
 #' \item "eigencell" 
-#' This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
+#' This method performs an eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
 #' Clusters which correlate above a specific threshold with the same eigen vector are classified together.
 #' This correlation threshold (a numeric double between 0 and 1 included, default is 0.8) provided using the 'method.parameter' parameter.
 #' \item "clique" 
@@ -277,8 +279,9 @@ identifyCC <- function(Results,
 #'
 #' @export
 classifyPhenoProfiles <- function (Results,
-        method           = "hierarchical_h",
-        method.parameter = NULL){
+                                   method           = "hierarchical_h",
+                                   method.parameter = NULL) {
+
     default.eigencell.correlation.th    <- 0.8
     default.clique.correlation.th       <- 0.7
     default.hierarchical.correlation.th <- 0.7                           
@@ -336,12 +339,10 @@ classifyPhenoProfiles <- function (Results,
     names(cluster.size) <- rownames(Results@cells.count)
     
     pheno <- methods::new("PhenoProfiles",
-            method                   = method,
-            method.parameter         = method.parameter,
-            cluster.size             = cluster.size,
-            cluster.number           = Results@cluster.number,
-            class.number             = length(unique(classes[,2])),
-            classes                  = classes)
+                          class.number = length(unique(classes[!is.na(classes$class), 2])),
+                          method                   = method,
+                          method.parameter         = method.parameter,
+                          classes                  = classes)
     
     message("[END] - computing classifyPhenoProfiles")
     return(pheno)    
@@ -363,8 +364,10 @@ classifyPhenoProfiles <- function (Results,
 #' \item "hierarchical_h" (default method)
 #' This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
 #' This heigth is a correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the 'method.parameter' parameter.
+#' \item "kmeans"
+#' This method works as described in the R stats documentation (?kmeans) using the 'method.parameter' parameter to specify the desired number of classes.
 #' \item "eigencell" 
-#' This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
+#' This method performs an eigen vector decomposition and then calculate the correlations between cluster enrichment profiles and these vectors.
 #' Clusters which correlate above a specific threshold with the same eigen vector are classified together.
 #' This correlation threshold (a numeric double between 0 and 1 included, default is 0.8) provided using the 'method.parameter' parameter.
 #' \item "clique" 
@@ -382,8 +385,8 @@ classifyPhenoProfiles <- function (Results,
 #'
 #' @export
 classifyEnrichmentProfiles <- function(Results,
-        method           = "hierarchical_h",
-        method.parameter = NULL){ # think about select sample ?
+                                       method           = "hierarchical_h",
+                                       method.parameter = NULL){ # think about select sample ?
     
     default.eigencell.correlation.th    <- 0.8
     default.clique.correlation.th       <- 0.7
@@ -431,16 +434,11 @@ classifyEnrichmentProfiles <- function(Results,
     classes$class <- as.numeric(classes$class)
     classes       <- classes[ order(classes$class), ]
     
-    cluster.size        <- apply(Results@cells.count,1,sum)
-    names(cluster.size) <- rownames(Results@cells.count)
-    
     enrich <- methods::new("EnrichmentProfiles",
-            method                   = method,
-            method.parameter         = method.parameter,
-            cluster.size             = cluster.size,
-            cluster.number           = Results@cluster.number,
-            class.number             = length(unique(classes[,2])),
-            classes                  = classes)
+                           class.number = length(unique(classes[!is.na(classes$class), 2])),
+                           method                   = method,
+                           method.parameter         = method.parameter,
+                           classes                  = classes)
     
     message("[END] - computing classifyEnrichmentProfiles")
     return(enrich)  
@@ -455,7 +453,7 @@ classifyEnrichmentProfiles <- function(Results,
 #' This function compute the Pearson correlation matrix associated to the provided matrix. 
 #' It is to note that negative correlations are considered as uncorrelated.
 #' This correlation matrix is used to performs a hierarchical classification.
-#' If 'class.number' is NULL, classification will be determined base on the cut height correlation threshold.
+#' If 'class.number' parameter is NULL, classification will be determined based on the cut height correlation threshold (i.e. 'hierarchical.correlation.th' parameter)
 #' 
 #' @param data a matrix with all clusters in rownames
 #' @param class.number a numeric specifying the number of classes
@@ -464,8 +462,8 @@ classifyEnrichmentProfiles <- function(Results,
 #' @return a dataframe containing for each cluster, its name and class
 #' 
 computeHierarchicalClustering <- function (data,
-        class.number                = NULL,
-        hierarchical.correlation.th = 0.8){
+                                           class.number                = NULL,
+                                           hierarchical.correlation.th = 0.8){
     
     cor.data <- cor(t(data))
     
@@ -486,22 +484,21 @@ computeHierarchicalClustering <- function (data,
     return(res)
 }
 
-
 #' @title Internal - Kmeans classification
 #' 
 #' @description 
 #' This function is used internally to classify clusters enrichment profilies or phenotype profiles using a k-means algorithm. 
 #' 
 #' @details 
-#' xxx
-#' 
+#' This method works as described in the R stats documentation (?kmeans) using the 'k' parameter to specify the desired number of classes.
+#
 #' @param data a numeric matrix with cluster names in rownames
 #' @param k a numeric specifying the desired number of classes
 #' 
 #' @return a dataframe containing for each cluster, its name and class
 #' 
 computeKmeans <- function(data,
-        k = NULL){
+                          k = NULL){
     kmeans <- kmeans(data, centers = k)    
     result <- data.frame(cluster = as.character(rownames(data)), class = as.numeric(kmeans$cluster))
     
@@ -515,15 +512,17 @@ computeKmeans <- function(data,
 #' This function is used internally to classify clusters enrichment profiles or phenotype profiles using eigen vector decomposition. 
 #' 
 #' @details 
-#' xxx
-#' 
+#' This method compute the performs a eigen vector decomposition and then calculate the correlations between the matrix rows and these vectors.
+#' Clusters which correlate above a specific threshold with the same eigen vector are classified together.
+#' This correlation threshold (a numeric double between 0 and 1 included, default is 0.8) provided using the 'eigencell.correlation.th' parameter.
+#'
 #' @param data a numeric matrix with all clusters in rownames
 #' @param eigencell.correlation.th a numeric value indicating the correlation coefficient threshold
 #' 
 #' @return a dataframe containing for each cluster, its name and class
 #' 
 computeEigenCellClusters <- function(data, 
-        eigencell.correlation.th = 0.80){
+                                     eigencell.correlation.th = 0.80){
     
     svd     <- svd(data)
     eigenCC <- t(svd$v)
@@ -560,7 +559,10 @@ computeEigenCellClusters <- function(data,
 #' This function is used internally to classify clusters enrichment profiles or phenotype profiles using a clique percolation algorithm. 
 #' 
 #' @details 
-#' xxx
+#' This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
+#' In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
+#' This correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the 'clique.correlation.th' parameter.
+#' After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 #' 
 #' @param data a numeric matrix with all clusters in rownames
 #' @param clique.correlation.th a numeric value indicating the correlation coefficient threshold
@@ -568,7 +570,7 @@ computeEigenCellClusters <- function(data,
 #' @return a dataframe containing for each cluster, its name and class
 #' 
 computeClique <- function(data,
-        clique.correlation.th = 0.7){
+                          clique.correlation.th = 0.7){
     
     res     <- c()
     for(i in 1:(nrow(data)-1)){

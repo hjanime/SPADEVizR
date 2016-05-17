@@ -20,15 +20,11 @@ This object is returned by the 'classifyPhenoProfiles()' function.
 \section{Slots}{
 
 \describe{
-\item{\code{cluster.number}}{a numeric providing the number of cluster}
+\item{\code{class.number}}{a numeric value specifying the number of clusters}
 
 \item{\code{method}}{a character specifying the method used to classify cluster}
 
 \item{\code{method.parameter}}{a named list of parameters used by the classification method}
-
-\item{\code{cluster.size}}{a numeric vector containing the number of cells associated with each cluster (-- sum of all samples --)}
-
-\item{\code{class.number}}{a numeric value specifying the number of clusters}
 
 \item{\code{classes}}{a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm}
 }}

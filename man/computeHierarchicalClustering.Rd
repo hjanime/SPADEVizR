@@ -24,6 +24,6 @@ This function is used internally to classify clusters enrichment profiles or phe
 This function compute the Pearson correlation matrix associated to the provided matrix. 
 It is to note that negative correlations are considered as uncorrelated.
 This correlation matrix is used to performs a hierarchical classification.
-If 'class.number' is NULL, classification will be determined base on the cut height correlation threshold.
+If 'class.number' parameter is NULL, classification will be determined based on the cut height correlation threshold (i.e. 'hierarchical.correlation.th' parameter)
 }
 

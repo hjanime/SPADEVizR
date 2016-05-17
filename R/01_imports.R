@@ -23,10 +23,10 @@
 #'
 #' @export 
 importSPADEResults <- function(path,
-                               dictionary         = data.frame(),
-                               exclude.markers    = c("cell_length", "FileNum", "density", "time"),
-                               probs              = c(0.05,0.95),
-                               use.raw.medians    = FALSE,
+                               dictionary             = data.frame(),
+                               exclude.markers        = c("cell_length", "FileNum", "density", "time"),
+                               probs                  = c(0.05,0.95),
+                               use.raw.medians        = FALSE,
                                quantile.approximation = FALSE){
     
     message("[START] - extracting SPADE results")

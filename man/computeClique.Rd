@@ -18,6 +18,9 @@ a dataframe containing for each cluster, its name and class
 This function is used internally to classify clusters enrichment profiles or phenotype profiles using a clique percolation algorithm.
 }
 \details{
-xxx
+This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
+In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
+This correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the 'clique.correlation.th' parameter.
+After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 }
 

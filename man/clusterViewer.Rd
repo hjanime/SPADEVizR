@@ -25,7 +25,7 @@ a list of ggplot objects
 Generates a parallel coordinate plot representation showing for each cluster the marker median expressions.
 }
 \details{
-If 'Results' is an object of class 'SPADEResults' object then the quantile ranges will be displayed using a ribbon.
+If 'Results' is an object of class 'SPADEResults' then the quantile ranges will be displayed using a ribbon.
 
 The 'samples' parameter required a named vector providing the correspondence between a sample name (in rowname) and the logical value TRUE to show this sample or FALSE otherwise.
 

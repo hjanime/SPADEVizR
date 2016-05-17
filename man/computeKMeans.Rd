@@ -18,6 +18,6 @@ a dataframe containing for each cluster, its name and class
 This function is used internally to classify clusters enrichment profilies or phenotype profiles using a k-means algorithm.
 }
 \details{
-xxx
+This method works as described in the R stats documentation (?kmeans) using the 'k' parameter to specify the desired number of classes.
 }
 

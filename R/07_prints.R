@@ -128,17 +128,14 @@ setMethod("print","CC",
 setMethod("print","PhenoProfiles",
         function(x){
             cat("Object class: PhenoProfiles\n")
-            cat(paste0("Clustering method used: "))
+            cat(paste0("Number of class: "))
+            cat(paste0(x@class.number, collapse = "; "))
+            cat("\n")
+            cat(paste0("Classification method used: "))
             cat(paste0(x@method, collapse="; "))
             cat("\n")
             cat(paste0("Parameter used"))
             cat(paste0(names(x@method.parameter), " = ", x@method.parameter, collapse="; "))
-            cat("\n")
-            cat(paste0("Number of cluster: "))
-            cat(paste0(x@cluster.number, collapse="; "))
-            cat("\n")
-            cat(paste0("Number of class: "))
-            cat(paste0(x@class.number, collapse="; "))
             cat("\n")
         }
 )
@@ -148,17 +145,14 @@ setMethod("print","PhenoProfiles",
 setMethod("print","EnrichmentProfiles",
         function(x){
             cat("Object class: EnrichmentProfiles\n")
-            cat(paste0("Clustering method used: "))
+            cat(paste0("Number of class: "))
+            cat(paste0(x@class.number, collapse = "; "))
+            cat("\n")
+            cat(paste0("Classification method used: "))
             cat(paste0(x@method, collapse="; "))
             cat("\n")
             cat(paste0("Parameter used"))
             cat(paste0(names(x@method.parameter), " = ", x@method.parameter, collapse="; "))
-            cat("\n")
-            cat(paste0("Number of cluster: "))
-            cat(paste0(x@cluster.number, collapse="; "))
-            cat("\n")
-            cat(paste0("Number of class: "))
-            cat(paste0(x@class.number, collapse="; "))
             cat("\n")
         }
 )

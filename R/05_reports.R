@@ -12,7 +12,7 @@
 #' \item {"stream" (included by default):}{Display a streamgraphViewer representation showing the evolution of cells abundance}
 #' \item {"cluster" (included by default):}{Display a parallel coordinate representation showing for each cluster the marker median expression}
 #' \item {"MDSclusters" (included by default):}{Display the cluster similarities using MDS}
-#' \item {"MDSsamples":}{Display the samples similarities using MDS. This plot required to provide the 'assignment' parameter}
+#' \item {"MDSsamples":}{Display the samples similarities using MDS. This plot required to provide the 'assignments' parameter}
 #' \item {"disto" (included by default):}{Display a distogram representation showing the marker co-expressions}
 #' \item {"kinetics_cluster":}{Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
 #' \item {"boxplot_cluster":}{Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}

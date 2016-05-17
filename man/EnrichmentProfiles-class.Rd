@@ -20,15 +20,11 @@ This object is returned by the 'classifyEnrichmentProfiles()' function.
 \section{Slots}{
 
 \describe{
+\item{\code{class.number}}{a numeric providing the number of classes}
+
 \item{\code{method}}{a character specifying the method used to classify cluster}
 
 \item{\code{method.parameter}}{a numeric parameters associated with the chosen method}
-
-\item{\code{cluster.size}}{a numeric vector with the number of cell in each cluster (sum of all samples)}
-
-\item{\code{cluster.number}}{a numeric providing the number of cluster}
-
-\item{\code{class.number}}{a numeric providing the number of classes}
 
 \item{\code{classes}}{a two column dataframe with the cluster in first column and corresponding class in the second column}
 }}

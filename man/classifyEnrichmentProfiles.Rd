@@ -31,8 +31,10 @@ It is to note that negative correlations are considered as uncorrelated
 \item "hierarchical_h" (default method)
 This method works in the same way than 'hierarchical_k' but the height where the hierarchical tree is specified. 
 This heigth is a correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the 'method.parameter' parameter.
+\item "kmeans"
+This method works as described in the R stats documentation (?kmeans) using the 'method.parameter' parameter to specify the desired number of classes.
 \item "eigencell" 
-This method compute the performs a eigen vector decomposition and then calculate the correlations between cluster expressions and these vectors.
+This method performs an eigen vector decomposition and then calculate the correlations between cluster enrichment profiles and these vectors.
 Clusters which correlate above a specific threshold with the same eigen vector are classified together.
 This correlation threshold (a numeric double between 0 and 1 included, default is 0.8) provided using the 'method.parameter' parameter.
 \item "clique" 

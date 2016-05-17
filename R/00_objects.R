@@ -70,7 +70,7 @@ Results <- setClass("Results",
 #' @slot graph a igraph object containing the SPADE tree
 #' @slot graph.layout a numeric matrix containing the layout of the SPADE tree
 #'  
-#' @import igraph
+#' @import igraph methods
 #' 
 #' @name SPADEResults-class
 #' @rdname SPADEResults-class
@@ -398,29 +398,36 @@ CC <- setClass("CC",
 #' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'classifyPhenoProfiles()' function. 
 #' 
-#' @slot cluster.number a numeric providing the number of cluster
+#' @slot class.number a numeric value specifying the number of clusters
 #' @slot method a character specifying the method used to classify cluster
 #' @slot method.parameter a named list of parameters used by the classification method
-#' @slot cluster.size a numeric vector containing the number of cells associated with each cluster (-- sum of all samples --)
-
-#' @slot class.number a numeric value specifying the number of clusters
 #' @slot classes a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
 #' 
 #' @name PhenoProfiles-class
 #' @rdname PhenoProfiles-class
 #' @exportClass PhenoProfiles
 PhenoProfiles <- setClass("PhenoProfiles",
-                          slots=c(method           = "character",
-                                  method.parameter = "numeric",
-                                  cluster.size     = "numeric",
-                                  cluster.number   = "numeric",
-                                  class.number     = "numeric",
-                                  classes          = "data.frame"),
-                          validity = function(object){#TODO complete this
-                                
-                             return(TRUE)
-                         }
-)
+                          slots = c(class.number     = "numeric",
+                                    method           = "character",
+                                    method.parameter = "numeric",
+                                    classes          = "data.frame"),
+                          validity = function(object) {
+
+                              if (is.element(object@method, c("hierarchical_h", "eigencell", "clique")) &&
+                                  (object@method.parameter > 1 || object@method.parameter < 0)) {
+                                  message(paste0("Object PhenoProfiles, Error : with ", objec@tmethod, " method, the method.parameter must be include into [0,1] interval"))
+                                  message(paste0("method.parameter founded is : ", object@th.pvalue))
+                                  return(FALSE)
+                              }
+
+                              if (is.element(object@method, c("hierarchical_k", "kmeans")) &&
+                                 (object@method.parameter != length(unique(object@classes$class)))) {
+                                  message(paste0("Object PhenoProfiles, Error the number of class in the slot classes (", length(unique(object@classes$class)), ") is inconsistent the specified number of class ", method.parameter))
+                                  return(FALSE)
+                              }
+
+                              return(TRUE)
+                          })
 
 #' @title Classification of clusters based on their enrichment profiles (EnrichmentProfiles class) definition
 #' 
@@ -436,26 +443,33 @@ PhenoProfiles <- setClass("PhenoProfiles",
 #' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'classifyEnrichmentProfiles()' function. 
 #' 
+#' @slot class.number a numeric providing the number of classes
 #' @slot method a character specifying the method used to classify cluster
 #' @slot method.parameter a numeric parameters associated with the chosen method
-#' @slot cluster.size a numeric vector with the number of cell in each cluster (sum of all samples)
-#' @slot cluster.number a numeric providing the number of cluster
-#' @slot class.number a numeric providing the number of classes
 #' @slot classes a two column dataframe with the cluster in first column and corresponding class in the second column 
 #' 
 #' @name EnrichmentProfiles-class
 #' @rdname EnrichmentProfiles-class
 #' @exportClass EnrichmentProfiles
 EnrichmentProfiles <- setClass("EnrichmentProfiles",
-                               slots=c(method                   = "character",
-                                       method.parameter         = "numeric",
-                                       cluster.size             = "numeric",
-                                       cluster.number           = "numeric",
-                                       class.number             = "numeric",
-                                       classes                  = "data.frame"),
+                               slots = c(class.number     = "numeric",
+                                         method           = "character",
+                                         method.parameter = "numeric",
+                                         classes          = "data.frame"),
                                validity = function(object){
                                     
-                                    #TODO complete this
+                                   if (is.element(object@method, c("hierarchical_h", "eigencell", "clique")) &&
+                                       (object@method.parameter > 1 || object@method.parameter < 0)) {
+                                       message(paste0("Object EnrichmentProfiles, Error : with ", objec@tmethod, " method, the method.parameter must be include into [0,1] interval"))
+                                       message(paste0("method.parameter founded is : ", object@th.pvalue))
+                                       return(FALSE)
+                                   }
+
+                                   if (is.element(object@method, c("hierarchical_k", "kmeans")) &&
+                                       (object@method.parameter != length(unique(object@classes$class)))) {
+                                       message(paste0("Object EnrichmentProfiles, Error the number of class in the slot classes (", length(unique(object@classes$class)), ") is inconsistent the specified number of class ", method.parameter))
+                                       return(FALSE)
+                                   }
                                     return(TRUE)
                                }
 )

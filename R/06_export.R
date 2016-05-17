@@ -99,11 +99,9 @@ setMethod("export",c("CC"),
 setMethod("export",c("PhenoProfiles"),
         function(object,filename){
             cat(file = filename, "#Object PhenoProfiles\n")
+            cat(file = filename, "#class.number\t", paste0(object@class.number, collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#method\t", paste0("\"", object@method, "\"", collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#method.parameter\t", paste0(object@method.parameter, collapse = "\t"), "\n", sep = "", append = TRUE)
-            cat(file = filename, "#cluster.size\t", paste0(object@cluster.size, collapse = "\t"), "\n", sep = "", append = TRUE)
-            cat(file = filename, "#cluster.number\t", paste0(object@cluster.number, collapse = "\t"), "\n", sep = "", append = TRUE)
-            cat(file = filename, "#class.number\t", paste0(object@class.number, collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#classes below :\n", append = TRUE)
             write.table(object@classes, file = filename, append = TRUE, sep = "\t", col.names = NA)
         }
@@ -114,11 +112,9 @@ setMethod("export",c("PhenoProfiles"),
 setMethod("export",c("EnrichmentProfiles"),
         function(object,filename){
             cat(file = filename, "#Object EnrichmentProfiles\n")
+            cat(file = filename, "#class.number\t", paste0(object@class.number, collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#method", paste0("\"", object@method, "\"", collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#method.parameter\t", paste0(object@method.parameter, collapse = "\t"), "\n", sep = "", append = TRUE)
-            cat(file = filename, "#cluster.size\t", paste0(object@cluster.size, collapse = "\t"), "\n", sep = "", append = TRUE)
-            cat(file = filename, "#cluster.number\t", paste0(object@cluster.number, collapse = "\t"), "\n", sep = "", append = TRUE)
-            cat(file = filename, "#class.number\t", paste0(object@class.number, collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#classes below :\n", append = TRUE)
             write.table(object@classes, file = filename, append = TRUE, sep = "\t", col.names = NA)
         }

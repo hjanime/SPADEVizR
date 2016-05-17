@@ -18,6 +18,8 @@ a dataframe containing for each cluster, its name and class
 This function is used internally to classify clusters enrichment profiles or phenotype profiles using eigen vector decomposition.
 }
 \details{
-xxx
+This method compute the performs a eigen vector decomposition and then calculate the correlations between the matrix rows and these vectors.
+Clusters which correlate above a specific threshold with the same eigen vector are classified together.
+This correlation threshold (a numeric double between 0 and 1 included, default is 0.8) provided using the 'eigencell.correlation.th' parameter.
 }
 

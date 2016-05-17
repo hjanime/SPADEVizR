@@ -5,7 +5,7 @@ Version: 1.0-0
 Author: Guillaume GAUTREAU and Nicolas TCHITCHEK
 Maintainer: Nicolas TCHITCHEK <nicolas.tchitchek@gmail.com> and Guillaume GAUTREAU <guillaume.gautreau@free.fr>
 Description: Flow and mass cytometry are experimental techniques used for the characterization of cell phenotypes. Automatic gating algorithms can be used to automatically identified clusters of cells having similar phenotypes. The SPADE algorithm has been proposed as a new way to analysis and explore mass-cytometry data. This algorithm performs a density-based down-sampling combined with an agglomerative hierarchical clustering. XXX While SPADE offers new opportunities for identifying cell populations, complementary approaches are needed to improve the characterization of identified cell populations. SPADEVizR is an R package designed to better visualize and analyze SPADE clustering results. This package extends the original SPADE outputs with techniques such as parallel coordinates, heatmaps, multidimensional scaling, volcano plots or streamgraph representations. Moreover several statistical methods allow the identification of SPADE clusters with relevant biological behaviors.
-License: GPL-3
+License: GPL-3 | file LICENCE
 Imports:
     data.table,
     flowCore,
@@ -13,9 +13,11 @@ Imports:
     ggnetwork,
     ggplot2,
 	ggrepel,
+	grid,
     gridExtra,
 	gtable,
     gtools,
+	grDevices,
     igraph,
     MASS,
 	methods,

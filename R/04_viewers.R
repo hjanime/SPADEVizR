@@ -19,11 +19,11 @@
 #' 
 #' @export
 countViewer <- function(Results,
-        samples      = NULL,
-        clusters     = NULL,
-        min.cells    = 0,
-        sort         = TRUE,
-        show.samples = TRUE){
+                        samples      = NULL,
+                        clusters     = NULL,
+                        min.cells    = 0,
+                        sort         = TRUE,
+                        show.samples = TRUE){
     
     if(is.null(samples)){ 
         data <- Results@cells.count
@@ -46,7 +46,7 @@ countViewer <- function(Results,
     data <- cbind("cluster" = rownames(data), data)
     
     if (sort){
-        data <- base::transform(data, "cluster" = reorder(cluster, -sum.of.samples))
+        data <- transform(data, "cluster" = reorder(cluster, -sum.of.samples))
     }else{
         data$cluster <- as.factor(data$cluster)
     }
@@ -59,9 +59,10 @@ countViewer <- function(Results,
     plot <- ggplot2::ggplot(data = data.melted) +
             ggplot2::ggtitle(paste("Count Viewer (", format(cells.number, big.mark=" "), " cells)", sep = "")) +
             ggplot2::geom_point(data = subset(data.melted, sample == "sum.of.samples"),
-                    ggplot2::aes_string(x = "cluster", y = "value", size = "value", shape = "total"),
-                    fill = "grey40") +
-            ggplot2::scale_shape_manual(values = 21)        
+                                ggplot2::aes_string(x = "cluster", y = "value", size = "value", shape = "total"),
+                                fill = "grey40") +
+            ggplot2::scale_shape_manual(values = 21)
+    
     if(show.samples){                
         plot <- plot + ggplot2::geom_jitter(data   = subset(data.melted, sample != "sum.of.samples"),
                 height = 0,
@@ -100,9 +101,9 @@ countViewer <- function(Results,
 #' 
 #' @export
 treeViewer <- function(SPADEResults,
-        samples       = NULL,
-        stat.object   = NULL,
-        marker        = NULL){
+                       samples       = NULL,
+                       stat.object   = NULL,
+                       marker        = NULL){
     
     if (names(SPADEResults) == "Results"){
         stop("Error : treeViewer required a SPADEResults object")
@@ -204,7 +205,7 @@ treeViewer <- function(SPADEResults,
 #' 
 #' @export
 phenoViewer <- function(SPADEResults,
-        num         = 5){
+                        num = 5){
     
     if (names(SPADEResults) == "Results"){
         stop("Error : phenoViewer required a SPADEResults object")
@@ -247,11 +248,11 @@ phenoViewer <- function(SPADEResults,
 #' 
 #' @export
 boxplotViewer <- function(Results,
-        conditions,
-        clusters        = NULL,
-        use.percentages = TRUE,
-        show.legend     = FALSE,
-        show.violin     = TRUE){
+                          conditions,
+                          clusters        = NULL,
+                          use.percentages = TRUE,
+                          show.legend     = FALSE,
+                          show.violin     = TRUE){
     
     data <- Results@cells.count
     
@@ -348,9 +349,9 @@ globalVariables(c("cluster", "sum.of.samples","ymax","ymin","value","ybase"))
 #' 
 #' @export
 kineticsViewer <- function(Results,
-        assignments,
-        clusters        = NULL,
-        use.percentages = TRUE){
+                           assignments,
+                           clusters        = NULL,
+                           use.percentages = TRUE){
     
     if(missing(assignments) || is.null(assignments)){
         stop("Error : the 'assignments' parameter is required")   
@@ -442,9 +443,9 @@ kineticsViewer <- function(Results,
 #' 
 #' @export
 streamgraphViewer <- function(Results,
-        order          = NULL,
-        clusters       = NULL,
-        use.relative   = FALSE){
+                              order          = NULL,
+                              clusters       = NULL,
+                              use.relative   = FALSE){
     
     data <- Results@cells.count
     
@@ -518,7 +519,7 @@ streamgraphViewer <- function(Results,
 #' Generates a parallel coordinate plot representation showing for each cluster the marker median expressions.
 #' 
 #' @details 
-#' If 'Results' is an object of class 'SPADEResults' object then the quantile ranges will be displayed using a ribbon.
+#' If 'Results' is an object of class 'SPADEResults' then the quantile ranges will be displayed using a ribbon.
 #' 
 #' The 'samples' parameter required a named vector providing the correspondence between a sample name (in rowname) and the logical value TRUE to show this sample or FALSE otherwise.
 #' 
@@ -541,10 +542,10 @@ streamgraphViewer <- function(Results,
 #' 
 #' @export
 clusterViewer <- function(Results,
-        clusters      = NULL,
-        samples       = NULL,
-        markers       = NULL,
-        show.mean     = "both"){
+                          clusters      = NULL,
+                          samples       = NULL,
+                          markers       = NULL,
+                          show.mean     = "both"){
     
     if(show.mean != "none" && show.mean != "both" && show.mean != "only"){
         stop("Error : show.mean must be one of those : 'none' 'both' 'only' ")
@@ -558,7 +559,7 @@ clusterViewer <- function(Results,
         cells.count <- Results@cells.count[,c(names(samples[ samples == TRUE] )), drop = FALSE]
     }
     
-    data <- stats::na.omit(data)# NA values are removed, generate a warning ?
+    data <- na.omit(data)# NA values are removed, generate a warning ?
     
     if(!is.null(clusters)){
         if (typeof(clusters) != "character"){
@@ -938,9 +939,9 @@ biplotViewer <- function(SPADEResults,
 #' 
 #' @export
 distogramViewer <- function(Results,
-        clusters = NULL,
-        samples  = NULL,
-        markers  = NULL){
+                            clusters = NULL,
+                            samples  = NULL,
+                            markers  = NULL){
     
     if(is.null(samples)){
         data        <- Results@marker.expressions
