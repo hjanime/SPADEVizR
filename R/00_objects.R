@@ -35,8 +35,9 @@ Results <- setClass("Results",
                     validity = function(object){
                         if((length(object@marker.names) + 2) != ncol(object@marker.expressions)){
                             message(paste0("Object Results, Error : marker.names length (",
-                                            length(object@marker.names)," + 2 for cluster IDs and sample names) are inconsistents with marker.expressions size (number of colunms : ",
-                                            ncol(object@marker.expressions),")"))
+                                           length(object@marker.names),
+                                           " + 2 for cluster IDs and sample names) are inconsistents with marker.expressions size (number of colunms : ",
+                                           ncol(object@marker.expressions),")"))
                             return (FALSE)
                         }
                         if(nrow(object@cells.count) != object@cluster.number){
@@ -87,7 +88,7 @@ SPADEResults <- setClass("SPADEResults",
                 		         graph.layout       = "matrix"),
                          validity = function(object){
                              
-                             if( !is.null(object@flowset) && (class(object@flowset)[1] != "flowSet")){
+                             if(!is.null(object@flowset) && (class(object@flowset)[1] != "flowSet")){
                                  message("Object SPADEResults, Error : flowset must be of class flowSet or null")
                                  return (FALSE)
                              }                             
@@ -419,7 +420,6 @@ PhenoProfiles <- setClass("PhenoProfiles",
                                   message(paste0("method.parameter founded is : ", object@th.pvalue))
                                   return(FALSE)
                               }
-
                               if (is.element(object@method, c("hierarchical_k", "kmeans")) &&
                                  (object@method.parameter != length(unique(object@classes$class)))) {
                                   message(paste0("Object PhenoProfiles, Error the number of class in the slot classes (", length(unique(object@classes$class)), ") is inconsistent the specified number of class ", method.parameter))
@@ -464,7 +464,6 @@ EnrichmentProfiles <- setClass("EnrichmentProfiles",
                                        message(paste0("method.parameter founded is : ", object@th.pvalue))
                                        return(FALSE)
                                    }
-
                                    if (is.element(object@method, c("hierarchical_k", "kmeans")) &&
                                        (object@method.parameter != length(unique(object@classes$class)))) {
                                        message(paste0("Object EnrichmentProfiles, Error the number of class in the slot classes (", length(unique(object@classes$class)), ") is inconsistent the specified number of class ", method.parameter))
@@ -489,42 +488,42 @@ NULL
 
 #' @rdname names-methods
 #' @export
-setMethod("names","Results",
-        definition = function(x){return("Results")}
+setMethod("names", "Results",
+         definition = function(x){return("Results")}
 )
 
 #' @rdname names-methods
 #' @export
-setMethod("names","SPADEResults",
-        definition = function(x){return("SPADEResults")}
+setMethod("names", "SPADEResults",
+         definition = function(x){return("SPADEResults")}
 )
 
 #' @rdname names-methods
 #' @export
-setMethod("names","AC",
-        definition = function(x){return("AC")}
+setMethod("names", "AC",
+         definition = function(x){return("AC")}
 )
 
 #' @rdname names-methods
 #' @export
-setMethod("names","DEC",
-        definition = function(x){return("DEC")}
+setMethod("names", "DEC",
+         definition = function(x){return("DEC")}
 )
 
 #' @rdname names-methods
 #' @export
-setMethod("names","CC",
-        definition = function(x){return("CC")}
+setMethod("names", "CC",
+         definition = function(x){return("CC")}
 )
 
 #' @rdname names-methods
 #' @export
-setMethod("names","PhenoProfiles",
-        definition = function(x){return("PhenoProfiles")}
+setMethod("names", "PhenoProfiles",
+         definition = function(x){return("PhenoProfiles")}
 )
 
 #' @rdname names-methods
 #' @export
-setMethod("names","EnrichmentProfiles",
-        definition = function(x){return("EnrichmentProfiles")}
+setMethod("names", "EnrichmentProfiles",
+         definition = function(x){return("EnrichmentProfiles")}
 )

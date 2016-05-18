@@ -20,8 +20,8 @@ abundantClustersViewer <- function(AC,
                                    show.all_labels    = FALSE){
 
     AC@result <- cbind (AC@result, cluster.size = AC@cluster.size)
-    
     data.text <- AC@result
+
     if (!show.all_labels){
         data.text <- subset(AC@result, AC@result$significance)
     }
@@ -29,41 +29,49 @@ abundantClustersViewer <- function(AC,
     plot <-  ggplot2::ggplot(data = AC@result) +
              ggplot2::ggtitle(paste0("Cells abundance of clusters(", format(sum(AC@cluster.size), big.mark=" "), " cells)", sep = "")) +
              ggplot2::geom_hline(yintercept = AC@th.mean,
-                                       linetype   = "dashed",
-                                       alpha      = 0.3,
-                                       color      = "red",
-                                       size       = 1) +  
+                                 linetype   = "dashed",
+                                 alpha      = 0.3,
+                                 color      = "red",
+                                 size       = 1) +  
              ggplot2::geom_vline(xintercept = -log10(AC@th.pvalue),
-                                       linetype   = "dashed",
-                                       alpha      = 0.3,
-                                       color      = "red",
-                                       size       = 1)
+                                 linetype   = "dashed",
+                                 alpha      = 0.3,
+                                 color      = "red",
+                                 size       = 1)
+
     if (show.cluster_sizes > 0){
-       plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significance", size = "cluster.size"), shape = 21, colour = "black", stroke = 1)
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significance", size = "cluster.size"),
+                                           shape = 21,
+                                           colour = "black",
+                                           stroke = 1)
     }
     else {
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significance"), shape = 21, colour = "black", stroke = 1)
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significance"),
+                                           shape = 21,
+                                           colour = "black",
+                                           stroke = 1)
     }                  
     
-    x.max <- ceiling(max(-log10(AC@th.pvalue),-log10(AC@result$pvalue)))
+    x.max    <- ceiling(max(-log10(AC@th.pvalue), -log10(AC@result$pvalue)))
     x.breaks <- seq(0, x.max, by = 1)
     
-    y.max <- ceiling(max(AC@th.mean,AC@result$mean))
+    y.max    <- ceiling(max(AC@th.mean, AC@result$mean))
     y.breaks <- seq(0, y.max, by = 1)
 
-    plot <- plot +  ggrepel::geom_text_repel(data = data.text, 
+    plot <- plot +  ggrepel::geom_text_repel(data          = data.text, 
                                              ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", label = "cluster"),
                                              size          = 3,
                                              box.padding   = grid::unit(0.35, "lines"),
                                              point.padding = grid::unit(0.3, "lines")) +
-                    ggplot2::scale_fill_manual(values = c("grey","red")) +
+                    ggplot2::scale_fill_manual(values  = c("grey", "red")) +
                     ggplot2::scale_x_continuous(limits = c(0, x.max), minor_breaks = NULL, breaks = x.breaks) + 
                     ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
                     ggplot2::xlab("-log10(p-value)") +
-                    ggplot2::ylab(ifelse(AC@use.percentages,"mean (% of cells)","mean (# of cells)")) +                  
+                    ggplot2::ylab(ifelse(AC@use.percentages, "mean (% of cells)", "mean (# of cells)")) +                  
                     ggplot2::theme_bw()
     
     return(plot)
+
 }
 
 
@@ -106,40 +114,49 @@ volcanoViewer <- function(DEC                = NULL,
     if (!show.all_labels){
         data.text <- subset(DEC@result, DEC@result$significance)
     }
-    min           <- floor(min(DEC@result$fold.change))
-    max           <- ceiling(max(DEC@result$fold.change))
-    max           <- max(max,abs(min))
-    x.breaks      <- c(round(c(-th.fc, th.fc),2), seq(-max, max, by = 1))
-    
-    title.details <- ifelse(DEC@use.percentages,"using % of cells","(using # of cells")
+    x.min    <- floor(min(DEC@result$fold.change))
+    x.max    <- ceiling(max(DEC@result$fold.change))
+    x.max    <- max(x.max, abs(x.min))
+    x.breaks <- c(round(c(-th.fc, th.fc), 2), seq(-x.max, x.max, by = 1))
+
+    y.max    <- ceiling(max(-log10(DEC@th.pvalue), -log10(DEC@result$pvalue)))
+    y.breaks <- seq(0, y.max, by = 1)
+
+    title.details <- ifelse(DEC@use.percentages, "using % of cells", "using # of cells")
         
     plot <- ggplot2::ggplot(data = DEC@result, ggplot2::aes_string(x = "fold.change", y = "-log10(pvalue)")) +
             ggplot2::ggtitle(paste0("Volcano plot showing differentially enriched clusters ", title.details, " (", format(sum(DEC@cluster.size), big.mark=" "), " cells)", sep = "")) +
-            ggplot2::geom_vline(xintercept = c(th.fc,-th.fc),
-                                       linetype   = "dashed",
-                                       alpha      = 0.3,
-                                       color      = "red",
-                                       size       = 1) +  
+            ggplot2::geom_vline(xintercept = c(th.fc, -th.fc),
+                                linetype   = "dashed",
+                                alpha      = 0.3,
+                                color      = "red",
+                                size       = 1) +  
             ggplot2::geom_hline(yintercept = -log10(DEC@th.pvalue),
-                                       linetype   = "dashed",
-                                       alpha      = 0.3,
-                                       color      = "red",
-                                       size       = 1)
+                                linetype   = "dashed",
+                                alpha      = 0.3,
+                                color      = "red",
+                                size       = 1)
     if (show.cluster.sizes > 0){
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significance", size = "cluster.size"), shape = 21, colour = "black", stroke = 1)
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significance", size = "cluster.size"),
+                                           shape = 21,
+                                           colour = "black",
+                                           stroke = 1)
     }
     else {
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significance"), shape = 21, colour = "black", stroke = 1)
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significance"),
+                                           shape = 21,
+                                           colour = "black", 
+                                           stroke = 1)
     }
                  
-    plot <- plot + ggrepel::geom_text_repel(data     = data.text,
+    plot <- plot + ggrepel::geom_text_repel(data          = data.text,
                                             ggplot2::aes_string(label = "cluster"),
                                             size          = 3,
                                             box.padding   = grid::unit(0.35, "lines"),
                                             point.padding = grid::unit(0.3, "lines")) +
-                   ggplot2::scale_fill_manual(values = c("grey","red")) +
-                   ggplot2::scale_x_continuous(limits = c(-max, max) ,minor_breaks = NULL, breaks = x.breaks) +
-                   ggplot2::scale_y_continuous(minor_breaks = NULL, breaks = round(-log10(c(DEC@th.pvalue,1,0.1,0.01,0.001)),2)) +
+                   ggplot2::scale_fill_manual(values = c("grey", "red")) +
+                   ggplot2::scale_x_continuous(limits = c(-x.max, x.max), minor_breaks = NULL, breaks = x.breaks) +
+                   ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
                    ggplot2::xlab(paste0(ifelse(fc.log2,"log2(fold.change)","fold.change"),"\ncond2 < enriched > cond1")) +
                    ggplot2::ylab("-log10(p-value)") +
                    ggplot2::theme_bw()
@@ -174,39 +191,46 @@ correlatedClustersViewer <- function(CC,
     if (!show.all_labels){
         data.text <- subset(CC@result, CC@result$significance)
     }
-    title.details <- ifelse(CC@use.percentages,"using % of cells","using # of cells")
+    title.details <- ifelse(CC@use.percentages, "using % of cells", "using # of cells")
     plot <- ggplot2::ggplot(data = CC@result) +
-            ggplot2::ggtitle(paste0("Correlation of clusters kinetics ", title.details," (", format(sum(CC@cluster.size), big.mark=" "), " cells)", sep = "")) +
+            ggplot2::ggtitle(paste0("Correlation of clusters kinetics ", title.details, " (", format(sum(CC@cluster.size), big.mark=" "), " cells)", sep = "")) +
             ggplot2::geom_hline(yintercept = -log10(CC@th.pvalue),
                                 linetype   = "dashed",
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1) +  
-            ggplot2::geom_vline(xintercept = c(-CC@th.correlation,CC@th.correlation),
+            ggplot2::geom_vline(xintercept = c(-CC@th.correlation, CC@th.correlation),
                                 linetype   = "dashed",
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1)
     if(show.cluster.sizes > 0){
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significance", size = "cluster.size"), shape = 21, colour = "black", stroke = 1)
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significance", size = "cluster.size"),
+                                           shape = 21,
+                                           colour = "black",
+                                           stroke = 1)
     }
     else{
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significance"), shape = 21, colour = "black", stroke = 1)
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significance"),
+                                           shape = 21,
+                                           colour = "black",
+                                           stroke = 1)
     }
-    
-    y.max <- ceiling(max(-log10(CC@th.pvalue),-log10(CC@result$pvalue)))
+
+    x.breaks <- c( - CC@th.correlation, CC@th.correlation, seq(-1, 1, by = 0.1))
+
+    y.max    <- ceiling(max(-log10(CC@th.pvalue), -log10(CC@result$pvalue)))
     y.breaks <- seq(0, y.max, by = 1)
     
-    plot <- plot +  ggrepel::geom_text_repel(data = data.text, 
+    plot <- plot +  ggrepel::geom_text_repel(data     = data.text, 
                     ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", label = "cluster"),
                                         size          = 3,
                                         box.padding   = grid::unit(0.35, "lines"),
                                         point.padding = grid::unit(0.3, "lines")) +
-                    ggplot2::scale_fill_manual(values = c("grey","red")) +
-                    ggplot2::scale_x_continuous(minor_breaks = NULL, limits = c(-1,1),
-                                                breaks = c(-CC@th.correlation,CC@th.correlation,seq(-1, 1, by = 0.1))) +
+                    ggplot2::scale_fill_manual(values = c("grey", "red")) +
+                    ggplot2::scale_x_continuous(minor_breaks = NULL, limits = c(-1, 1), breaks = x.breaks) +
                     ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
-                    ggplot2::xlab(paste(CC@method,"coeficient of correlation")) +
+                    ggplot2::xlab(paste(CC@method, "coeficient of correlation")) +
                     ggplot2::ylab("-log10(p-value)") +
                     ggplot2::theme_bw()
     return(plot)
@@ -225,18 +249,18 @@ correlatedClustersViewer <- function(CC,
 #' @return a 'ggplot' object
 #' 
 #' @import ggplot2 ggnetwork network gridExtra
-#' @importFrom network set.vertex.attribute add.edges
+#' @importFrom network %s% set.vertex.attribute add.edges get.edge.attribute add.vertices %c% list.vertex.attributes set.edge.attribute is.directed set.vertex.attribute get.vertex.attribute delete.edges is.bipartite get.edges list.edge.attributes delete.vertices
 #' @export
 #' 
 profilesViewer <- function (profile.object){
 
-    classes <- profile.object@classes    
-    classes <- na.omit(classes)
-    all.sorted.classes <- names(sort(table(classes$class), decreasing = TRUE))
+    classes        <- profile.object@classes    
+    classes        <- na.omit(classes)
+    sorted.classes <- names(sort(table(classes$class), decreasing = TRUE))
 
     plots <- list()
     
-    for (i in all.sorted.classes){
+    for (i in sorted.classes){
 
         same.class <- classes[classes$class == i,]
         
@@ -248,14 +272,13 @@ profilesViewer <- function (profile.object){
             previous <- NA
             for (j in 1:nrow(same.class)){
                 
-                x        <- c(x,j)
-                y        <- c(y,previous)
+                x        <- c(x, j)
+                y        <- c(y, previous)
                 previous <- j
                 
             }
             y[1] <- previous
-            
-            
+
 #            temp <- base::tempfile()
 #            sink(temp) 
             graph <- network::network.initialize(nrow(same.class), directed = FALSE)
@@ -279,7 +302,7 @@ profilesViewer <- function (profile.object){
           }
     }
 
-    ret <- gridExtra::grid.arrange(grobs = plots, top = paste0("Profiles Viewer (",names(profile.object)," using ",profile.object@method," method)"))
+    ret <- gridExtra::grid.arrange(grobs = plots, top = paste0("Profiles Viewer (", names(profile.object), " using ", profile.object@method, " method)"))
     
     return(ret)
 
@@ -298,46 +321,46 @@ profilesViewer <- function (profile.object){
 #'  
 #' @name plot
 #' @rdname plot-methods
-setGeneric("plot", function(x,y=NULL,...){ standardGeneric("plot") })
+setGeneric("plot", function(x, y=NULL, ...){ standardGeneric("plot") })
 
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot",c("DEC","missing"),
-        function(x,...){
-            return(volcanoViewer(x,...))
+setMethod("plot", c("DEC", "missing"),
+        function(x, ...){
+            return(volcanoViewer(x, ...))
         }
 )
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot",c("AC","missing"),
-        function(x,y,...){
-            return(abundantClustersViewer(x,...))
+setMethod("plot", c("AC", "missing"),
+        function(x, y, ...){
+            return(abundantClustersViewer(x, ...))
         }
 )
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot",c("CC","missing"),
-        function(x,y,...){
-            return(correlatedClustersViewer(x,...))
+setMethod("plot", c("CC", "missing"),
+        function(x, y, ...){
+            return(correlatedClustersViewer(x, ...))
         }
 )
 
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot",c("PhenoProfiles","missing"),
-        function(x,...){
-            return(profilesViewer(x,...))
+setMethod("plot", c("PhenoProfiles", "missing"),
+        function(x, ...){
+            return(profilesViewer(x, ...))
         }
 )
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot",c("EnrichmentProfiles","missing"),
-        function(x,...){
-            return(profilesViewer(x,...))
+setMethod("plot", c("EnrichmentProfiles", "missing"),
+        function(x, ...){
+            return(profilesViewer(x, ...))
         }
 )

@@ -14,16 +14,16 @@ biplotViewer(SPADEResults, x.marker, y.marker, samples = NULL,
 
 \item{y.marker}{a character indicating the marker name of the second dimension}
 
-\item{samples}{named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
+\item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
 
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be used)}
 
-\item{sample.merge}{xxx}
+\item{sample.merge}{a logical specifying if the selected samples must be merged in a single biplot}
 
 \item{resample.ratio}{a numeric ratio (between 0 and 1) specifying the downsample ratio to show less dots (or NULL)}
 }
 \value{
-if return.gg is TRUE, the function returns a list of ggplot objects
+a 'ggplot' object
 }
 \description{
 Generates a biplot representation with two markers

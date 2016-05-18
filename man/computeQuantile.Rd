@@ -18,6 +18,6 @@ a numeric matrix containing the quantiles of each marker
 This function is used internally to compute the maker range quantiles.
 }
 \details{
-This function performs the exact calculation of quantiles with all cells but needs more memory than 'computeQuantile.approximation'.
+This function performs the exact calculation of quantiles with all cells but needs more ressources (time and memory usage) than 'computeQuantile.approximation'.
 }
 

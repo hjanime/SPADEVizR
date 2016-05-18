@@ -5,10 +5,10 @@
 \title{Generate a report including SPADEVizR plots.}
 \usage{
 generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
-  "pheno", "cluster", "tree", "disto", "stream", "MDSclusters"),
-  clusters = NULL, markers = NULL, assignments = NULL,
-  conditions = NULL, stat.objects = list(), profile.objects = list(),
-  width = 29.7, height = 21)
+  "pheno", "tree", "disto", "MDSclusters", "cluster"), clusters = NULL,
+  markers = NULL, assignments = NULL, conditions = NULL,
+  stat.objects = list(), profile.objects = list(), width = 29.7,
+  height = 21)
 }
 \arguments{
 \item{Results}{a 'SPADEResults' or 'Result' object}
@@ -29,9 +29,9 @@ generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
 
 \item{profile.objects}{a vector of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')}
 
-\item{width}{a numeric specifying the plot width}
+\item{width}{a numeric specifying the plot width in centimeter}
 
-\item{height}{a numeric specifying the plot height}
+\item{height}{a numeric specifying the plot height in centimeter}
 }
 \description{
 Generate a customizable PDF report based on SPADEVizR vizualisation features.
@@ -42,7 +42,7 @@ Available plots are :
 \item {"pheno" (included by default):}{Display an heatmap representation}
 \item {"boxplot":}{Display a boxplot representation. This plot required to provide the 'conditions' parameter}
 \item {"kinetics":}{Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter}
-\item {"stream" (included by default):}{Display a streamgraphViewer representation showing the evolution of cells abundance}
+\item {"stream":}{Display a streamgraphViewer representation showing the evolution of cells abundance}
 \item {"cluster" (included by default):}{Display a parallel coordinate representation showing for each cluster the marker median expression}
 \item {"MDSclusters" (included by default):}{Display the cluster similarities using MDS}
 \item {"MDSsamples":}{Display the samples similarities using MDS. This plot required to provide the 'assignments' parameter}

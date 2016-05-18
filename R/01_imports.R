@@ -14,7 +14,7 @@
 #' @param dictionary a two column dataframe providing the correspondence between the original marker names (first column) and the real marker names (second column)
 #' @param exclude.markers a character vector of markers to exclude (case insensitive)
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute maker range quantiles. First is the lower bound and second is the upper bound.
-#' @param use.raw.medians a logical specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)
+#' @param use.raw.medians a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)
 #' @param quantile.approximation a logical specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
 #' 
 #' @return a S4 object of class 'SPADEResults'
@@ -30,11 +30,11 @@ importSPADEResults <- function(path,
                                quantile.approximation = FALSE){
     
     message("[START] - extracting SPADE results")
-    message(paste0(basename(path),"\n"))
-    path <- normalizePath(path,"/")
+    message(paste0(basename(path), "\n"))
+    path <- normalizePath(path, "/")
     
     fcs.files <- dir(path, full.names = TRUE, pattern = ".fcs.density.fcs.cluster.fcs$")
-    flowset   <- load.flowSet(fcs.files = fcs.files, dictionary = dictionary, exclude.markers = exclude.markers)
+    flowset <- load.flowSet(fcs.files = fcs.files, dictionary = dictionary, exclude.markers = exclude.markers, use.raw.medians = use.raw.medians)
     
     message("\tcompute quantiles...")
     
@@ -42,51 +42,43 @@ importSPADEResults <- function(path,
         quantiles <- computeQuantile.approximation(flowset,probs)
     }
     else{
-        quantiles <- computeQuantile(flowset,probs)
+        quantiles <- computeQuantile(flowset, probs)
     }
     gc()    
     message("\treading SPADE results...")
     
-    files <- dir(paste(path,"/tables/bySample/",sep=""),full.names = TRUE)
-    
-    path.clusters.table   <- paste(path,"clusters.table",sep = "/")
-    header.clusters.table <- readLines(path.clusters.table,n = 1)
-    header.clusters.table <- gsub("\\\"","",header.clusters.table)
-    cluster               <- unlist(strsplit(header.clusters.table," "))
+    files <- dir(paste(path, "/tables/bySample/", sep=""), full.names = TRUE)
     
     marker.expressions <- data.frame(stringsAsFactors = FALSE)
     cells.count        <- data.frame()
     cells.percent      <- data.frame()
 
     for(file in files){
-        
-        SPADES.matrix        <- read.table(file,sep = ",",header = TRUE,stringsAsFactors = FALSE,check.names = FALSE)
-        
-        cells.count.sample   <- SPADES.matrix [,"count"]
-        
-        name <- gsub('.fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$','',basename(file))
-        
+
+        name <- gsub('.fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$', '', basename(file))
+        SPADE.matrix       <- read.table(file, sep = ",", header = TRUE, stringsAsFactors = FALSE, check.names = FALSE)
+        cells.count.sample <- SPADE.matrix [,"count"]
+                
         if(nrow(cells.count)){
             cells.count     <- cbind(cells.count, cells.count.sample)
-            samples.headers <- append(samples.headers,name)
+            samples.headers <- append(samples.headers, name)
         }else{
-            cells.count     <- data.frame(row.names = SPADES.matrix [,"ID"], cells.count.sample)
+            cells.count     <- data.frame(row.names = SPADE.matrix [,"ID"], cells.count.sample)
             samples.headers <- name
         }
         
-        SPADES.matrix <- SPADES.matrix[, grep ("count|percenttotal",colnames(SPADES.matrix), invert = TRUE)]
-        
-        SPADES.matrix      <- cbind(name = rep(name,nrow(SPADES.matrix)),SPADES.matrix)
-        marker.expressions <- rbind(marker.expressions,SPADES.matrix)
+        marker.expressions.sample <- SPADE.matrix[, grep("count|percenttotal", colnames(SPADE.matrix), invert = TRUE)]
+        marker.expressions.sample <- cbind(name = rep(name, nrow(marker.expressions.sample)), marker.expressions.sample)
+        marker.expressions        <- rbind(marker.expressions, marker.expressions.sample)
 
     }
     
-    nb.cluster <- nrow(cells.count)
-    colnames(cells.count)   <- samples.headers
+    nb.cluster            <- nrow(cells.count)
+    colnames(cells.count) <- samples.headers
 
-    marker.expressions.header <- colnames(marker.expressions)
-    marker.expressions.header <- gsub("X.","(",marker.expressions.header,fixed = TRUE)
-    marker.expressions.header <- gsub(".",")",marker.expressions.header,fixed = TRUE)
+    marker.expressions.header    <- colnames(marker.expressions)
+    marker.expressions.header    <- gsub("X.", "(", marker.expressions.header, fixed = TRUE)
+    marker.expressions.header    <- gsub(".", ")", marker.expressions.header, fixed = TRUE)
     marker.expressions.header[1] <- "sample"
     marker.expressions.header[2] <- "cluster"
     colnames(marker.expressions) <- marker.expressions.header
@@ -94,28 +86,28 @@ importSPADEResults <- function(path,
     marker.expressions <- filter.medians(marker.expressions,use.raw.medians)
     
     marker.expressions.header  <- colnames(marker.expressions)
-    clustering.markers.indices <- grep("_clust",marker.expressions.header)
+    clustering.markers.index   <- grep("_clust",marker.expressions.header)
     marker.expressions.header  <- gsub("_clust","",marker.expressions.header)
 
     if(nrow(dictionary)>0){           
-        colnames(marker.expressions)  <- rename.markers(marker.expressions.header,dictionary)    
+        colnames(marker.expressions)  <- rename.markers(marker.expressions.header, dictionary)    
     }else{
         colnames(marker.expressions)  <- marker.expressions.header
     }
     
-    clustering.markers <- colnames(marker.expressions)[clustering.markers.indices]
-    
+    clustering.markers <- colnames(marker.expressions)[clustering.markers.index]
+
     if(!is.null(exclude.markers)){
-        marker.expressions <- exclude.markers(marker.expressions,exclude.markers)
-        clustering.markers <- setdiff(clustering.markers,exclude.markers)
+        marker.expressions <- exclude.markers(marker.expressions, exclude.markers)
+        clustering.markers <- setdiff(clustering.markers, exclude.markers)
     }
 
-    graph        <- igraph::read.graph(paste(path,"./mst.gml",sep = ""),format = "gml")
-    graph.layout <- as.matrix(read.table(paste0(path,"/layout.table"),sep = " ",quote = "",stringsAsFactors = FALSE))
+    graph        <- igraph::read.graph(paste(path, "./mst.gml", sep = ""), format = "gml")
+    graph.layout <- as.matrix(read.table(paste0(path, "/layout.table"), sep = " ", quote = "", stringsAsFactors = FALSE))
 
-    markers.names <- colnames(marker.expressions[, grep ("cluster|sample",colnames(marker.expressions), invert = TRUE)])
-    
-    res <- methods::new("SPADEResults", 
+    markers.names <- colnames(marker.expressions[, -c(1, 2)])
+
+    res <- methods::new("SPADEResults",
                         marker.expressions  = marker.expressions,
                         use.raw.medians     = use.raw.medians,
                         dictionary          = dictionary,
@@ -174,11 +166,14 @@ importResults <- function(cells.count,
     colnames(marker.expressions)[2] <- "cluster"
     
     res <- methods::new("Results", 
-                        marker.expressions  = marker.expressions,
-                        cells.count         = cells.count,
-                        sample.names        = as.character(setdiff(unique(marker.expressions$sample),"cluster")),
-                        marker.names        = colnames(marker.expressions)[3:length(marker.expressions)],
-                        cluster.number      = length(unique(marker.expressions$cluster)))    
+                        marker.expressions = marker.expressions,
+                        cells.count        = cells.count,
+                        sample.names       = as.character(setdiff(unique(marker.expressions$sample), "cluster")),
+                        marker.names       = colnames(marker.expressions)[3:length(marker.expressions)],
+                        cluster.number = length(unique(marker.expressions$cluster)))
+
+    return(res)
+    
 }
 
 #' @title Internal - Renaming cell markers
@@ -236,7 +231,7 @@ exclude.markers <- function(data,exclude, colnames.FCS = NULL){
     exclude.flags <- toupper(exclude) %in% toupper(column)
     
     if(any(!(exclude.flags))){
-       warning(paste0("Unknown marker to exclude: ",paste(exclude[!exclude.flags],collapse=", ")))
+       warning(paste0("Unknown marker to exclude: ", paste(exclude[!exclude.flags], collapse=", ")))
     }
 
     data    <- data[ , -which(toupper(column) %in% toupper(exclude))]
@@ -261,7 +256,7 @@ filter.medians <- function(data,use.raw.medians = FALSE){
         exclude <- "^raw_medians|^cvs"
     }
     
-    data           <- data[,grep(exclude, colnames(data), invert=TRUE, ignore.case = TRUE)]
+    data           <- data[,grep(exclude, colnames(data), invert = TRUE, ignore.case = TRUE)]
     colnames(data) <- gsub("^medians|^cvs|^raw_medians", "", colnames(data))
     
     return(data)
@@ -274,7 +269,7 @@ filter.medians <- function(data,use.raw.medians = FALSE){
 #' This function is used internally to compute the maker range quantiles.
 #' 
 #' @details 
-#' This function performs the exact calculation of quantiles with all cells but needs more memory than 'computeQuantile.approximation'.
+#' This function performs the exact calculation of quantiles with all cells but needs more ressources (time and memory usage) than 'computeQuantile.approximation'.
 #' 
 #' @param flowset a flowCore flowset
 #' @param probs a numeric vector of 2 values specifying the quantiles to compute
@@ -284,20 +279,20 @@ filter.medians <- function(data,use.raw.medians = FALSE){
 #' @import flowCore
 computeQuantile <- function(flowset,probs = c(0.05,0.95)){
 
-    bounds <- data.frame ()
+    bounds  <- data.frame ()
     markers <- flowset@colnames
     markers <- setdiff(markers,"cluster")
     
     for(marker in markers){
         temp <- c()
-        for (j in 1:length(flowset)){    
-            frame <- flowset[[j]]@exprs
-            temp <- c(temp, frame[,marker])
+        for (sample in 1:length(flowset)){    
+            frame <- flowset[[sample]]@exprs
+            temp  <- c(temp, frame[,marker])
         }
         if(nrow(bounds) > 0){
-            bounds     <- cbind(bounds, t(t(quantile(temp, probs = probs))))# WARNING 
+            bounds <- cbind(bounds, quantile(temp, probs = probs))
         }else{
-            bounds     <- as.data.frame(t(t(quantile(temp, probs = probs))))# WARNING 
+            bounds <- as.data.frame(quantile(temp, probs = probs))
         }
     }
 
@@ -328,14 +323,12 @@ computeQuantile.approximation <- function(flowset,probs = c(0.05,0.95)){
     lower.bounds <- bounds.by.sample[seq(from = 1,to = nrow(bounds.by.sample), by = 2),]
     upper.bounds <- bounds.by.sample[seq(from = 2,to = nrow(bounds.by.sample), by = 2),]
     
-    lower.bounds <- apply (lower.bounds,2,mean)
-    upper.bounds <- apply (upper.bounds,2,mean)
+    lower.bounds <- apply(lower.bounds,2,mean)
+    upper.bounds <- apply(upper.bounds,2,mean)
     
-    bounds <- rbind(lower.bounds,upper.bounds)
+    bounds <- data.frame(row.names = probs, rbind(lower.bounds, upper.bounds))
     
-    rownames(bounds) <- probs
-    
-    return (as.data.frame(bounds))
+    return (bounds)
     
 }
 
@@ -344,18 +337,19 @@ computeQuantile.approximation <- function(flowset,probs = c(0.05,0.95)){
 #' @description 
 #' This function loads the FCS files to the 'flowset' slot of the 'SPADEResult' object.
 #' @details
-#' If a 'SPADEResult' object is provided, others parameters ('fcs.files', 'dictionary', 'exclude.markers') will be ignored.
+#' If a 'SPADEResult' object is provided, others parameters ('fcs.files', 'dictionary', 'exclude.markers', 'use.raw.medians') will be ignored.
 #' @param SPADEResult a SPADEResult object (optional)
 #' @param fcs.files a character vector containing the absolute path of the original FCS files
 #' @param dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
 #' @param exclude.markers a character vector of markers to exclude (case insensitive)
+#' @param use.raw.medians a logical specifying if the arcsinh transformation must be performed or not
 #' 
 #' @return a S4 'flowSet' object
 #' 
 #' @import flowCore 
 #'
 #' @export 
-load.flowSet <- function(SPADEResult = NULL, fcs.files, dictionary, exclude.markers){
+load.flowSet <- function(SPADEResult = NULL, fcs.files, dictionary, exclude.markers, use.raw.medians) {
     
     message("FCS files loading:")
     
@@ -364,8 +358,8 @@ load.flowSet <- function(SPADEResult = NULL, fcs.files, dictionary, exclude.mark
         fcs.files  <- SPADEResult@fcs.files
     }
     
-    flowset           <- flowCore::read.flowSet(fcs.files, emptyValue = TRUE)
-    samples.names     <- gsub(".fcs.density.fcs.cluster.fcs", "", basename(fcs.files))
+    flowset                        <- flowCore::read.flowSet(fcs.files, emptyValue = TRUE)
+    samples.names                  <- gsub(".fcs.density.fcs.cluster.fcs", "", basename(fcs.files))
     flowCore::sampleNames(flowset) <- samples.names
         
     if(nrow(dictionary)>0){
@@ -373,19 +367,24 @@ load.flowSet <- function(SPADEResult = NULL, fcs.files, dictionary, exclude.mark
     }
     
     if (!is.null(SPADEResult)){
-        exclude.markers <- setdiff(flowset@colnames, c(SPADEResult@marker.names, "cluster"))
+        exclude.markers  <- setdiff(flowset@colnames, c(SPADEResult@marker.names, "cluster"))
     }
     
     if (!is.null(exclude.markers)){
         flowset <- exclude.markers(flowset, exclude.markers, colnames.FCS = flowset@colnames)
     }
-    message("\tarchsin transform...")
-    
-    transform.arcsinh <- flowCore::arcsinhTransform(a=0, b=0.2) #a and b match SPADE a and b
-    marker.toTransform <- setdiff(flowset@colnames, c("cluster"))
-    transformations <- flowCore::transformList(marker.toTransform, transform.arcsinh)
-    flowset <- flowCore::transform(flowset, transformations)
-    
+
+    if ((is.null(SPADEResult) && !use.raw.medians) || !SPADEResult@use.raw.medians) {
+        message("\tarchsin transform...")
+
+        transform.arcsinh  <- flowCore::arcsinhTransform(a = 0, b = 0.2) #a and b match SPADE a and b
+        marker.toTransform <- setdiff(flowset@colnames, c("cluster"))
+        transformations    <- flowCore::transformList(marker.toTransform, transform.arcsinh)
+        flowset <- flowCore::transform(flowset, transformations)
+    }
+
+    return(flowset)
+
 }
 
 #' @title Unload 'flowSet' object from a 'SPADEResult' object
@@ -395,8 +394,11 @@ load.flowSet <- function(SPADEResult = NULL, fcs.files, dictionary, exclude.mark
 #' @param SPADEResult a SPADEResult object (optional)
 #' @return The new 'SPADEResult' object
 #' @export 
-unload.flowSet <- function(SPADEResult){
+unload.flowSet <- function(SPADEResult) {
+
     SPADEResult@flowset <- NULL
     gc()
+
     return(SPADEResult)
+
 }

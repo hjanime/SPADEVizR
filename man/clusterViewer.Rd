@@ -19,7 +19,7 @@ clusterViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
 \item{show.mean}{a character specifying if marker means expression should be displayed, possible value are among : "none", "only" or "both"}
 }
 \value{
-a list of ggplot objects
+a list of 'ggplot' objects
 }
 \description{
 Generates a parallel coordinate plot representation showing for each cluster the marker median expressions.

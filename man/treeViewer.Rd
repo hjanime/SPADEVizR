@@ -17,7 +17,7 @@ treeViewer(SPADEResults, samples = NULL, stat.object = NULL,
 \item{marker}{a character specifying the marker name to display}
 }
 \value{
-a list of ggplot objects
+a list of 'ggplot' objects
 }
 \description{
 Generates a tree representation showing combined SPADE trees.

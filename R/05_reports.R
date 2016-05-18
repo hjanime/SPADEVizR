@@ -9,7 +9,7 @@
 #' \item {"pheno" (included by default):}{Display an heatmap representation}
 #' \item {"boxplot":}{Display a boxplot representation. This plot required to provide the 'conditions' parameter}
 #' \item {"kinetics":}{Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter}
-#' \item {"stream" (included by default):}{Display a streamgraphViewer representation showing the evolution of cells abundance}
+#' \item {"stream":}{Display a streamgraphViewer representation showing the evolution of cells abundance}
 #' \item {"cluster" (included by default):}{Display a parallel coordinate representation showing for each cluster the marker median expression}
 #' \item {"MDSclusters" (included by default):}{Display the cluster similarities using MDS}
 #' \item {"MDSsamples":}{Display the samples similarities using MDS. This plot required to provide the 'assignments' parameter}
@@ -27,15 +27,15 @@
 #' @param conditions conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude
 #' @param stat.objects a vector of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')
 #' @param profile.objects a vector of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')
-#' @param width a numeric specifying the plot width
-#' @param height a numeric specifying the plot height
+#' @param width a numeric specifying the plot width in centimeter
+#' @param height a numeric specifying the plot height in centimeter
 #'
 #' @import gridExtra
 #' 
 #' @export
 generateReport <- function(Results,
                            PDFfile         = "report.pdf",
-                           plot.names      = c("count","pheno", "cluster", "tree", "disto", "stream", "MDSclusters"),
+                           plot.names      = c("count", "pheno", "tree", "disto", "MDSclusters", "cluster"),
                            clusters        = NULL,
                            markers         = NULL,
                            assignments     = NULL,
@@ -119,11 +119,10 @@ generateReport <- function(Results,
     for(profile.object in c(profile.objects)){
         plots <- c(plots, list(plot(profile.object)))
     }
-    
 
     pages.plots <- gridExtra::marrangeGrob(grobs = plots, nrow = 1, ncol = 1)
 
-    ggplot2::ggsave(PDFfile, pages.plots, width = width, height = height)
+    ggplot2::ggsave(PDFfile, pages.plots, width = width, height = height, unit = "cm")
     message("[END] - report")
 
 }

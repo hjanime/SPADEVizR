@@ -11,7 +11,7 @@ distogramViewer(Results, clusters = NULL, samples = NULL, markers = NULL)
 
 \item{clusters}{a character vector containing the clusters names to be use (by default all clusters will be used)}
 
-\item{samples}{a character vector specifying the samples to use}
+\item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
 
 \item{markers}{a character vector specifying the markers to be displayed}
 }

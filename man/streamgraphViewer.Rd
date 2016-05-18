@@ -22,7 +22,4 @@ a 'ggplot' object
 \description{
 Generate a streamgraph representation showing the dynamic evolution of the number of cells in clusters across samples.
 }
-\details{
-xxx
-}
 

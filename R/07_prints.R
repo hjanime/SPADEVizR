@@ -39,7 +39,7 @@ setMethod("print","SPADEResults",
 	cat("\n")
 	cat(paste0("Samples : "))
     cat("\n")
-	cat(paste0(" ", x@sample.names, collapse="\n"))
+	cat(paste0(" ", x@sample.names, collapse = "\n"))
 	cat("\n")
 	}
 )
@@ -50,7 +50,7 @@ setMethod("print","AC",
         function(x){
             cat("Object class: Abundant Clusters (AC)\n")
             cat(paste0("Samples: "))
-            cat(paste0(x@sample.names, collapse="; "))
+            cat(paste0(x@sample.names, collapse = "; "))
             cat("\n")
             cat(paste0("Use matrix of percent: ", x@use.percentages))
             cat("\n")
@@ -59,10 +59,10 @@ setMethod("print","AC",
             cat(paste0("Adjusted: ", x@method.adjust))
             cat("\n")
             cat(paste0("P-value threshold: "))
-            cat(paste0(" ", x@th.pvalue, collapse="\n"))
+            cat(paste0(" ", x@th.pvalue, collapse = "\n"))
             cat("\n")
             cat(paste0("Mean threshold: "))
-            cat(paste0(" ", x@th.mean, collapse="\n"))
+            cat(paste0(" ", x@th.mean, collapse = "\n"))
             cat("\n")    
         }
 )
@@ -73,10 +73,10 @@ setMethod("print","DEC",
         function(x){
             cat("Object class: Differentially Enriched Clusters (DEC)\n")
             cat(paste0("Sample of Condition 1: "))
-            cat(paste0(x@sample.cond1, collapse="; "))
+            cat(paste0(x@sample.cond1, collapse = "; "))
             cat("\n")
             cat(paste0("Sample of Condition 2: "))
-            cat(paste0(x@sample.cond2, collapse="; "))
+            cat(paste0(x@sample.cond2, collapse = "; "))
             cat("\n")
             cat(paste0("Use matrix of percent: ", x@use.percentages))
             cat("\n")
@@ -87,10 +87,10 @@ setMethod("print","DEC",
             cat(paste0("Paired: ", x@method.paired))
             cat("\n")
             cat(paste0("P-value threshold: "))
-            cat(paste0(" ", x@th.pvalue, collapse="\n"))
+            cat(paste0(" ", x@th.pvalue, collapse = "\n"))
             cat("\n")
             cat(paste0("Fold-change threshold: "))
-            cat(paste0(" ", x@th.fc, collapse="\n"))
+            cat(paste0(" ", x@th.fc, collapse = "\n"))
             cat("\n") 
         }
 )
@@ -101,10 +101,10 @@ setMethod("print","CC",
         function(x){
             cat("Object class: Correlated Clusters (CC)\n")
             cat(paste0("Samples: "))
-            cat(paste0(x@sample.names, collapse="; "))
+            cat(paste0(x@sample.names, collapse = "; "))
             cat("\n")
             cat(paste0("Phenotypic variables: "))
-            cat(paste0(x@variable, collapse="; "))
+            cat(paste0(x@variable, collapse = "; "))
             cat("\n")
             cat(paste0("Use matrix of percent: ", x@use.percentages))
             cat("\n")
@@ -114,11 +114,11 @@ setMethod("print","CC",
             cat("\n")
             cat(paste0("P-value threshold: "))
             cat("\n")
-            cat(paste0(" ", x@th.pvalue, collapse="\n"))
+            cat(paste0(" ", x@th.pvalue, collapse = "\n"))
             cat("\n")
             cat(paste0("Correlation threshold: "))
             cat("\n")
-            cat(paste0(" ", x@th.correlation, collapse="\n"))
+            cat(paste0(" ", x@th.correlation, collapse = "\n"))
             cat("\n")
         }
 )
@@ -132,10 +132,10 @@ setMethod("print","PhenoProfiles",
             cat(paste0(x@class.number, collapse = "; "))
             cat("\n")
             cat(paste0("Classification method used: "))
-            cat(paste0(x@method, collapse="; "))
+            cat(paste0(x@method, collapse = "; "))
             cat("\n")
             cat(paste0("Parameter used"))
-            cat(paste0(names(x@method.parameter), " = ", x@method.parameter, collapse="; "))
+            cat(paste0(names(x@method.parameter), " = ", x@method.parameter, collapse = "; "))
             cat("\n")
         }
 )
@@ -152,12 +152,10 @@ setMethod("print","EnrichmentProfiles",
             cat(paste0(x@method, collapse="; "))
             cat("\n")
             cat(paste0("Parameter used"))
-            cat(paste0(names(x@method.parameter), " = ", x@method.parameter, collapse="; "))
+            cat(paste0(names(x@method.parameter), " = ", x@method.parameter, collapse = "; "))
             cat("\n")
         }
 )
-
-
 
 #' @title Textual previews for SPADEVizR objects
 #'

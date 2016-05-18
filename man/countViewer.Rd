@@ -26,7 +26,4 @@ a 'ggplot' object
 \description{
 Generate a two dimensional vizualisation showing the number of cells (sum of selected samples) of each cluster.
 }
-\details{
-xxx
-}
 

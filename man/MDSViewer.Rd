@@ -21,13 +21,14 @@ MDSViewer(Results, use.percentages = TRUE, assignments, clusters = NULL,
 \item{dist.method}{a character string containing the name of the distance measure to use}
 }
 \value{
-a list of ggplot objects
+a list of 'ggplot' objects
 }
 \description{
 Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs enrichment.
 }
 \details{
 The 'space' parameter specifying if the cluster or sample similarities will be determined using MDS.
-When the 'space' parameter is equal to 'sample', the 'assignements' parameter is required.
+When the 'space' parameter is equal to 'sample', the 'assignements' parameter is required. 
+Available method for the 'dist.method' parameter are : "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski"
 }
 

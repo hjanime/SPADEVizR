@@ -4,7 +4,8 @@
 \alias{load.flowSet}
 \title{Load FCS files object into a 'SPADEResult' object}
 \usage{
-load.flowSet(SPADEResult = NULL, fcs.files, dictionary, exclude.markers)
+load.flowSet(SPADEResult = NULL, fcs.files, dictionary, exclude.markers,
+  use.raw.medians)
 }
 \arguments{
 \item{SPADEResult}{a SPADEResult object (optional)}
@@ -14,6 +15,8 @@ load.flowSet(SPADEResult = NULL, fcs.files, dictionary, exclude.markers)
 \item{dictionary}{a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)}
 
 \item{exclude.markers}{a character vector of markers to exclude (case insensitive)}
+
+\item{use.raw.medians}{a logical specifying if the arcsinh transformation must be performed or not}
 }
 \value{
 a S4 'flowSet' object
@@ -22,6 +25,6 @@ a S4 'flowSet' object
 This function loads the FCS files to the 'flowset' slot of the 'SPADEResult' object.
 }
 \details{
-If a 'SPADEResult' object is provided, others parameters ('fcs.files', 'dictionary', 'exclude.markers') will be ignored.
+If a 'SPADEResult' object is provided, others parameters ('fcs.files', 'dictionary', 'exclude.markers', 'use.raw.medians') will be ignored.
 }
 

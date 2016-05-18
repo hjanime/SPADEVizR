@@ -18,7 +18,7 @@ importSPADEResults(path, dictionary = data.frame(),
 
 \item{probs}{a vector of probabilities with 2 values in [0,1] to compute maker range quantiles. First is the lower bound and second is the upper bound.}
 
-\item{use.raw.medians}{a logical specifying if "transformed" or "raw" medians will be use in the cluster expression matrix (FALSE by default)}
+\item{use.raw.medians}{a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)}
 
 \item{quantile.approximation}{a logical specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
 }

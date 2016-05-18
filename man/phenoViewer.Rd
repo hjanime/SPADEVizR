@@ -12,7 +12,7 @@ phenoViewer(SPADEResults, num = 5)
 \item{num}{a numeric value specifying the number of markers expression categories to use}
 }
 \value{
-a list of ggplot objects
+a list of 'ggplot' objects
 }
 \description{
 Generates an heatmap representation showing for all clusters the marker median expressions.

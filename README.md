@@ -175,7 +175,7 @@ For instance, an import of cell clustering results obtained from as previously d
 ```r
 marker.expressions <- read.delim("PATH")
 cells.count        <- read.delim("PATH")
-results_other      <- importX(cells.count = cells.count, marker.expressions = marker.expressions)
+results_other      <- importX(cells.count =  cells.count, marker.expressions = marker.expressions)
 ```
 
 `Results` objects can be used by all functions excepting the `TreeViewer()`, `PhenoViewer()` (Heatmap viewer) and `classifyPhenoProfiles()` which only accept a `SPADEResult` object.
@@ -324,9 +324,9 @@ print(PhenoProfiles)
 The `classifyPhenoProfiles()` function returns a `PhenoProfiles` object containing mainly the cluster associations.
 
 ## <a name="stat_function_classifyEnrichmentProfiles"/> 4.5 Classification of clusters based on their enrichment profiles
-The `classifyEnrichmentProfiles()` function classifies each cluster in different classes based on their the number of cells associated with each sample (enrichment profiles). Differents clustering methods are available among hierarchical classification, k-means, eigen vector decomposition, clique classification.
+The `classifyEnrichmentProfiles` function classifies each cluster in different classes based on their the number of cells associated with each sample (enrichment profiles). Differents clustering methods are available among hierarchical classification, k-means, eigen vector decomposition, clique classification.
 
-The `classifyEnrichmentProfiles()` function takes a `Results` or `SPADEResult` object and a `method` parameter among:
+The `classifyEnrichmentProfiles` function takes a `Results` or `SPADEResult` object and a `method` parameter among:
 
  * `hierarchical_k`:
 This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
