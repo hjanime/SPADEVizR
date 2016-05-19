@@ -48,10 +48,9 @@ countViewer <- function(Results,
         data$cluster <- as.factor(data$cluster)
     }
     
-    data.melted <- reshape2::melt(data, id = c("cluster"))  
+    data.melted           <- reshape2::melt(data, id = c("cluster"))  
     colnames(data.melted) <- c("cluster", "sample", "value")
-    
-    data.melted$total <- ifelse(data.melted[,"sample"] == "sum.of.samples","sum of selected samples","")
+    data.melted$total     <- ifelse(data.melted[,"sample"] == "sum.of.samples","sum of selected samples","")
     
     plot <- ggplot2::ggplot(data = data.melted) +
             ggplot2::ggtitle(paste("Count Viewer (", format(cells.number, big.mark=" "), " cells)", sep = "")) +
@@ -62,16 +61,16 @@ countViewer <- function(Results,
     
     if(show.samples){                
         plot <- plot + ggplot2::geom_jitter(data   = subset(data.melted, sample != "sum.of.samples"),
-                height = 0,
-                width  = 0.5,
-                ggplot2::aes_string(x = "cluster", y = "value", size = "value", fill = "sample"),
-                shape  = 21,
-                alpha  = 0.4)
+                                            height = 0,
+                                            width  = 0.5,
+                                            ggplot2::aes_string(x = "cluster", y = "value", size = "value", fill = "sample"),
+                                            shape  = 21,
+                                            alpha  = 0.4)
     }
     plot <- plot + ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0,1.1*max(data.melted$value))) +
-            ggplot2::ylab("# of cells") +
-            ggplot2::theme_bw() +
-            ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1))
+                   ggplot2::ylab("# of cells") +
+                   ggplot2::theme_bw() +
+                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1))
     
     return(plot)
 }
@@ -260,7 +259,7 @@ phenoViewer <- function(SPADEResults,
 #'
 #' @return a 'ggplot' object
 #' 
-#' @import reshape2 ggplot2
+#' @import reshape2 ggplot2 gtools
 #' 
 #' @export
 boxplotViewer <- function(Results,
@@ -304,6 +303,8 @@ boxplotViewer <- function(Results,
     
     data.melted$cond <- conditions[data.melted$sample]
     data.melted      <- data.melted[!is.na(data.melted$cond),]
+    data.melted$cond <- factor(data.melted$cond, levels = gtools::mixedsort(unique(data.melted$cond)))
+
     plots            <- list()
     
     for(current.cluster in clusters){
@@ -319,9 +320,9 @@ boxplotViewer <- function(Results,
         cells.number <- sum(cells.count[current.cluster,])
         
         plots[[i]] <- ggplot2::ggplot(data = data.temp, ggplot2::aes_string(x = "cond", y = "value")) +
-                ggplot2::ggtitle(paste("cluster ", current.cluster, " - Boxplot Viewer (", format(cells.number, big.mark=" "), " cells)", sep = "")) +
-                ggplot2::geom_boxplot() +
-                ggplot2::geom_jitter(ggplot2::aes_string(color = "sample"), width = 0.2, show.legend = show.legend)
+                      ggplot2::ggtitle(paste("cluster ", current.cluster, " - Boxplot Viewer (", format(cells.number, big.mark=" "), " cells)", sep = "")) +
+                      ggplot2::geom_boxplot() +
+                      ggplot2::geom_jitter(ggplot2::aes_string(color = "sample"), width = 0.2, show.legend = show.legend)
         
         if(show.violin){
             plots[[i]] <- plots[[i]] + ggplot2::geom_violin(alpha = 0.05, fill = "red", colour = "red")
@@ -358,7 +359,7 @@ boxplotViewer <- function(Results,
 #' 
 #' @return a 'ggplot' object
 #' 
-#' @import reshape2 ggplot2
+#' @import reshape2 ggplot2 gtools
 #' 
 #' @export
 kineticsViewer <- function(Results,
@@ -404,7 +405,8 @@ kineticsViewer <- function(Results,
     
     data.melted$individuals <- assignments[data.melted$sample,'individuals']
     data.melted$timepoints  <- assignments[data.melted$sample,'timepoints']
-    
+    data.melted$timepoints  <- factor(data.melted$timepoints, levels = gtools::mixedsort(unique(data.melted$timepoints)))
+
     plots <- list()
     for(current.cluster in clusters){
         data.temp  <- data.melted[data.melted$cluster == current.cluster,]
@@ -764,8 +766,8 @@ MDSViewer <- function(Results,
         samples <- rownames(data)
         
         data_i$individuals <- as.factor(data_i$individuals)
-        data_i$timepoints  <- as.factor(data_i$timepoints)
-        
+        data_i$timepoints  <- factor(data_i$timepoints, levels = gtools::mixedsort(unique(data_i$timepoints)))
+
         cells.number <- sum(colSums(cells.count[, rownames(assignments)]))
         
         data.table_i <- data.table::data.table(data_i, key = "individuals")
@@ -953,7 +955,7 @@ biplotViewer <- function(SPADEResults,
 #' Generate a distogram representation showing the marker co-expressions.
 #' 
 #' @details 
-#' A pearson correlation matrix is calculated between selected markers using selected clusters and samples.
+#' A Pearson correlation matrix is calculated between selected markers using selected clusters and samples.
 #' High positive correlated markers are shown by a green tile at their perpendicular intersection. 
 #' In the same way, absence of correlation are shown by black tiles and negative correlation by red tiles.
 #'

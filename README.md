@@ -572,7 +572,7 @@ For instance, the following command describe how to visualize the distances betw
 
 ```r
 MDSViewer(results, space = "clusters", clusters = c("2","3","4","5","6","7","9"))
-## These clusters will be compute :
+## These clusters will be computed :
 ## 2	3	4	5	6	7	9
 ## MDS computation
 ## done
@@ -586,7 +586,7 @@ assignments <- data.frame(row.names = results@sample.names,
 						  timepoints = c(0,0,0,0,0,8,8,8,8,8,28,28,28,28,28),
 						  individuals = c("BB078","BB231","BC641","BD619","BD620","BB078","BB231","BC641","BD619","BD620","BB078","BB231","BC641","BD619","BD620"))
 MDSViewer(results, space = "samples", assignments = assignments, clusters = c("2","3","4","5","6","7","9"))
-## These clusters will be compute :
+## These clusters will be computed :
 ## 2	3	4	5	6	7	9
 ## MDS computation
 ## done
@@ -607,6 +607,8 @@ For instance, the following command describe how to visualize the biplots using 
 samples <- c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE)
 names(samples) <- results@sample.names
 biplotViewer(results, x.marker = "CD20", y.marker = "HLADR", samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"))
+## Biplot computation
+## done
 ```
 
 <img src="README.figures/biplot-1.png" title="" alt="" style="display: block; margin: auto;" />
@@ -641,7 +643,7 @@ The `generateReport()` function allows to easily generate a PDF file containing 
  * "[pheno](#pheno_viewer_function)" (included by default): Display an heatmap representation
  * "[boxplot](#boxplot_viewer_function)": Display a boxplot representation. This plot required to provide the 'conditions' parameter
  * "[kinetics](#kinetics_viewer_function)": Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter
- * "[stream](#streamgraph_viewer_function)" (included by default): Display a streamgraphViewer representation showing the evolution of cells abundance
+ * "[stream](#streamgraph_viewer_function)": Display a streamgraphViewer representation showing the evolution of cells abundance
  * "[cluster](#cluster_viewer_function)" (included by default): Display a parallel coordinate representation showing for each cluster the marker median expression
  * "[MDSclusters](#MDS_viewer_function)" (included by default): Display the cluster similarities using MDS
  * "[MDSsamples](#MDS_viewer_function)": Display the samples similarities using MDS. This plot required to provide the 'assignments' parameter

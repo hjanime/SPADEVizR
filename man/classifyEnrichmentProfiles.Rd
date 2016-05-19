@@ -24,7 +24,7 @@ Classifies clusters based on their enrichment profiles.
 The classification is done on cell abundances of each clusters and could be performed using 5 methods:
 \itemize{
 \item "hierarchical_k" 
-This method first compute the pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
+This method first compute the Pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
 The hierarchical classification is cutted in order to return the desired number of classes. 
 This number of classes must be provided as a numeric integer using the 'method.parameter' parameter.
 It is to note that negative correlations are considered as uncorrelated
