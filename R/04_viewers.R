@@ -150,7 +150,7 @@ treeViewer <- function(SPADEResults,
     
     if (!is.null(stat.object)){
         stat.object.name <- names(stat.object)
-        pos.vertex[, stat.object.name] <- stat.object@result$significance
+        pos.vertex[, stat.object.name] <- stat.object@result$significant
         if(!is.null(marker)){
             plot <- plot + ggplot2::geom_point(data   = pos.vertex,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size", fill = marker, colour = stat.object.name),

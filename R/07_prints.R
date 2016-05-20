@@ -125,31 +125,16 @@ setMethod("print","CC",
 
 #' @rdname print-methods
 #' @export
-setMethod("print","PhenoProfiles",
+setMethod("print","CCR",
         function(x){
-            cat("Object class: PhenoProfiles\n")
+            cat("Object class: CRR\n")
+            cat(paste0("type: ", x@type))
+            cat("\n")
             cat(paste0("Number of class: "))
             cat(paste0(x@class.number, collapse = "; "))
             cat("\n")
             cat(paste0("Classification method used: "))
             cat(paste0(x@method, collapse = "; "))
-            cat("\n")
-            cat(paste0("Parameter used"))
-            cat(paste0(names(x@method.parameter), " = ", x@method.parameter, collapse = "; "))
-            cat("\n")
-        }
-)
-
-#' @rdname print-methods
-#' @export
-setMethod("print","EnrichmentProfiles",
-        function(x){
-            cat("Object class: EnrichmentProfiles\n")
-            cat(paste0("Number of class: "))
-            cat(paste0(x@class.number, collapse = "; "))
-            cat("\n")
-            cat(paste0("Classification method used: "))
-            cat(paste0(x@method, collapse="; "))
             cat("\n")
             cat(paste0("Parameter used"))
             cat(paste0(names(x@method.parameter), " = ", x@method.parameter, collapse = "; "))
@@ -201,12 +186,6 @@ setMethod("show","CC",
 
 #' @rdname show-methods
 #' @export
-setMethod("show","PhenoProfiles",
-        definition = function(object){print(object)}
-)
-
-#' @rdname show-methods
-#' @export
-setMethod("show","EnrichmentProfiles",
+setMethod("show","CCR",
         definition = function(object){print(object)}
 )

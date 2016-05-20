@@ -5,9 +5,8 @@
 \alias{show}
 \alias{show,AC-method}
 \alias{show,CC-method}
+\alias{show,CCR-method}
 \alias{show,DEC-method}
-\alias{show,EnrichmentProfiles-method}
-\alias{show,PhenoProfiles-method}
 \alias{show,Results-method}
 \alias{show,SPADEResults-method}
 \title{Textual previews for SPADEVizR objects}
@@ -22,9 +21,7 @@
 
 \S4method{show}{CC}(object)
 
-\S4method{show}{PhenoProfiles}(object)
-
-\S4method{show}{EnrichmentProfiles}(object)
+\S4method{show}{CCR}(object)
 }
 \arguments{
 \item{object}{a SPADEVizR object}

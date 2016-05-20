@@ -210,9 +210,9 @@ AC <- setClass("AC",
                        message(paste0("th.pvalue founded is : ", object@th.pvalue))
                        return(FALSE)
                    }                
-                   if(!identical(colnames(object@result),c("cluster","mean","sd","pvalue","significance"))){
+                   if(!identical(colnames(object@result),c("cluster","mean","sd","pvalue","significant"))){
                       print(colnames(object@result))
-                      message("Object AC, Error in result slot, result must have this colmuns : 'cluster','mean','sd','pvalue','significance'")
+                      message("Object AC, Error in result slot, result must have this colmuns : 'cluster','mean','sd','pvalue','significant'")
                       message("Colmuns founded are : ")
                       message(paste(colnames(object@result)))
                       return(FALSE)
@@ -291,9 +291,9 @@ DEC <- setClass("DEC",
                 message(paste0("th.fc founded is : ", object@th.fc))
                 return(FALSE)
             }
-            if(!identical(colnames(object@result),c("cluster","mean.cond1","sd.cond1","mean.cond2","sd.cond2","fold.change","pvalue","significance"))){
+            if(!identical(colnames(object@result),c("cluster","mean.cond1","sd.cond1","mean.cond2","sd.cond2","fold.change","pvalue","significant"))){
                 print(colnames(object@result))
-                message("Object DEC, Error in result slot, result must have this colmuns : 'cluster','mean.cond1','sd.cond1','mean.cond2','sd.cond2','fold.change','pvalue','significance'")
+                message("Object DEC, Error in result slot, result must have this colmuns : 'cluster','mean.cond1','sd.cond1','mean.cond2','sd.cond2','fold.change','pvalue','significant'")
                 message("Colmuns found are : ")
                 message(paste(colnames(object@result)))
                 return(FALSE)
@@ -304,7 +304,7 @@ DEC <- setClass("DEC",
 )
 
 
-#' @title Correlated Clusters (CC class)  definition
+#' @title Correlated Clusters (CC class) definition
 #' 
 #' @description 
 #' The 'CC' object is a S4 object containing coefficient of correlation associated between each cluster and a phenotypic variable.
@@ -372,9 +372,9 @@ CC <- setClass("CC",
                        message(paste0("th.correlation founded is : ", object@th.pvalue))
                        return(FALSE)
                    }
-                   if(!identical(colnames(object@result),c("cluster","correlation","pvalue","significance"))){
+                   if(!identical(colnames(object@result),c("cluster","correlation","pvalue","significant"))){
                        print(colnames(object@result))
-                       message("Object CC, Error in result slot, result must have this colmuns : 'cluster','correlation','pvalue','significance'")
+                       message("Object CC, Error in result slot, result must have this colmuns : 'cluster','correlation','pvalue','significant'")
                        message("Colmuns found are : ")
                        message(paste(colnames(object@result)))
                        return(FALSE)
@@ -385,10 +385,10 @@ CC <- setClass("CC",
 )
 
 
-#' @title Classification of clusters based on their phenotype profiles (PhenoProfiles class) definition
+#' @title Classification of clustering Results (CCR class) definition
 #' 
 #' @description 
-#' The 'PhenoProfiles' is a S4 object containing the information related to the cluster classification based on theirs marker expressions.
+#' The 'CR' is a S4 object containing the information related to the cluster classification based on theirs marker expressions.
 #' 
 #' 
 #' This object contains all information about the classification method and parameters used.  
@@ -398,7 +398,8 @@ CC <- setClass("CC",
 #'  
 #' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'classifyPhenoProfiles()' function. 
-#' 
+#'
+#' @slot type a character specifying if the classification is based on the phenotype profiles or on the enrichment profiles
 #' @slot class.number a numeric value specifying the number of clusters
 #' @slot method a character specifying the method used to classify cluster
 #' @slot method.parameter a named list of parameters used by the classification method
@@ -407,71 +408,34 @@ CC <- setClass("CC",
 #' @name PhenoProfiles-class
 #' @rdname PhenoProfiles-class
 #' @exportClass PhenoProfiles
-PhenoProfiles <- setClass("PhenoProfiles",
-                          slots = c(class.number     = "numeric",
-                                    method           = "character",
-                                    method.parameter = "numeric",
-                                    classes          = "data.frame"),
-                          validity = function(object) {
+CCR <- setClass("CCR",
+                slots = c(type             = "character", 
+                          class.number     = "numeric",
+                          method           = "character",
+                          method.parameter = "numeric",
+                          classes          = "data.frame"),
+                validity = function(object) {
 
-                              if (is.element(object@method, c("hierarchical_h", "eigencell", "clique")) &&
-                                  (object@method.parameter > 1 || object@method.parameter < 0)) {
-                                  message(paste0("Object PhenoProfiles, Error : with ", objec@tmethod, " method, the method.parameter must be include into [0,1] interval"))
-                                  message(paste0("method.parameter founded is : ", object@th.pvalue))
-                                  return(FALSE)
-                              }
-                              if (is.element(object@method, c("hierarchical_k", "kmeans")) &&
-                                 (object@method.parameter != length(unique(object@classes$class)))) {
-                                  message(paste0("Object PhenoProfiles, Error the number of class in the slot classes (", length(unique(object@classes$class)), ") is inconsistent the specified number of class ", method.parameter))
-                                  return(FALSE)
-                              }
+                    if (!is.element(object@type, c("phenotype", "enrichment"))) {
+                        message("Object CCR, Error : the 'type' slot must be 'phenotype' or 'enrichment' ")
+                        return(FALSE)
+                    }
 
-                              return(TRUE)
-                          })
+                    if (is.element(object@method, c("hierarchical_h", "eigencell", "clique")) &&
+                       (object@method.parameter > 1 || object@method.parameter < 0)) {
+                        message(paste0("Object CCR, Error : with ", objec@tmethod, " method, the method.parameter must be include into [0,1] interval"))
+                        message(paste0("method.parameter founded is : ", object@th.pvalue))
+                        return(FALSE)
+                    }
+                    if (is.element(object@method, c("hierarchical_k", "kmeans")) &&
+                       (object@method.parameter != length(unique(object@classes$class)))) {
+                        message(paste0("Object CCR, Error the number of class in the slot classes (", length(unique(object@classes$class)), ") is inconsistent the specified number of class ", method.parameter))
+                        return(FALSE)
+                    }
+                     
+                    return(TRUE)
+               })
 
-#' @title Classification of clusters based on their enrichment profiles (EnrichmentProfiles class) definition
-#' 
-#' @description 
-#' The 'EnrichmentProfiles' is a S4 object containing the information related to the cluster classification based on theirs enrichment profiles.
-#' 
-#' 
-#' This object contains all information about the classification method and parameters used.   
-#' 
-#' @details
-#' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
-#' 
-#' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-#' This object is returned by the 'classifyEnrichmentProfiles()' function. 
-#' 
-#' @slot class.number a numeric providing the number of classes
-#' @slot method a character specifying the method used to classify cluster
-#' @slot method.parameter a numeric parameters associated with the chosen method
-#' @slot classes a two column dataframe with the cluster in first column and corresponding class in the second column 
-#' 
-#' @name EnrichmentProfiles-class
-#' @rdname EnrichmentProfiles-class
-#' @exportClass EnrichmentProfiles
-EnrichmentProfiles <- setClass("EnrichmentProfiles",
-                               slots = c(class.number     = "numeric",
-                                         method           = "character",
-                                         method.parameter = "numeric",
-                                         classes          = "data.frame"),
-                               validity = function(object){
-                                    
-                                   if (is.element(object@method, c("hierarchical_h", "eigencell", "clique")) &&
-                                       (object@method.parameter > 1 || object@method.parameter < 0)) {
-                                       message(paste0("Object EnrichmentProfiles, Error : with ", objec@tmethod, " method, the method.parameter must be include into [0,1] interval"))
-                                       message(paste0("method.parameter founded is : ", object@th.pvalue))
-                                       return(FALSE)
-                                   }
-                                   if (is.element(object@method, c("hierarchical_k", "kmeans")) &&
-                                       (object@method.parameter != length(unique(object@classes$class)))) {
-                                       message(paste0("Object EnrichmentProfiles, Error the number of class in the slot classes (", length(unique(object@classes$class)), ") is inconsistent the specified number of class ", method.parameter))
-                                       return(FALSE)
-                                   }
-                                    return(TRUE)
-                               }
-)
 
 #' @title Definition of class names 
 #'
@@ -512,18 +476,7 @@ setMethod("names", "DEC",
 
 #' @rdname names-methods
 #' @export
-setMethod("names", "CC",
-         definition = function(x){return("CC")}
+setMethod("names", "CCR",
+         definition = function(x){return("CCR")}
 )
 
-#' @rdname names-methods
-#' @export
-setMethod("names", "PhenoProfiles",
-         definition = function(x){return("PhenoProfiles")}
-)
-
-#' @rdname names-methods
-#' @export
-setMethod("names", "EnrichmentProfiles",
-         definition = function(x){return("EnrichmentProfiles")}
-)

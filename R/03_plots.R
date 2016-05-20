@@ -23,11 +23,11 @@ abundantClustersViewer <- function(AC,
     data.text <- AC@result
 
     if (!show.all_labels){
-        data.text <- subset(AC@result, AC@result$significance)
+        data.text <- subset(AC@result, AC@result$significant)
     }
 
     plot <-  ggplot2::ggplot(data = AC@result) +
-             ggplot2::ggtitle(paste0("Cells abundance of clusters(", format(sum(AC@cluster.size), big.mark=" "), " cells)", sep = "")) +
+             ggplot2::ggtitle(paste0("Cells abundance of clusters (", format(sum(AC@cluster.size), big.mark=" "), " cells)", sep = "")) +
              ggplot2::geom_hline(yintercept = AC@th.mean,
                                  linetype   = "dashed",
                                  alpha      = 0.3,
@@ -40,20 +40,19 @@ abundantClustersViewer <- function(AC,
                                  size       = 1)
 
     if (show.cluster_sizes > 0){
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significance", size = "cluster.size"),
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significant", size = "cluster.size"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1)
-    }
-    else {
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significance"),
+    }else{
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significant"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1)
     }                  
     
     x.max    <- ceiling(max(-log10(AC@th.pvalue), -log10(AC@result$pvalue)))
-    x.breaks <- seq(0, x.max, by = 1)
+    x.breaks <- c(seq(0, x.max, by = 1), round(-log10(AC@th.pvalue), 2))
     
     y.max    <- ceiling(max(AC@th.mean, AC@result$mean))
     y.breaks <- seq(0, y.max, by = 1)
@@ -73,7 +72,6 @@ abundantClustersViewer <- function(AC,
     return(plot)
 
 }
-
 
 #' @title Visualization of differentially enriched clusters
 #'
@@ -112,7 +110,7 @@ volcanoViewer <- function(DEC                = NULL,
     
     data.text <- DEC@result
     if (!show.all_labels){
-        data.text <- subset(DEC@result, DEC@result$significance)
+        data.text <- subset(DEC@result, DEC@result$significant)
     }
     x.min    <- floor(min(DEC@result$fold.change))
     x.max    <- ceiling(max(DEC@result$fold.change))
@@ -120,7 +118,7 @@ volcanoViewer <- function(DEC                = NULL,
     x.breaks <- c(round(c(-th.fc, th.fc), 2), seq(-x.max, x.max, by = 1))
 
     y.max    <- ceiling(max(-log10(DEC@th.pvalue), -log10(DEC@result$pvalue)))
-    y.breaks <- seq(0, y.max, by = 1)
+    y.breaks <- c(seq(0, y.max, by = 1), round(-log10(DEC@th.pvalue), 2))
 
     title.details <- ifelse(DEC@use.percentages, "using % of cells", "using # of cells")
         
@@ -137,13 +135,12 @@ volcanoViewer <- function(DEC                = NULL,
                                 color      = "red",
                                 size       = 1)
     if (show.cluster.sizes > 0){
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significance", size = "cluster.size"),
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significant", size = "cluster.size"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1)
-    }
-    else {
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significance"),
+    }else{
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significant"),
                                            shape = 21,
                                            colour = "black", 
                                            stroke = 1)
@@ -189,7 +186,7 @@ correlatedClustersViewer <- function(CC,
     
     data.text <- CC@result
     if (!show.all_labels){
-        data.text <- subset(CC@result, CC@result$significance)
+        data.text <- subset(CC@result, CC@result$significant)
     }
     title.details <- ifelse(CC@use.percentages, "using % of cells", "using # of cells")
     plot <- ggplot2::ggplot(data = CC@result) +
@@ -205,13 +202,12 @@ correlatedClustersViewer <- function(CC,
                                 color      = "red",
                                 size       = 1)
     if(show.cluster.sizes > 0){
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significance", size = "cluster.size"),
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significant", size = "cluster.size"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1)
-    }
-    else{
-        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significance"),
+    }else{
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significant"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1)
@@ -220,13 +216,13 @@ correlatedClustersViewer <- function(CC,
     x.breaks <- c( - CC@th.correlation, CC@th.correlation, seq(-1, 1, by = 0.1))
 
     y.max    <- ceiling(max(-log10(CC@th.pvalue), -log10(CC@result$pvalue)))
-    y.breaks <- seq(0, y.max, by = 1)
+    y.breaks <- c(seq(0, y.max, by = 1), round(-log10(CC@th.pvalue), 2))
     
-    plot <- plot +  ggrepel::geom_text_repel(data     = data.text, 
-                    ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", label = "cluster"),
-                                        size          = 3,
-                                        box.padding   = grid::unit(0.35, "lines"),
-                                        point.padding = grid::unit(0.3, "lines")) +
+    plot <- plot +  ggrepel::geom_text_repel(data          = data.text, 
+                                             ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", label = "cluster"),
+                                             size          = 3,
+                                             box.padding   = grid::unit(0.35, "lines"),
+                                             point.padding = grid::unit(0.3, "lines")) +
                     ggplot2::scale_fill_manual(values = c("grey", "red")) +
                     ggplot2::scale_x_continuous(minor_breaks = NULL, limits = c(-1, 1), breaks = x.breaks) +
                     ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
@@ -236,15 +232,15 @@ correlatedClustersViewer <- function(CC,
     return(plot)
 }
 
-#' @title profilesViewer
+#' @title classificationViewer
 #'
 #' @description 
-#' Generate a graph representation of PhenoProfiles classes
+#' Generate a graph representation of classified clusters
 #' 
 #' @details 
-#' xxx
+#' Clusters of the same classe are shown using a circular graph. Circular graphs are sorted by the number of cluster in each class. 
 #'
-#' @param profile.object a PhenoProfiles object or an EnrichmentProfiles object
+#' @param CCR an object of class 'CCR' (object returned by the 'classifyclusteringResults()' function)
 #' 
 #' @return a 'ggplot' object
 #' 
@@ -252,9 +248,9 @@ correlatedClustersViewer <- function(CC,
 #' @importFrom network %s% set.vertex.attribute add.edges get.edge.attribute add.vertices %c% list.vertex.attributes set.edge.attribute is.directed set.vertex.attribute get.vertex.attribute delete.edges is.bipartite get.edges list.edge.attributes delete.vertices
 #' @export
 #' 
-profilesViewer <- function (profile.object){
+classificationViewer <- function (CCR){
 
-    classes        <- profile.object@classes    
+    classes        <- CCR@classes
     classes        <- na.omit(classes)
     sorted.classes <- names(sort(table(classes$class), decreasing = TRUE))
 
@@ -302,7 +298,11 @@ profilesViewer <- function (profile.object){
           }
     }
 
-    ret <- gridExtra::grid.arrange(grobs = plots, top = paste0("Profiles Viewer (", names(profile.object), " using ", profile.object@method, " method)"))
+    if(length(plots) == 0){
+        plots <- list(grid::rectGrob())
+    }
+
+    ret <- gridExtra::grid.arrange(grobs = plots, top = paste0("ClassificationViewer - (based on ", CCR@type, " using ", CCR@method, " method)"))
     
     return(ret)
 
@@ -314,8 +314,8 @@ profilesViewer <- function (profile.object){
 #' This function generates a graphical representation for 'AC', 'DEC', 'CC', 'PhenoProfiles' and 'EnrichmentProfiles' objects.
 #'
 #' @param x a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object
-#' @param y a supplementary parameter transmited to 'AC', 'DEC' or 'CC' object
-#' @param ... some supplementaries parameters transmited to 'AC', 'DEC' or 'CC' object
+#' @param y a supplementary parameter transmited respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions
+#' @param ... some supplementaries parameters transmited respectively to \code{\link[SPADEVizR]{abundantClustersViewer}}, \code{\link[SPADEVizR]{volcanoViewer}} or \code{\link[SPADEVizR]{correlatedClustersViewer}} functions
 #' 
 #' @return a 'ggplot' object
 #'  
@@ -351,16 +351,8 @@ setMethod("plot", c("CC", "missing"),
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot", c("PhenoProfiles", "missing"),
+setMethod("plot", c("CCR", "missing"),
         function(x, ...){
-            return(profilesViewer(x, ...))
-        }
-)
-
-#' @rdname plot-methods
-#' @export
-setMethod("plot", c("EnrichmentProfiles", "missing"),
-        function(x, ...){
-            return(profilesViewer(x, ...))
+            return(classificationViewer(x, ...))
         }
 )

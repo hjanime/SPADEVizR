@@ -25,8 +25,7 @@
 #' @param markers a character vector of markers to include in the report (all will be included by default)
 #' @param assignments a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment
 #' @param conditions conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude
-#' @param stat.objects a vector of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')
-#' @param profile.objects a vector of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')
+#' @param stat.objects a vector of stat.object to be displayed in the report (object of class 'DEC', 'AC', 'CC' or 'CCR')
 #' @param width a numeric specifying the plot width in centimeter
 #' @param height a numeric specifying the plot height in centimeter
 #'
@@ -41,7 +40,6 @@ generateReport <- function(Results,
                            assignments     = NULL,
                            conditions      = NULL,
                            stat.objects    = list(),
-                           profile.objects = list(),
                            width           = 29.7,
                            height          = 21){
     
@@ -115,9 +113,6 @@ generateReport <- function(Results,
 
     for(stat.object in c(stat.objects)){
         plots <- c(plots, list(plot(stat.object)))
-    }
-    for(profile.object in c(profile.objects)){
-        plots <- c(plots, list(plot(profile.object)))
     }
 
     pages.plots <- gridExtra::marrangeGrob(grobs = plots, nrow = 1, ncol = 1)

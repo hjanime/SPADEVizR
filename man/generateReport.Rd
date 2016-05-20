@@ -7,8 +7,7 @@
 generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
   "pheno", "tree", "disto", "MDSclusters", "cluster"), clusters = NULL,
   markers = NULL, assignments = NULL, conditions = NULL,
-  stat.objects = list(), profile.objects = list(), width = 29.7,
-  height = 21)
+  stat.objects = list(), width = 29.7, height = 21)
 }
 \arguments{
 \item{Results}{a 'SPADEResults' or 'Result' object}
@@ -25,9 +24,7 @@ generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
 
 \item{conditions}{conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude}
 
-\item{stat.objects}{a vector of stat.object to be displayed in the report (object of class 'DEC', 'AC' or 'CC')}
-
-\item{profile.objects}{a vector of profile.objects to be displayed in the report (object of class 'PhenoProfiles' or 'EnrichmentProfiles')}
+\item{stat.objects}{a vector of stat.object to be displayed in the report (object of class 'DEC', 'AC', 'CC' or 'CCR')}
 
 \item{width}{a numeric specifying the plot width in centimeter}
 

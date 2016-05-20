@@ -2,11 +2,11 @@
 % Please edit documentation in R/00_objects.R
 \docType{class}
 \name{PhenoProfiles-class}
-\alias{PhenoProfiles}
+\alias{CCR}
 \alias{PhenoProfiles-class}
-\title{Classification of clusters based on their phenotype profiles (PhenoProfiles class) definition}
+\title{Classification of clustering Results (CCR class) definition}
 \description{
-The 'PhenoProfiles' is a S4 object containing the information related to the cluster classification based on theirs marker expressions.
+The 'CR' is a S4 object containing the information related to the cluster classification based on theirs marker expressions.
 
 
 This object contains all information about the classification method and parameters used.
@@ -20,6 +20,8 @@ This object is returned by the 'classifyPhenoProfiles()' function.
 \section{Slots}{
 
 \describe{
+\item{\code{type}}{a character specifying if the classification is based on the phenotype profiles or on the enrichment profiles}
+
 \item{\code{class.number}}{a numeric value specifying the number of clusters}
 
 \item{\code{method}}{a character specifying the method used to classify cluster}

@@ -4,7 +4,7 @@
 \name{CC-class}
 \alias{CC}
 \alias{CC-class}
-\title{Correlated Clusters (CC class)  definition}
+\title{Correlated Clusters (CC class) definition}
 \description{
 The 'CC' object is a S4 object containing coefficient of correlation associated between each cluster and a phenotypic variable.
 Moreover this object contains all parameters used in the statistical analysis.

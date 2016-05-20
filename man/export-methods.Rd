@@ -5,9 +5,8 @@
 \alias{export}
 \alias{export,AC-method}
 \alias{export,CC-method}
+\alias{export,CCR-method}
 \alias{export,DEC-method}
-\alias{export,EnrichmentProfiles-method}
-\alias{export,PhenoProfiles-method}
 \alias{export,Results-method}
 \title{Exportation of SPADEVizR objects}
 \usage{
@@ -21,9 +20,7 @@ export(object, filename = "export.txt")
 
 \S4method{export}{CC}(object, filename = "export.txt")
 
-\S4method{export}{PhenoProfiles}(object, filename = "export.txt")
-
-\S4method{export}{EnrichmentProfiles}(object, filename = "export.txt")
+\S4method{export}{CCR}(object, filename = "export.txt")
 }
 \arguments{
 \item{object}{a SPADEVizR object}

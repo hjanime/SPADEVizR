@@ -19,19 +19,19 @@ computePhenoTable <- function(SPADEResults, num = 5){
     
     data        <- SPADEResults@marker.expressions[colnames(SPADEResults@marker.expressions)]
     data        <- na.omit(data)# NA values are removed, generate a warning ?
-    data.melted <- reshape2::melt(data, id.vars = c("sample","cluster"))
+    data.melted <- reshape2::melt(data, id.vars = c("sample", "cluster"))
     
-    colnames(data.melted) <- c("sample","cluster","marker","value")
+    colnames(data.melted) <- c("sample", "cluster", "marker", "value")
     data.melted$marker    <- as.vector(data.melted$marker)
-    means                 <- plyr::ddply(data.melted, c("cluster","marker"), function(df){mean(df$value, na.rm = TRUE)}) #NA values are removed
-    colnames(means)       <- c("cluster","marker","value")
+    means                 <- plyr::ddply(data.melted, c("cluster", "marker"), function(df){mean(df$value, na.rm = TRUE)}) #NA values are removed
+    colnames(means)       <- c("cluster", "marker", "value")
 
     for(i in 1:nrow(means)){
         
         cluster <- means[i, "cluster"]
         value   <- means[i, "value"]
-        min     <- SPADEResults@quantiles[1, means[i,"marker"]]
-        max     <- SPADEResults@quantiles[2, means[i,"marker"]]
+        min     <- SPADEResults@quantiles[1, means[i, "marker"]]
+        max     <- SPADEResults@quantiles[2, means[i, "marker"]]
         seq     <- seq(from = min, to = max, length.out = num)
         means[i,"value"] <- which.min(abs(value - seq))
         

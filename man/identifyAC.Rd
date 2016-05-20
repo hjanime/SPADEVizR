@@ -4,13 +4,13 @@
 \alias{identifyAC}
 \title{Identification of the Abundant Clusters}
 \usage{
-identifyAC(Results, condition, use.percentages = TRUE, method = "t.test",
+identifyAC(Results, samples, use.percentages = TRUE, method = "t.test",
   method.adjust = NULL, th.pvalue = 0.05, th.mean = 0)
 }
 \arguments{
 \item{Results}{a 'Results' or 'SPADEResults' object}
 
-\item{condition}{a named vector providing the correspondence between a sample name (in row names) and the logical value TRUE to test abundance for this sample or FALSE otherwise}
+\item{samples}{a named vector providing the correspondence between a sample name (in row names) and the logical value TRUE to test abundance for this sample or FALSE otherwise}
 
 \item{use.percentages}{a logical specifying if the computations should be performed on percentage}
 

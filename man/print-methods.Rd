@@ -5,9 +5,8 @@
 \alias{print}
 \alias{print,AC-method}
 \alias{print,CC-method}
+\alias{print,CCR-method}
 \alias{print,DEC-method}
-\alias{print,EnrichmentProfiles-method}
-\alias{print,PhenoProfiles-method}
 \alias{print,Results-method}
 \alias{print,SPADEResults-method}
 \title{Textual previews for all SPADEVizR objects}
@@ -22,9 +21,7 @@
 
 \S4method{print}{CC}(x)
 
-\S4method{print}{PhenoProfiles}(x)
-
-\S4method{print}{EnrichmentProfiles}(x)
+\S4method{print}{CCR}(x)
 }
 \arguments{
 \item{x}{a SPADEVizR object}

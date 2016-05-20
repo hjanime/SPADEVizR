@@ -4,10 +4,8 @@
 \name{names}
 \alias{names}
 \alias{names,AC-method}
-\alias{names,CC-method}
+\alias{names,CCR-method}
 \alias{names,DEC-method}
-\alias{names,EnrichmentProfiles-method}
-\alias{names,PhenoProfiles-method}
 \alias{names,Results-method}
 \alias{names,SPADEResults-method}
 \title{Definition of class names}
@@ -20,11 +18,7 @@
 
 \S4method{names}{DEC}(x)
 
-\S4method{names}{CC}(x)
-
-\S4method{names}{PhenoProfiles}(x)
-
-\S4method{names}{EnrichmentProfiles}(x)
+\S4method{names}{CCR}(x)
 }
 \arguments{
 \item{x}{a SPADEVizR object}
