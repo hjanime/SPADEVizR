@@ -9,8 +9,12 @@
 #' @param AC an object of class AC (object returned by the 'computeAC()' function)
 #' @param show.cluster_sizes a logical specifying if dot sizes are proportional to cell counts
 #' @param show.all_labels a logical specifying if all cluster labels must be shown (or just significant clusters)
+<<<<<<< HEAD
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
 #'
+=======
+#' 
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @return a 'ggplot' object
 #' 
 #' @import ggplot2 ggrepel grid
@@ -18,8 +22,12 @@
 #' @export
 abundantClustersViewer <- function(AC,
                                    show.cluster_sizes = TRUE,
+<<<<<<< HEAD
                                    show.all_labels    = FALSE,
                                    show.on_device     = TRUE) {
+=======
+                                   show.all_labels    = FALSE){
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 
     AC@result <- cbind (AC@result, cluster.size = AC@cluster.size)
     data.text <- AC@result
@@ -29,7 +37,11 @@ abundantClustersViewer <- function(AC,
     }
 
     plot <-  ggplot2::ggplot(data = AC@result) +
+<<<<<<< HEAD
              ggplot2::ggtitle(paste0("Cell abundances of clusters (", format(sum(AC@cluster.size), big.mark=" "), " cells)", sep = "")) +
+=======
+             ggplot2::ggtitle(paste0("Cells abundance of clusters (", format(sum(AC@cluster.size), big.mark=" "), " cells)", sep = "")) +
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
              ggplot2::geom_hline(yintercept = AC@th.mean,
                                  linetype   = "dashed",
                                  alpha      = 0.3,
@@ -41,12 +53,20 @@ abundantClustersViewer <- function(AC,
                                  color      = "red",
                                  size       = 1)
 
+<<<<<<< HEAD
     if (show.cluster_sizes){
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significant", size = "cluster.size"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1) +
                        ggplot2::scale_size(name = "number.of.cells", guide = ggplot2::guide_legend(order = 2))
+=======
+    if (show.cluster_sizes > 0){
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significant", size = "cluster.size"),
+                                           shape = 21,
+                                           colour = "black",
+                                           stroke = 1)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
     }else{
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significant"),
                                            shape = 21,
@@ -56,6 +76,7 @@ abundantClustersViewer <- function(AC,
     
     x.max    <- ceiling(max(-log10(AC@th.pvalue), -log10(AC@result$pvalue)))
     x.breaks <- c(seq(0, x.max, by = 1), round(-log10(AC@th.pvalue), 2))
+<<<<<<< HEAD
     
     y.max    <- ceiling(max(AC@th.mean, AC@result$mean))
     y.breaks <- seq(0, y.max, by = 1)
@@ -80,6 +101,28 @@ abundantClustersViewer <- function(AC,
 
 }
 
+=======
+    
+    y.max    <- ceiling(max(AC@th.mean, AC@result$mean))
+    y.breaks <- seq(0, y.max, by = 1)
+
+    plot <- plot +  ggrepel::geom_text_repel(data          = data.text, 
+                                             ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", label = "cluster"),
+                                             size          = 3,
+                                             box.padding   = grid::unit(0.35, "lines"),
+                                             point.padding = grid::unit(0.3, "lines")) +
+                    ggplot2::scale_fill_manual(values  = c("grey", "red")) +
+                    ggplot2::scale_x_continuous(limits = c(0, x.max), minor_breaks = NULL, breaks = x.breaks) + 
+                    ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
+                    ggplot2::xlab("-log10(p-value)") +
+                    ggplot2::ylab(ifelse(AC@use.percentages, "mean (% of cells)", "mean (# of cells)")) +                  
+                    ggplot2::theme_bw()
+    
+    return(plot)
+
+}
+
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @title Visualization of differentially enriched clusters
 #'
 #' @description 
@@ -92,7 +135,10 @@ abundantClustersViewer <- function(AC,
 #' @param fc.log2 a logical specifying if fold-change or log2(fold-change) is use 
 #' @param show.cluster.sizes a logical specifying if dot sizes are proportional to cell counts
 #' @param show.all_labels a logical specifying if all cluster labels must be show or just significant cluster
+<<<<<<< HEAD
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #'
 #' @return a 'ggplot' object
 #'  
@@ -102,8 +148,12 @@ abundantClustersViewer <- function(AC,
 volcanoViewer <- function(DEC                = NULL,
                           fc.log2            = TRUE,
                           show.cluster.sizes = TRUE,
+<<<<<<< HEAD
                           show.all_labels    = FALSE,
                           show.on_device     = TRUE) {
+=======
+                          show.all_labels    = FALSE){
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
     
     th.fc <- DEC@th.fc
     
@@ -143,12 +193,20 @@ volcanoViewer <- function(DEC                = NULL,
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1)
+<<<<<<< HEAD
     if (show.cluster.sizes){
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significant", size = "cluster.size"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1) +
                        ggplot2::scale_size(name = "number.of.cells")
+=======
+    if (show.cluster.sizes > 0){
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significant", size = "cluster.size"),
+                                           shape = 21,
+                                           colour = "black",
+                                           stroke = 1)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
     }else{
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significant"),
                                            shape = 21,
@@ -186,8 +244,12 @@ volcanoViewer <- function(DEC                = NULL,
 #' @param CC an object of class 'CC' (object returned by the 'computeCC()' function)
 #' @param show.cluster.sizes a logical specifying if dot sizes are proportional to cell counts
 #' @param show.all_labels a logical specifying if all cluster label must be show or just significant cluster
+<<<<<<< HEAD
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
 #'
+=======
+#' 
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @return a 'ggplot' object
 #' 
 #' @import ggplot2 ggrepel grid
@@ -195,8 +257,12 @@ volcanoViewer <- function(DEC                = NULL,
 #' @export
 correlatedClustersViewer <- function(CC,
                                      show.cluster.sizes = TRUE,
+<<<<<<< HEAD
                                      show.all_labels = FALSE,
                                      show.on_device = TRUE) {
+=======
+                                     show.all_labels    = FALSE){
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
     
     CC@result <- cbind (CC@result, cluster.size = CC@cluster.size)
     
@@ -217,12 +283,20 @@ correlatedClustersViewer <- function(CC,
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1)
+<<<<<<< HEAD
     if(show.cluster.sizes){
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significant", size = "cluster.size"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1) +
                        ggplot2::scale_size(name = "number.of.cells")
+=======
+    if(show.cluster.sizes > 0){
+        plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significant", size = "cluster.size"),
+                                           shape = 21,
+                                           colour = "black",
+                                           stroke = 1)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
     }else{
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significant"),
                                            shape = 21,
@@ -246,6 +320,7 @@ correlatedClustersViewer <- function(CC,
                     ggplot2::xlab(paste(CC@method, "coeficient of correlation")) +
                     ggplot2::ylab("-log10(p-value)") +
                     ggplot2::theme_bw()
+<<<<<<< HEAD
 
     if (show.on_device) {
         plot(plot)
@@ -255,6 +330,11 @@ correlatedClustersViewer <- function(CC,
 
 }
 
+=======
+    return(plot)
+}
+
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @title classificationViewer
 #'
 #' @description 
@@ -264,6 +344,7 @@ correlatedClustersViewer <- function(CC,
 #' Clusters of the same classe are shown using a circular graph. Circular graphs are sorted by the number of cluster in each class. 
 #'
 #' @param CCR an object of class 'CCR' (object returned by the 'classifyclusteringResults()' function)
+<<<<<<< HEAD
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
 #'
 #' @return a 'ggplot' object
@@ -274,10 +355,21 @@ correlatedClustersViewer <- function(CC,
 #' 
 classificationViewer <- function(CCR,
                                  show.on_device = TRUE) {
+=======
+#' 
+#' @return a 'ggplot' object
+#' 
+#' @import ggplot2 ggnetwork network gridExtra
+#' @importFrom network %s% set.vertex.attribute add.edges get.edge.attribute add.vertices %c% list.vertex.attributes set.edge.attribute is.directed set.vertex.attribute get.vertex.attribute delete.edges is.bipartite get.edges list.edge.attributes delete.vertices
+#' @export
+#' 
+classificationViewer <- function (CCR){
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 
     classes        <- CCR@classes
     classes        <- na.omit(classes)
     sorted.classes <- names(sort(table(classes$class), decreasing = TRUE))
+<<<<<<< HEAD
 
     colours <- grDevices::rainbow(n = length(sorted.classes), alpha = 0.5)
 
@@ -396,4 +488,108 @@ setMethod("plot", c("CCR", "missing"),
         function(x, ...){
             return(classificationViewer(x, ...))
         }
+=======
+
+    plots <- list()
+    
+    for (i in sorted.classes){
+
+        same.class <- classes[classes$class == i,]
+        
+        if (nrow(same.class) >= 2){
+            
+            x      <- c()
+            y      <- c()
+            
+            previous <- NA
+            for (j in 1:nrow(same.class)){
+                
+                x        <- c(x, j)
+                y        <- c(y, previous)
+                previous <- j
+                
+            }
+            y[1] <- previous
+
+#            temp <- base::tempfile()
+#            sink(temp) 
+            graph <- network::network.initialize(nrow(same.class), directed = FALSE)
+            network::set.vertex.attribute(x = graph, attrname = "cluster", value = as.character(same.class$cluster))
+            network::add.edges(x = graph, tail = x, head = y)
+            
+            graph <- ggnetwork::ggnetwork(graph, layout = "circle")
+#            sink()
+#            
+#            if (file.info(temp)$size > 0){
+#                cat(file = temp)
+#            }
+#            file.remove(temp) 
+            
+            index <- length(plots) + 1
+            plots[[index]] <- ggplot2::ggplot(data = graph, ggplot2::aes_string(x = "x", y = "y", xend = "xend", yend = "yend")) + 
+                              ggnetwork::geom_edges(linetype = "twodash", color = "grey90", size = 1, curvature = 0.1) +
+                              ggnetwork::geom_nodes(size = 6, fill = "grey", color = "black", shape = 21, stroke = 3) +
+                              ggnetwork::geom_nodetext(ggplot2::aes_string(label = "cluster"), size = 2) +
+                              ggnetwork::theme_blank()
+          }
+    }
+
+    if(length(plots) == 0){
+        plots <- list(grid::rectGrob())
+    }
+
+    ret <- gridExtra::grid.arrange(grobs = plots, top = paste0("ClassificationViewer - (based on ", CCR@type, " using ", CCR@method, " method)"))
+    
+    return(ret)
+
+}
+
+#' @title Graphical representation for some SPADEVizR objects
+#'
+#' @description 
+#' This function generates a graphical representation for 'AC', 'DEC', 'CC', 'PhenoProfiles' and 'EnrichmentProfiles' objects.
+#'
+#' @param x a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object
+#' @param y a supplementary parameter transmited respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions
+#' @param ... some supplementaries parameters transmited respectively to \code{\link[SPADEVizR]{abundantClustersViewer}}, \code{\link[SPADEVizR]{volcanoViewer}} or \code{\link[SPADEVizR]{correlatedClustersViewer}} functions
+#' 
+#' @return a 'ggplot' object
+#'  
+#' @name plot
+#' @rdname plot-methods
+setGeneric("plot", function(x, y=NULL, ...){ standardGeneric("plot") })
+
+
+#' @rdname plot-methods
+#' @export
+setMethod("plot", c("DEC", "missing"),
+        function(x, ...){
+            return(volcanoViewer(x, ...))
+        }
+)
+
+#' @rdname plot-methods
+#' @export
+setMethod("plot", c("AC", "missing"),
+        function(x, y, ...){
+            return(abundantClustersViewer(x, ...))
+        }
+)
+
+#' @rdname plot-methods
+#' @export
+setMethod("plot", c("CC", "missing"),
+        function(x, y, ...){
+            return(correlatedClustersViewer(x, ...))
+        }
+)
+
+
+#' @rdname plot-methods
+#' @export
+setMethod("plot", c("CCR", "missing"),
+        function(x, ...){
+            return(classificationViewer(x, ...))
+        }
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 )

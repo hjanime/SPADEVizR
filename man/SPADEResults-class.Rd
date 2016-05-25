@@ -14,9 +14,13 @@ In addition to the 'Result' object, the 'SPADEResults' object contains informati
 }
 \details{
 The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+<<<<<<< HEAD
 This object is returned by the 'importSPADEResult()' function. 
 
 The 'bounds' slot inihirited from 'Result' object is overriden by the 'SPADEResults' object. Indeed this slot contains in this case, the marker expression quantiles based on all cells in the place of extremun bounds.
+=======
+This object is returned by the 'importSPADEResult()' function.
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \section{Slots}{
 
@@ -28,8 +32,15 @@ The 'bounds' slot inihirited from 'Result' object is overriden by the 'SPADEResu
 \item{\code{marker.clustering}}{a logical vector specifying marker that have been used during the clustering precedure}
 
 \item{\code{flowset}}{a flowSet object containing the imported SPADE FCS file}
+<<<<<<< HEAD
 
 \item{\code{fcs.files}}{a character vector containing the absolute path of the original FCS files}
+=======
+
+\item{\code{fcs.files}}{a character vector containing the absolute path of the original FCS files}
+
+\item{\code{quantiles}}{a numeric data.frame containing the quantiles for each each markers of cluster}
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 
 \item{\code{graph}}{a igraph object containing the SPADE tree}
 

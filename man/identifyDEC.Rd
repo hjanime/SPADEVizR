@@ -11,7 +11,11 @@ identifyDEC(Results, conditions, use.percentages = TRUE, method = "t.test",
 \arguments{
 \item{Results}{a 'Results' or 'SPADEResults' object}
 
+<<<<<<< HEAD
 \item{conditions}{a named vector providing the correspondence between a sample name (in row names) and the condition of this sample : 1 or 2 to attribute this sample, respectively to the first or second condition}
+=======
+\item{conditions}{a named vector providing the correspondence between a sample name (in row names) and the condition of this sample : NA to exclude a sample from tests, 1 or 2 to attribute this sample, respectively to the first or second condition}
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 
 \item{use.percentages}{a logical specifying if the computations should be performed on percentage}
 

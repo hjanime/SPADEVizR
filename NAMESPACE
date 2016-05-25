@@ -6,11 +6,18 @@ export(biplotViewer)
 export(boxplotViewer)
 export(classificationViewer)
 export(classifyClusteringResults)
+<<<<<<< HEAD
+=======
+export(clusterViewer)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 export(correlatedClustersViewer)
 export(countViewer)
 export(distogramViewer)
 export(generateReport)
+<<<<<<< HEAD
 export(heatmapViewer)
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 export(identifyAC)
 export(identifyCC)
 export(identifyDEC)

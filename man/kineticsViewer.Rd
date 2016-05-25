@@ -10,13 +10,20 @@ kineticsViewer(Results, assignments, clusters = NULL,
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
+<<<<<<< HEAD
 \item{assignments}{a 2 column data.frame with the sample names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment}
+=======
+\item{assignments}{a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment}
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
 \item{use.percentages}{a logical specifying if the visualization should be performed on percentage}
+<<<<<<< HEAD
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a 'ggplot' object

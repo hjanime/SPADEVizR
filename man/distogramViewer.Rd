@@ -4,8 +4,12 @@
 \alias{distogramViewer}
 \title{Visualization of marker co-expressions}
 \usage{
+<<<<<<< HEAD
 distogramViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
   show.on_device = TRUE)
+=======
+distogramViewer(Results, clusters = NULL, samples = NULL, markers = NULL)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
@@ -15,8 +19,11 @@ distogramViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
 \item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
 
 \item{markers}{a character vector specifying the markers to be displayed}
+<<<<<<< HEAD
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a list of 'ggplot' objects

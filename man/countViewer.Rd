@@ -5,7 +5,11 @@
 \title{Visualization of cluster sizes}
 \usage{
 countViewer(Results, samples = NULL, clusters = NULL, min.cells = 0,
+<<<<<<< HEAD
   sort = TRUE, show.samples = TRUE, show.on_device = TRUE)
+=======
+  sort = TRUE, show.samples = TRUE)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
@@ -19,8 +23,11 @@ countViewer(Results, samples = NULL, clusters = NULL, min.cells = 0,
 \item{sort}{a logical specifying if clusters will be to be sorted (descending) based on the sum of all selected samples for each cluster}
 
 \item{show.samples}{a logical specifying if the number of cells for all selected samples will be displayed}
+<<<<<<< HEAD
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a 'ggplot' object

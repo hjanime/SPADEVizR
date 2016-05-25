@@ -14,8 +14,11 @@ setOldClass("igraph") # give access to igraph class
 #' 
 #' The 'marker.expressions' dataframe stores the marker median expressions for each cluster. This dataframe has in the first the sample names, in the second column the cluster names, and the maker median expressions in the others columns.
 #' 
+<<<<<<< HEAD
 #' The 'bounds' dataframe stores extremum bounds (minimum and maximun) marker expressions for each marker
 #'
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'importX()' function.
 #' 
@@ -24,8 +27,12 @@ setOldClass("igraph") # give access to igraph class
 #' @slot sample.names a character vector containing the sample names
 #' @slot marker.names a character vector containing the markers names
 #' @slot cluster.number a numeric specifying the number of cell clusters
+<<<<<<< HEAD
 #' @slot bounds a numeric data.frame containing the extremum bounds for each markers
 #'
+=======
+#' 
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @name Results-class
 #' @rdname Results-class
 #' @exportClass Results
@@ -72,22 +79,37 @@ Results <- setClass("Results",
 #' 
 #' @description 
 #' The 'SPADEResults' object is a S4 object containing cell clustering results obtained from SPADE.
+<<<<<<< HEAD
 #' 
 #' 
 #' This object inherits from the 'Result' object and stores the count matrix (i.e. the number of cells associated with each cluster of each sample) and the cell cluster phenotypes (i.e. the marker median expressions for each cluster). 
 #' In addition to the 'Result' object, the 'SPADEResults' object contains information about SPADE clustering results, such as the SPADE tree, the clustering makers and the FCS files.
 #' 
+=======
+#' 
+#' 
+#' This object inherits from the 'Result' object and stores the count matrix (i.e. the number of cells associated with each cluster of each sample) and the cell cluster phenotypes (i.e. the marker median expressions for each cluster). 
+#' In addition to the 'Result' object, the 'SPADEResults' object contains information about SPADE clustering results, such as the SPADE tree, the clustering makers and the FCS files.
+#' 
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @details 
 #' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'importSPADEResult()' function. 
 #'
+<<<<<<< HEAD
 #' The 'bounds' slot inihirited from 'Result' object is overriden by the 'SPADEResults' object. Indeed this slot contains in this case, the marker expression quantiles based on all cells in the place of extremun bounds.
 #'
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @slot use.raw.medians a logical specifying if the marker expressions correspond to the raw or transformed data
 #' @slot dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
 #' @slot marker.clustering a logical vector specifying marker that have been used during the clustering precedure
 #' @slot flowset a flowSet object containing the imported SPADE FCS file
 #' @slot fcs.files a character vector containing the absolute path of the original FCS files
+<<<<<<< HEAD
+=======
+#' @slot quantiles a numeric data.frame containing the quantiles for each each markers of cluster
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @slot graph a igraph object containing the SPADE tree
 #' @slot graph.layout a numeric matrix containing the layout of the SPADE tree
 #'  
@@ -161,6 +183,7 @@ SPADEResults <- setClass("SPADEResults",
 )
 
 #' @title Abundant Clusters (AC class) definition
+<<<<<<< HEAD
 #' 
 #' @description 
 #' The 'AC' object is a S4 object containing the information related to the abundant clusters in a given biological condition. 
@@ -172,6 +195,19 @@ SPADEResults <- setClass("SPADEResults",
 #' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'identifyAC()' function. 
 #' 
+=======
+#' 
+#' @description 
+#' The 'AC' object is a S4 object containing the information related to the abundant clusters in a given biological condition. 
+#' Moreover this object contains all parameters used in the statistical analysis.  
+#' 
+#' @details 
+#' A cluster is considered as a significant abundant cluster if its associated p-value and mean are below the specific thresholds 'th.pvalue' and 'th.mean'.  
+#' 
+#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' This object is returned by the 'identifyAC()' function. 
+#' 
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @slot sample.names a character vector containing the samples used to compute the abundant clusters
 #' @slot cluster.size a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster
 #' @slot use.percentages a logical specifying if computation was performed on percentage of cell abundance

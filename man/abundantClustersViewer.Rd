@@ -5,7 +5,11 @@
 \title{Visualization of abundant clusters}
 \usage{
 abundantClustersViewer(AC, show.cluster_sizes = TRUE,
+<<<<<<< HEAD
   show.all_labels = FALSE, show.on_device = TRUE)
+=======
+  show.all_labels = FALSE)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \arguments{
 \item{AC}{an object of class AC (object returned by the 'computeAC()' function)}
@@ -13,8 +17,11 @@ abundantClustersViewer(AC, show.cluster_sizes = TRUE,
 \item{show.cluster_sizes}{a logical specifying if dot sizes are proportional to cell counts}
 
 \item{show.all_labels}{a logical specifying if all cluster labels must be shown (or just significant clusters)}
+<<<<<<< HEAD
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a 'ggplot' object

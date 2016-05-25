@@ -5,7 +5,11 @@
 \title{Generate a report including SPADEVizR plots.}
 \usage{
 generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
+<<<<<<< HEAD
   "heatmap", "tree", "disto", "MDSclusters", "pheno"), clusters = NULL,
+=======
+  "pheno", "tree", "disto", "MDSclusters", "cluster"), clusters = NULL,
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
   markers = NULL, assignments = NULL, conditions = NULL,
   stat.objects = list(), width = 29.7, height = 21)
 }
@@ -24,7 +28,11 @@ generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
 
 \item{conditions}{conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude}
 
+<<<<<<< HEAD
 \item{stat.objects}{a vector of plotable objects to be displayed in the report (object of class 'DEC', 'AC', 'CC' or 'CCR' accepted)}
+=======
+\item{stat.objects}{a vector of stat.object to be displayed in the report (object of class 'DEC', 'AC', 'CC' or 'CCR')}
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 
 \item{width}{a numeric specifying the plot width in centimeter}
 
@@ -36,6 +44,7 @@ Available plots are :
 \itemize{
 \item {"count" (included by default):}{Display an representation showing the number of cells for each cluster}
 \item {"tree" (included by default):}{Display a tree representation showing combined SPADE trees}
+<<<<<<< HEAD
 \item {"heatmap" (included by default):}{Display an heatmap representation}
 \item {"boxplot":}{Display a boxplot representation. This plot required to provide the 'conditions' parameter}
 \item {"kinetics":}{Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter}
@@ -43,6 +52,15 @@ Available plots are :
 \item {"pheno" (included by default):}{Display a parallel coordinate representation showing for each cluster the marker median expression}
 \item {"MDSclusters" (included by default):}{Display the cluster similarities using MDS}
 \item {"MDSsamples":}{Display the samples similarities using MDS}
+=======
+\item {"pheno" (included by default):}{Display an heatmap representation}
+\item {"boxplot":}{Display a boxplot representation. This plot required to provide the 'conditions' parameter}
+\item {"kinetics":}{Display a kinetic representation for each cluster. This plot required to provide the 'assignments' parameter}
+\item {"stream":}{Display a streamgraphViewer representation showing the evolution of cells abundance}
+\item {"cluster" (included by default):}{Display a parallel coordinate representation showing for each cluster the marker median expression}
+\item {"MDSclusters" (included by default):}{Display the cluster similarities using MDS}
+\item {"MDSsamples":}{Display the samples similarities using MDS. This plot required to provide the 'assignments' parameter}
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 \item {"disto" (included by default):}{Display a distogram representation showing the marker co-expressions}
 \item {"kinetics_cluster":}{Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
 \item {"boxplot_cluster":}{Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}

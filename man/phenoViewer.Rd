@@ -2,14 +2,21 @@
 % Please edit documentation in R/04_viewers.R
 \name{phenoViewer}
 \alias{phenoViewer}
+<<<<<<< HEAD
 \title{Visualization of cluster phenotypes}
 \usage{
 phenoViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
   show.mean = "both", show.on_device = TRUE)
+=======
+\title{Visualization of all clusters phenotypes as an heatmap}
+\usage{
+phenoViewer(SPADEResults, num = 5)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \arguments{
 \item{Results}{a SPADEResults or Result object}
 
+<<<<<<< HEAD
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
 \item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
@@ -19,11 +26,15 @@ phenoViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
 \item{show.mean}{a character specifying if marker means expression should be displayed, possible value are among : "none", "only" or "both"}
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+=======
+\item{num}{a numeric value specifying the number of markers expression categories to use}
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a list of 'ggplot' objects
 }
 \description{
+<<<<<<< HEAD
 Generates a parallel coordinate plot representation showing for each cluster the marker median expressions.
 }
 \details{
@@ -37,5 +48,14 @@ The 'show.mean' parameter allows to visualize three kinds of information:
 }
 
 If the 'Results' parameter is a 'SPADEResults' object, markers used by SPADE to clustered cell populations are shown in bold.
+=======
+Generates an heatmap representation showing for all clusters the marker median expressions.
+}
+\details{
+For each marker, median expressions are discretized in severals categories corresponding to the heat intensities. 
+This number of categories is provided using 'num' parameter.
+
+By default the 'pheno.table' parameter is null and will be automatically compute using the 'computePhenoTable' function.
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 

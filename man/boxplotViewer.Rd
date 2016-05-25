@@ -5,12 +5,20 @@
 \title{Visualization of cluster enrichment profiles conditions}
 \usage{
 boxplotViewer(Results, conditions, clusters = NULL, use.percentages = TRUE,
+<<<<<<< HEAD
   show.legend = FALSE, show.violin = TRUE, show.on_device = TRUE)
+=======
+  show.legend = FALSE, show.violin = TRUE)
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
+<<<<<<< HEAD
 \item{conditions}{conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample}
+=======
+\item{conditions}{conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude}
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
@@ -19,8 +27,11 @@ boxplotViewer(Results, conditions, clusters = NULL, use.percentages = TRUE,
 \item{show.legend}{a logical specifying if the legend must be displayed}
 
 \item{show.violin}{a logical specifying if the count distribution must be displayed}
+<<<<<<< HEAD
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+=======
+>>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a 'ggplot' object
