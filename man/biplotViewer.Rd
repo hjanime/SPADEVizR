@@ -5,12 +5,8 @@
 \title{biplotViewer}
 \usage{
 biplotViewer(SPADEResults, x.marker, y.marker, samples = NULL,
-<<<<<<< HEAD
   clusters = NULL, sample.merge = FALSE, resample.ratio = NULL,
   show.on_device = TRUE)
-=======
-  clusters = NULL, sample.merge = FALSE, resample.ratio = NULL)
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \arguments{
 \item{SPADEResults}{a SPADEResults object (Results object is not accepted)}
@@ -26,11 +22,8 @@ biplotViewer(SPADEResults, x.marker, y.marker, samples = NULL,
 \item{sample.merge}{a logical specifying if the selected samples must be merged in a single biplot}
 
 \item{resample.ratio}{a numeric ratio (between 0 and 1) specifying the downsample ratio to show less dots (or NULL)}
-<<<<<<< HEAD
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
-=======
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a 'ggplot' object

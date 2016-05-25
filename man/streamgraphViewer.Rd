@@ -4,18 +4,12 @@
 \alias{streamgraphViewer}
 \title{Visualization of cluster abundance dynamics}
 \usage{
-<<<<<<< HEAD
 streamgraphViewer(Results, sample.order = NULL, clusters = NULL,
   use.relative = FALSE, show.on_device = TRUE)
-=======
-streamgraphViewer(Results, order = NULL, clusters = NULL,
-  use.relative = FALSE)
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
-<<<<<<< HEAD
 \item{sample.order}{a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples}
 
 \item{clusters}{a character vector containing the clusters names to be vizualised}
@@ -23,22 +17,12 @@ streamgraphViewer(Results, order = NULL, clusters = NULL,
 \item{use.relative}{a logical specifying if the visualization should be performed on relative abundance}
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
-=======
-\item{order}{a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples (NA to exclude a sample)}
-
-\item{clusters}{a character vector containing the clusters names to be vizualised (by default all clusters will be displayed)}
-
-\item{use.relative}{a logical specifying if the visualization should be performed on relative abundance}
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a 'ggplot' object
 }
 \description{
 Generate a streamgraph representation showing the dynamic evolution of the number of cells in clusters across samples.
-<<<<<<< HEAD
 The 'clusters' parameter is required.
-=======
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 

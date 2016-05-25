@@ -17,11 +17,8 @@ The 'cells.count' dataframe stores the number of cells associated with each clus
 
 The 'marker.expressions' dataframe stores the marker median expressions for each cluster. This dataframe has in the first the sample names, in the second column the cluster names, and the maker median expressions in the others columns.
 
-<<<<<<< HEAD
 The 'bounds' dataframe stores extremum bounds (minimum and maximun) marker expressions for each marker
 
-=======
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 This object is returned by the 'importX()' function.
 }
@@ -37,10 +34,7 @@ This object is returned by the 'importX()' function.
 \item{\code{marker.names}}{a character vector containing the markers names}
 
 \item{\code{cluster.number}}{a numeric specifying the number of cell clusters}
-<<<<<<< HEAD
 
 \item{\code{bounds}}{a numeric data.frame containing the extremum bounds for each markers}
-=======
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }}
 

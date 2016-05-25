@@ -4,30 +4,19 @@
 \alias{treeViewer}
 \title{Visualization of combined SPADE trees}
 \usage{
-<<<<<<< HEAD
 treeViewer(SPADEResults, samples = NULL, highlight = NULL, marker = NULL,
   show.on_device = TRUE)
-=======
-treeViewer(SPADEResults, samples = NULL, stat.object = NULL,
-  marker = NULL)
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \arguments{
 \item{SPADEResults}{a SPADEResults object (Results object is not accepted)}
 
 \item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
 
-<<<<<<< HEAD
 \item{highlight}{an AC, DEC or CC object to highligth identified significant clusters in the SPADE tree}
 
 \item{marker}{a character specifying the marker name to display}
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
-=======
-\item{stat.object}{an AC, DEC or CC object to highligth identified significant clusters in the SPADE tree}
-
-\item{marker}{a character specifying the marker name to display}
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 }
 \value{
 a list of 'ggplot' objects

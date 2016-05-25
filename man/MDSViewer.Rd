@@ -31,10 +31,6 @@ Generate a Multidimensional Scaling (MDS) representation showing the similaritie
 }
 \details{
 The 'space' parameter specifying if the cluster or sample similarities will be determined using MDS.
-<<<<<<< HEAD
-=======
-When the 'space' parameter is equal to 'sample', the 'assignements' parameter is required. 
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 Available method for the 'dist.method' parameter are : "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski"
 }
 

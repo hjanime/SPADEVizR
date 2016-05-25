@@ -4,11 +4,7 @@
 #' This function is used to identify the abundant clusters. That is to say clusters that have cell abundance statistically greater than a specific threshold.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
-<<<<<<< HEAD
 #' @param samples a named vector providing the correspondence between a sample name (in row names) and the logical value TRUE to test abundance for this sample
-=======
-#' @param samples a named vector providing the correspondence between a sample name (in row names) and the logical value TRUE to test abundance for this sample or FALSE otherwise
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character specifying the statistical method used to identify the abundant clusters. The parameter can take the values "t.test" or "wilcox.test"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
@@ -79,11 +75,7 @@ identifyAC <- function(Results,
 #' That is to say clusters that are differentially abundant between two biologicals conditions.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
-<<<<<<< HEAD
 #' @param conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample : 1 or 2 to attribute this sample, respectively to the first or second condition
-=======
-#' @param conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample : NA to exclude a sample from tests, 1 or 2 to attribute this sample, respectively to the first or second condition
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character specifying the name of the statistical test to use "t.test" or "wilcox.test"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
@@ -178,11 +170,7 @@ identifyDEC <- function(Results,
 #' That is to say clusters that correlate with a phenotypic variable.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
-<<<<<<< HEAD
 #' @param variable a numerical named vector providing the correspondence between a sample name (in rownames) and the specific numerical phenotype
-=======
-#' @param variable a numerical named vector providing the correspondence between a sample name (in rownames) and the specific phenotype or NA to ignore a sample
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character indicating the correlation method to use : "pearson", "spearman"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
@@ -254,11 +242,7 @@ identifyCC <- function(Results,
 #' @title Classification of clutering results based on the phenotype profiles or enrichment profiles
 #' 
 #' @description 
-<<<<<<< HEAD
 #' Classifies clusters based on their phenotype profiles (expressions of markers) or enrichment profiles (number of cells for each cluster).
-=======
-#' Classifies clusters based on their phenotype profiles or enrichment profiles.
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' 
 #' @details 
 #' The classification is done on cell abundances of each clusters and could be performed using 5 methods:
@@ -460,10 +444,6 @@ computeEigenCellClusters <- function(data,
         }
     }
 
-<<<<<<< HEAD
-=======
-    print(res)
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
     if(nrow(res) > 0){
         colnames(res) <- c("cluster", "class")
         classes.uniq <- unique(res[, "class"])

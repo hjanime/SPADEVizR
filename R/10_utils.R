@@ -19,13 +19,6 @@ computePhenoTable <- function(SPADEResults, num = 5){
     data        <- na.omit(data)# NA values are removed, generate a warning ?
     data.melted <- reshape2::melt(data, id.vars = c("sample", "cluster"))
     
-<<<<<<< HEAD
-=======
-    data        <- SPADEResults@marker.expressions[colnames(SPADEResults@marker.expressions)]
-    data        <- na.omit(data)# NA values are removed, generate a warning ?
-    data.melted <- reshape2::melt(data, id.vars = c("sample", "cluster"))
-    
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
     colnames(data.melted) <- c("sample", "cluster", "marker", "value")
     data.melted$marker    <- as.vector(data.melted$marker)
     means                 <- plyr::ddply(data.melted, c("cluster", "marker"), function(df){mean(df$value, na.rm = TRUE)}) #NA values are removed
@@ -35,13 +28,8 @@ computePhenoTable <- function(SPADEResults, num = 5){
         
         cluster <- means[i, "cluster"]
         value   <- means[i, "value"]
-<<<<<<< HEAD
         min     <- SPADEResults@bounds[1, means[i, "marker"]]
         max     <- SPADEResults@bounds[2, means[i, "marker"]]
-=======
-        min     <- SPADEResults@quantiles[1, means[i, "marker"]]
-        max     <- SPADEResults@quantiles[2, means[i, "marker"]]
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
         seq     <- seq(from = min, to = max, length.out = num)
         means[i,"value"] <- which.min(abs(value - seq))
         
@@ -49,10 +37,6 @@ computePhenoTable <- function(SPADEResults, num = 5){
     
     means <- means[gtools::mixedsort(colnames(means))]
 
-<<<<<<< HEAD
-=======
-    message("[END] - computing PhenoTable")
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
     return(means)
     
 }
@@ -97,12 +81,8 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
     
     centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable", y = "markers")) + 
                    ggplot2::geom_tile(ggplot2::aes_string(fill = "value"), colour = "black") +
-<<<<<<< HEAD
                    ggplot2::scale_fill_manual(values = colfunc(num), guide = ggplot2::guide_legend(title          = "relative.expression",
                                                                                                    direction      = "horizontal",
-=======
-                   ggplot2::scale_fill_manual(values = colfunc(num), guide = ggplot2::guide_legend(direction      = "horizontal",
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
                                                                                                    ncol           = 5,
                                                                                                    byrow          = TRUE,
                                                                                                    label.theme    = ggplot2::element_text(size = 10, angle = 0), 
@@ -128,7 +108,6 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
 }
 
 #' @title Internal - Build a dendrograms plot
-<<<<<<< HEAD
 #'
 #' @description 
 #' This function is used internally to generate a 'ggplot' dendrogram.
@@ -140,19 +119,6 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
 #' @param row a logical value specifying if the horizontal dendrogram must be computed
 #' @param col a logical value specifying if the vertical dendrogram must be computed
 #' 
-=======
-#'
-#' @description 
-#' This function is used internally to generate a 'ggplot' dendrogram.
-#'
-#' @details 
-#' It is to note that 'row' and 'col' are mutuality excluded (both cannot be both TRUE) with priority to row.
-#' 
-#' @param dist a numeric matrix containing distances between objects
-#' @param row a logical value specifying if the horizontal dendrogram must be computed
-#' @param col a logical value specifying if the vertical dendrogram must be computed
-#' 
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @return a 'ggplot' dendrogram object
 #'
 #' @import ggplot2 ggdendro grid
@@ -233,17 +199,10 @@ g_axis <- function(gplot, x.axis =! y.axis, y.axis =! x.axis ){
 }
 
 #' @title Internal - Generate an heatmap by assembling elements
-<<<<<<< HEAD
 #'
 #' @description 
 #' This function displays the heatmap elements build by 'ggheatmap()'
 #'
-=======
-#'
-#' @description 
-#' This function displays the heatmap elements build by 'ggheatmap()'
-#'
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
 #' @param list the list of ggplot object provided by ggheatmap
 #' @param col.width size of horizontal dendrogram
 #' @param row.width size of vertical dendrogram
@@ -276,7 +235,6 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
                                                          plot.margin      = grid::unit(c(0,0,0,0), "cm"),
                                                          panel.margin     = grid::unit(c(0,0,0,0), "cm"))
                                              
-<<<<<<< HEAD
     ret <- gridExtra::arrangeGrob(list$col, #1 on the layout
                                   legend, #2 on the layout
                                   center.without_legend, #3 on the layout
@@ -290,18 +248,3 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
 
     return(ret)
 }
-=======
-    ret <- gridExtra::grid.arrange(list$col, #1 on the layout
-                                   legend, #2 on the layout
-                                   center.without_legend, #3 on the layout
-                                   list$row, #4 on the layout
-                                   y.axis, #5 on the layout
-                                   x.axis, #6 on the layout
-                                   layout_matrix = layout,
-                                   widths        = grid::unit(c(col.width, 1-(2*col.width), col.width), "null"),
-                                   heights       = grid::unit(c(row.width, 1-(2*row.width), row.width), "null"),
-                                   top           = "Pheno Viewer")
-
-    return(ret)
-}
->>>>>>> 43ace80f59a8e1b7a65c6f88e2a134a1e91a2f23
