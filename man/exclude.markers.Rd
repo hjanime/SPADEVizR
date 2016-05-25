@@ -9,9 +9,9 @@ exclude.markers(data, exclude, colnames.FCS = NULL)
 \arguments{
 \item{data}{a numeric matrix or flowset}
 
-\item{exclude}{a character vector containing the cell markers to be excluded}
+\item{exclude}{a character vector containing the cell markers to be excluded (case intensive)}
 
-\item{colnames.FCS}{a character vector containing colnames if data is a FCS flowset}
+\item{colnames.FCS}{a character vector containing column names if data is a FCS flowset}
 }
 \value{
 a numeric matrix without the cell markers to exclude
@@ -20,6 +20,6 @@ a numeric matrix without the cell markers to exclude
 This function is used internally to remove one or several cell markers.
 }
 \details{
-xxx
+If the data parameter is a dataframe the colnames.FCS parameter is ignored but if the data parameter is a flowset, the colnames.FCS parameter is required.
 }
 

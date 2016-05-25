@@ -2,28 +2,31 @@
 % Please edit documentation in R/00_objects.R
 \docType{class}
 \name{PhenoProfiles-class}
-\alias{PhenoProfiles}
+\alias{CCR}
 \alias{PhenoProfiles-class}
-\title{PhenoProfiles class definition}
+\title{Classification of clustering Results (CCR class) definition}
 \description{
-PhenoProfiles is a S4 object containing the result of classifyPhenoProfiles() function.
-It classify clusters by their markers properties provided by the fonction computePhenoTable()
+The 'CR' is a S4 object containing the information related to the cluster classification based on theirs marker expressions.
+
+
+This object contains all information about the classification method and parameters used.
 }
 \details{
-PhenoProfiles is a printable and a plotable object calling the xxx() fonction
+Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
+ 
+The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'classifyPhenoProfiles()' function.
 }
 \section{Slots}{
 
 \describe{
+\item{\code{type}}{a character specifying if the classification is based on the phenotype profiles or on the enrichment profiles}
+
+\item{\code{class.number}}{a numeric value specifying the number of clusters}
+
 \item{\code{method}}{a character specifying the method used to classify cluster}
 
-\item{\code{method.parameter}}{a list of parameters used by the selected method}
-
-\item{\code{cluster.size}}{a numeric vector with the number of cell in each cluster (sum of all samples)}
-
-\item{\code{cluster.number}}{a numeric providing the number of cluster}
-
-\item{\code{class.number}}{a numeric providing the number of classes}
+\item{\code{method.parameter}}{a named list of parameters used by the classification method}
 
 \item{\code{classes}}{a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm}
 }}

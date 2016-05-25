@@ -2,29 +2,29 @@
 % Please edit documentation in R/03_plots.R
 \name{volcanoViewer}
 \alias{volcanoViewer}
-\title{Volcano Plot Viewer}
+\title{Visualization of differentially enriched clusters}
 \usage{
-volcanoViewer(DEC = NULL, fc.log2 = TRUE, cluster.size = TRUE,
-  all.label = FALSE)
+volcanoViewer(DEC = NULL, fc.log2 = TRUE, show.cluster.sizes = TRUE,
+  show.all_labels = FALSE, show.on_device = TRUE)
 }
 \arguments{
-\item{DEC}{object DEC provided by the function computeDEC}
+\item{DEC}{an object of class 'DEC' (object returned by the 'computeDEC()' function)}
 
-\item{fc.log2}{a logicial specifing if foldchange or log2(foldchange) is use}
+\item{fc.log2}{a logical specifying if fold-change or log2(fold-change) is use}
 
-\item{cluster.size}{a logicial specifing if points size are related to cell count or not (TRUE by default)}
+\item{show.cluster.sizes}{a logical specifying if dot sizes are proportional to cell counts}
 
-\item{all.label}{a logicial specifing if all cluster labels must be show or just significant cluster}
+\item{show.all_labels}{a logical specifying if all cluster labels must be show or just significant cluster}
 
-\item{SPADEResults}{the SPADEViewer result object}
+\item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
 }
 \value{
-a ggplot object
+a 'ggplot' object
 }
 \description{
-Generate a Volcano plot representation based on Differentially Enriched Clusters (DEC) of The SPADE result object.
+Generates a Volcano plot representation showing for each cluster
 }
 \details{
-xxx
+By default, only significant differentially enriched clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.
 }
 

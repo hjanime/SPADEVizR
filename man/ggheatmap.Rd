@@ -2,25 +2,24 @@
 % Please edit documentation in R/10_utils.R
 \name{ggheatmap}
 \alias{ggheatmap}
-\title{title Internal - Create a list of elements allowing to build a heatmap}
+\title{Internal - Create a list of elements allowing to build a heatmap}
 \usage{
-ggheatmap(mat, dendrogram.type = "rectangle", num = 5,
-  dists = c("eucledian", "eucledian"))
+ggheatmap(matrix, dendrogram.type = "rectangle", num = 5,
+  clustering.markers = NULL)
 }
 \arguments{
-\item{mat}{a matrix}
+\item{matrix}{a numeric matrix containing the markers expression categories}
 
-\item{dendrogram.type}{a caracter spycifing the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)}
+\item{dendrogram.type}{a character specifying the look of dendrograms ("rectangle" or "triangle", "rectangle" by default)}
 
-\item{num}{xxx}
+\item{num}{a numeric value specifying the number of markers expression categories}
+
+\item{clustering.markers}{a character vector of clustering markers}
 }
 \value{
 a list of 3 plots (top dendrogram, right dendrogram, heatmap)
 }
 \description{
-Use the function ggheatmap.plot to display this heatmap
-}
-\details{
-
+This function is used internally to build the element needed for an heatmap
 }
 

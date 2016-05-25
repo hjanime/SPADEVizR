@@ -4,13 +4,11 @@
 \name{names}
 \alias{names}
 \alias{names,AC-method}
-\alias{names,CC-method}
+\alias{names,CCR-method}
 \alias{names,DEC-method}
-\alias{names,EnrichmentProfiles-method}
-\alias{names,PhenoProfiles-method}
 \alias{names,Results-method}
 \alias{names,SPADEResults-method}
-\title{Results object's name}
+\title{Definition of class names}
 \usage{
 \S4method{names}{Results}(x)
 
@@ -20,55 +18,15 @@
 
 \S4method{names}{DEC}(x)
 
-\S4method{names}{CC}(x)
-
-\S4method{names}{PhenoProfiles}(x)
-
-\S4method{names}{EnrichmentProfiles}(x)
+\S4method{names}{CCR}(x)
 }
 \arguments{
-\item{x}{a Results object}
-
-\item{x}{a SPADEResults object}
-
-\item{x}{a AC object}
-
-\item{x}{a DEC object}
-
-\item{x}{a CC object}
-
-\item{x}{a PhenoProfiles object}
-
-\item{x}{a EnrichmentProfiles object}
+\item{x}{a SPADEVizR object}
 }
 \value{
-none
-
-none
-
-none
-
-none
-
-none
-
-none
-
-none
+a character providing the name of the object
 }
 \description{
-Named a Results object.
-
-Named a SPADEResults object.
-
-Named a AC object.
-
-Named a DEC object.
-
-Named a CC object.
-
-Named a PhenoProfiles object.
-
-Named a EnrichmentProfiles object.
+Provides the name of each SPADEVizR object
 }
 

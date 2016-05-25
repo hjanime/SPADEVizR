@@ -2,20 +2,17 @@
 % Please edit documentation in R/10_utils.R
 \name{g_legend}
 \alias{g_legend}
-\title{title Internal - g_legend}
+\title{Internal - Extraction of ggplot legend}
 \usage{
-g_legend(a.gplot)
+g_legend(gplot)
 }
 \arguments{
-\item{a.gplot}{a ggplot2 plot}
+\item{gplot}{a 'ggplot' plot}
 }
 \value{
-a ggplot2 legend
+a 'ggplot' legend object
 }
 \description{
-Extract legend from a plot
-}
-\details{
-xxx
+This function is used internally to extract the legend from a 'ggplot' object.
 }
 

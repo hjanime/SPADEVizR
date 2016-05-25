@@ -6,26 +6,33 @@
 \alias{SPADEResults-class}
 \title{SPADEResults class definition}
 \description{
-SPADEResults is a S4 object containing SPADE results.
+The 'SPADEResults' object is a S4 object containing cell clustering results obtained from SPADE.
+
+
+This object inherits from the 'Result' object and stores the count matrix (i.e. the number of cells associated with each cluster of each sample) and the cell cluster phenotypes (i.e. the marker median expressions for each cluster). 
+In addition to the 'Result' object, the 'SPADEResults' object contains information about SPADE clustering results, such as the SPADE tree, the clustering makers and the FCS files.
 }
 \details{
-SPADEResults extend Results object adding specific SPADE data. SPADEResults object is the central element used by the most of SPADEViR functions, it aims to store the SPADE data comming from the importSPADEResults() function.
+The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'importSPADEResult()' function. 
+
+The 'bounds' slot inihirited from 'Result' object is overriden by the 'SPADEResults' object. Indeed this slot contains in this case, the marker expression quantiles based on all cells in the place of extremun bounds.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{use.raw.medians}}{a logical specifying if the marker expressions are obtained from "raw_median" or "transformed" columns}
+\item{\code{use.raw.medians}}{a logical specifying if the marker expressions correspond to the raw or transformed data}
 
-\item{\code{dictionary}}{a two column data.frame providing the correspondence between the original marker names (first column) and the new marker names (second column)}
+\item{\code{dictionary}}{a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)}
 
 \item{\code{marker.clustering}}{a logical vector specifying marker that have been used during the clustering precedure}
 
-\item{\code{fcs.files}}{a character vector containing the absolute path of the original FCS files}
+\item{\code{flowset}}{a flowSet object containing the imported SPADE FCS file}
 
-\item{\code{quantiles}}{a numerical matrix containing the quantiles for each each markers of cluster}
+\item{\code{fcs.files}}{a character vector containing the absolute path of the original FCS files}
 
 \item{\code{graph}}{a igraph object containing the SPADE tree}
 
-\item{\code{graph.layout}}{a numerical matrix containing the layout of the SPADE tree}
+\item{\code{graph.layout}}{a numeric matrix containing the layout of the SPADE tree}
 }}
 

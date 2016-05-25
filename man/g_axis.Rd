@@ -2,24 +2,24 @@
 % Please edit documentation in R/10_utils.R
 \name{g_axis}
 \alias{g_axis}
-\title{title Internal - g_axis}
+\title{Internal - Extraction of ggplot axes}
 \usage{
-g_axis(a.gplot, x = !y, y = !x)
+g_axis(gplot, x.axis = !y.axis, y.axis = !x.axis)
 }
 \arguments{
-\item{a.gplot}{a ggplot2 plot}
+\item{gplot}{a 'ggplot' plot}
 
-\item{x}{a logical, TRUE to extract x axis}
+\item{x.axis}{a logical value specifying if the x-axis must be extract}
 
-\item{y}{a logical, TRUE to extract y axis}
+\item{y.axis}{a logical value specifying if the y-axis must be extract}
 }
 \value{
-a ggplot2 axis
+a 'ggplot' axis object
 }
 \description{
-Extract axis from a plot
+This function is used internally to extract axes from a 'ggplot' objet.
 }
 \details{
-x and y are mutuality excluded (both can't be TRUE) with priority to x
+It is to note that 'x' and 'y' are mutuality excluded (both cannot be both TRUE) with priority to 'x'.
 }
 

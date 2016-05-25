@@ -4,34 +4,38 @@
 \name{DEC-class}
 \alias{DEC}
 \alias{DEC-class}
-\title{Differentially Enriched Clusters (DEC) class definition}
+\title{Differentially Enriched Clusters (DEC class) definition}
 \description{
-DEC is a S4 object containing the result of computeDEC function.
+The 'DEC' object is a S4 object containing the information related to the differentially enriched clusters between two given biological conditions. 
+Moreover this object contains all parameters used in the statistical analysis.
 }
 \details{
-DEC is a printable and a plotable object calling the volcanoViewer() fonction.
+A cluster is considered as a differentially enriched cluster if its associated p-value and fold-change are below the specific thresholds 'th.pvalue' and 'th.fc'.  
+
+The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'identifyDEC()' function.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{sample.cond1}}{a character specifying the names of the samples corresponding the first condition}
+\item{\code{sample.cond1}}{a character specifying the names of the samples of the first biological condition}
 
-\item{\code{sample.cond2}}{a character specifying the names of the samples corresponding the second condition}
+\item{\code{sample.cond2}}{a character specifying the names of the samples of the second biological condition}
 
-\item{\code{cluster.size}}{a numeric vector containing number of cells ( sum of all samples ) for each cluster}
+\item{\code{cluster.size}}{a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster}
 
-\item{\code{use.percentages}}{a logical specifying if computations was performed on percentage of cell abondance}
+\item{\code{use.percentages}}{a logical specifying if computation was performed on percentage of cell abundance}
 
 \item{\code{method}}{a character containing the name of the statistical test used to identify the DEC}
 
-\item{\code{method.adjust}}{a character containing the name of the multiple correction method used}
+\item{\code{method.adjust}}{a character containing the name of the multiple correction method used (if any)}
 
-\item{\code{method.paired}}{a logical indicating if the test has beeen performed in a paired manner}
+\item{\code{method.paired}}{a logical indicating if the statistical test have been performed in a paired manner}
 
-\item{\code{th.pvalue}}{a numeric vector with pvalue threshold}
+\item{\code{th.fc}}{a numeric value specifying the fold-change threshold}
 
-\item{\code{th.fc}}{a numeric vector with foldchange threshold}
+\item{\code{th.pvalue}}{a numeric value specifying the p-value threshold}
 
-\item{\code{result}}{a dataframe with clusters in row. The first and second colunm contain the mean and the standard deviation for the first condition, the third and fourth the mean and standard deviation for the second condition, the sixth the fold-change and the seventh the pvalue and finnaly the significance according to pvalue threshold and fold change threshold}
+\item{\code{result}}{a data.frame containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially enriched.}
 }}
 

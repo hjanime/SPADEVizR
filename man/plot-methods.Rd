@@ -3,35 +3,33 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,AC-method}
-\alias{plot,CC-method}
-\alias{plot,DEC-method}
-\alias{plot,EnrichmentProfiles-method}
-\alias{plot,PhenoProfiles-method}
-\title{xxx}
+\alias{plot,AC,missing-method}
+\alias{plot,CC,missing-method}
+\alias{plot,CCR,missing-method}
+\alias{plot,DEC,missing-method}
+\title{Graphical representation for some SPADEVizR objects}
 \usage{
-plot(x, ...)
+plot(x, y = NULL, ...)
 
-\S4method{plot}{DEC}(x, ...)
+\S4method{plot}{DEC,missing}(x, y = NULL, ...)
 
-\S4method{plot}{AC}(x, ...)
+\S4method{plot}{AC,missing}(x, y = NULL, ...)
 
-\S4method{plot}{CC}(x, ...)
+\S4method{plot}{CC,missing}(x, y = NULL, ...)
 
-\S4method{plot}{PhenoProfiles}(x, ...)
-
-\S4method{plot}{EnrichmentProfiles}(x, ...)
+\S4method{plot}{CCR,missing}(x, y = NULL, ...)
 }
 \arguments{
-\item{xxx}{}
+\item{x}{a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object}
+
+\item{y}{a supplementary parameter transmited respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions}
+
+\item{...}{some supplementaries parameters transmited respectively to \code{\link[SPADEVizR]{abundantClustersViewer}}, \code{\link[SPADEVizR]{volcanoViewer}} or \code{\link[SPADEVizR]{correlatedClustersViewer}} functions}
 }
 \value{
-xxx
+a 'ggplot' object
 }
 \description{
-xxx
-}
-\details{
-xxx
+This function generates a graphical representation for 'AC', 'DEC', 'CC', 'PhenoProfiles' and 'EnrichmentProfiles' objects.
 }
 

@@ -5,12 +5,11 @@
 \alias{show}
 \alias{show,AC-method}
 \alias{show,CC-method}
+\alias{show,CCR-method}
 \alias{show,DEC-method}
-\alias{show,EnrichmentProfiles-method}
-\alias{show,PhenoProfiles-method}
 \alias{show,Results-method}
 \alias{show,SPADEResults-method}
-\title{Textual preview for Results objects}
+\title{Textual previews for SPADEVizR objects}
 \usage{
 \S4method{show}{Results}(object)
 
@@ -22,53 +21,15 @@
 
 \S4method{show}{CC}(object)
 
-\S4method{show}{PhenoProfiles}(object)
-
-\S4method{show}{EnrichmentProfiles}(object)
+\S4method{show}{CCR}(object)
 }
 \arguments{
-\item{x}{a Results object}
-
-\item{x}{a SPADEResults object}
-
-\item{x}{a Abundant Clusters (AC) object}
-
-\item{x}{a Differentially Enriched Clusters (DEC) object}
-
-\item{x}{a Correlated Clusters (CC) object}
-
-\item{x}{a PhenoProfiles object}
-
-\item{x}{a EnrichmentProfiles object}
+\item{object}{a SPADEVizR object}
 }
 \value{
 none
-
-none
-
-none
-
-none
-
-none
-
-none
-
-none
 }
 \description{
-Show a preview a Results object.
-
-Show a preview a SPADEResults object.
-
-Show a preview a for Abundant Clusters (AC) object
-
-Show a preview a for Differentially Enriched Clusters (DEC) object
-
-Show a preview a Correlated Clusters (CC) object.
-
-Show a preview a PhenoProfiles object.
-
-Show a preview a EnrichmentProfiles object.
+Show a previews for a SPADEVizR object.
 }
 

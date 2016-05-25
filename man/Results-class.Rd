@@ -6,22 +6,35 @@
 \alias{Results-class}
 \title{Results class definition}
 \description{
-Results is a S4 object containing cytometric results.
+The Results object is a S4 object containing cell clustering results obtained from various automatic gating algorithms. 
+
+
+This object mainly stores the count matrix (i.e. the number of cells associated with each cluster of each sample) and the cell cluster phenotypes (i.e. the marker median expressions for each cluster). 
+It is to note that the Results object is a super class of the SPADEResult object.
 }
 \details{
-Results is the core (super classe) of SPADEResults object but allow importation of data comming from other software than SPADE. It aims to store the data comming from the importResults() function.
+The 'cells.count' dataframe stores the number of cells associated with each cluster of each sample. This dataframe has in row the clusters and in column the samples.
+
+The 'marker.expressions' dataframe stores the marker median expressions for each cluster. This dataframe has in the first the sample names, in the second column the cluster names, and the maker median expressions in the others columns.
+
+The 'bounds' dataframe stores extremum bounds (minimum and maximun) marker expressions for each marker
+
+The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+This object is returned by the 'importX()' function.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{marker.expressions}}{a dataframe containing the number of cells for each cluster of each sample}
+\item{\code{cells.count}}{a dataframe containing the number of cells for each cluster of each sample}
 
-\item{\code{cells.count}}{a numerical dataframe containing marker median expressions for each cluster of each sample}
+\item{\code{marker.expressions}}{a numerical dataframe containing marker median expressions for each cluster of each sample}
 
 \item{\code{sample.names}}{a character vector containing the sample names}
 
 \item{\code{marker.names}}{a character vector containing the markers names}
 
-\item{\code{cluster.number}}{a numeric specyfing the number of clusters}
+\item{\code{cluster.number}}{a numeric specifying the number of cell clusters}
+
+\item{\code{bounds}}{a numeric data.frame containing the extremum bounds for each markers}
 }}
 
