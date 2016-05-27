@@ -10,7 +10,7 @@ identifyAC(Results, samples, use.percentages = TRUE, method = "t.test",
 \arguments{
 \item{Results}{a 'Results' or 'SPADEResults' object}
 
-\item{samples}{a named vector providing the correspondence between a sample name (in row names) and the logical value TRUE to test abundance for this sample}
+\item{samples}{a character vector providing the sample names to used}
 
 \item{use.percentages}{a logical specifying if the computations should be performed on percentage}
 

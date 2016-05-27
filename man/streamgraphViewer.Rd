@@ -4,13 +4,13 @@
 \alias{streamgraphViewer}
 \title{Visualization of cluster abundance dynamics}
 \usage{
-streamgraphViewer(Results, sample.order = NULL, clusters = NULL,
+streamgraphViewer(Results, samples = NULL, clusters = NULL,
   use.relative = FALSE, show.on_device = TRUE)
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
-\item{sample.order}{a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples}
+\item{samples}{a character vector providing the sample names to used (all samples by default)}
 
 \item{clusters}{a character vector containing the clusters names to be vizualised}
 
@@ -24,5 +24,8 @@ a 'ggplot' object
 \description{
 Generate a streamgraph representation showing the dynamic evolution of the number of cells in clusters across samples.
 The 'clusters' parameter is required.
+}
+\details{
+The order of samples in the 'samples' vector corespond to the order where the sample will be displayed
 }
 

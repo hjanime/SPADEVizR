@@ -10,7 +10,7 @@ countViewer(Results, samples = NULL, clusters = NULL, min.cells = 0,
 \arguments{
 \item{Results}{a SPADEResults or Results object}
 
-\item{samples}{a named vector providing the correspondence between samples name (in row-names) and the logical value TRUE to use these samples (all samples by default)}
+\item{samples}{a character vector providing the sample names to used (all samples by default)}
 
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 

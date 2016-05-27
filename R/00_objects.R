@@ -401,7 +401,7 @@ CC <- setClass("CC",
 #' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
 #'  
 #' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-#' This object is returned by the 'classifyPhenoProfiles()' function. 
+#' This object is returned by the 'classifyClusteringResults()' function. 
 #'
 #' @slot type a character specifying if the classification is based on the phenotype profiles or on the enrichment profiles
 #' @slot class.number a numeric value specifying the number of clusters
@@ -409,9 +409,9 @@ CC <- setClass("CC",
 #' @slot method.parameter a named list of parameters used by the classification method
 #' @slot classes a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
 #' 
-#' @name PhenoProfiles-class
-#' @rdname PhenoProfiles-class
-#' @exportClass PhenoProfiles
+#' @name CCR-class
+#' @rdname CCR-class
+#' @exportClass CCR
 CCR <- setClass("CCR",
                 slots = c(type             = "character", 
                           class.number     = "numeric",

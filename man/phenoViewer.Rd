@@ -12,7 +12,7 @@ phenoViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
 
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
-\item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
+\item{samples}{a character vector providing the sample names to used (all samples by default)}
 
 \item{markers}{a character vector specifying the markers to be displayed}
 

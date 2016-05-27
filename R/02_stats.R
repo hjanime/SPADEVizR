@@ -4,7 +4,7 @@
 #' This function is used to identify the abundant clusters. That is to say clusters that have cell abundance statistically greater than a specific threshold.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
-#' @param samples a named vector providing the correspondence between a sample name (in row names) and the logical value TRUE to test abundance for this sample
+#' @param samples a character vector providing the sample names to used
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character specifying the statistical method used to identify the abundant clusters. The parameter can take the values "t.test" or "wilcox.test"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
@@ -22,9 +22,9 @@ identifyAC <- function(Results,
                        th.pvalue       = 0.05,
                        th.mean         = 0){
     
-    message("[START] - computing ACs")
+    message("[START] - Identification of Abundant Clusters")
     
-    data         <- Results@cells.count[, names(samples[samples == TRUE]), drop = FALSE]
+    data         <- Results@cells.count[, samples, drop = FALSE]
     cluster.size <- apply(data, 1, sum)
 
     if(use.percentages){
@@ -33,10 +33,7 @@ identifyAC <- function(Results,
     }else{
         data   <- data
     }
-    
-    message("Samples used :")
-    message(paste0(colnames(data), "\n"))
-    
+        
     pv <- apply(data, 1, function(x){
                    return(do.call(method, args = list(x = x, alternative = "greater", mu = th.mean))$p.value)
                })
@@ -62,8 +59,9 @@ identifyAC <- function(Results,
                        th.mean         = th.mean,
                        th.pvalue       = th.pvalue,
                        result          = result)
-    
-    message("[END] - computing ACs")
+
+    print(AC)
+    message("[END] - Identification of Abundant Clusters")
     
     return(AC)
 }
@@ -75,7 +73,8 @@ identifyAC <- function(Results,
 #' That is to say clusters that are differentially abundant between two biologicals conditions.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
-#' @param conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample : 1 or 2 to attribute this sample, respectively to the first or second condition
+#' @param condition1 a character vector providing the sample names defined as the first condition
+#' @param condition2 a character vector providing the sample names defined as the second condition
 #' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param method a character specifying the name of the statistical test to use "t.test" or "wilcox.test"
 #' @param method.adjust a character specifying if the p-values should be corrected using multiple correction methods among : "holm", "hochberg", "hommel", "bonferroni", "BH", "BY" and "fdr" (from 'stats::p.adjust' method) 
@@ -87,7 +86,8 @@ identifyAC <- function(Results,
 #' 
 #' @export
 identifyDEC <- function(Results,
-                        conditions,
+                        condition1,
+                        condition2,
                         use.percentages = TRUE,
                         method          = "t.test",
                         method.adjust   = NULL,
@@ -95,11 +95,11 @@ identifyDEC <- function(Results,
                         th.pvalue       = 0.05,
                         th.fc           = 1){
     
-    message("[START] - computing DECs\n")
+    message("[START] - Identification of Differentially Enriched Clusters\n")
 
     data         <- Results@cells.count
-    data.cond1   <- data[,names(conditions[(!is.na(conditions) & conditions == 1)]), drop = FALSE]
-    data.cond2   <- data[,names(conditions[(!is.na(conditions) & conditions == 2)]), drop = FALSE]
+    data.cond1   <- data[, condition1, drop = FALSE]
+    data.cond2   <- data[, condition2, drop = FALSE]
     data         <- cbind(data.cond1, data.cond2)
     cluster.size <- apply(data, 1, sum)
     
@@ -109,11 +109,6 @@ identifyDEC <- function(Results,
     }else{
         data   <- data
     }
-    
-    message("cond1:")
-    message(paste0(colnames(data.cond1), "\n"))
-    message("cond2:")
-    message(paste0(colnames(data.cond2), "\n"))
     
     s1 <- ncol(data.cond1)
     
@@ -157,8 +152,9 @@ identifyDEC <- function(Results,
                         th.fc           = th.fc,
                         th.pvalue       = th.pvalue,
                         result          = result)
-    
-    message("[END] - computing DECs")
+    print(DEC)
+
+    message("[END] - Identification of Differentially Enriched Clusters")
     
     return(DEC)
 }
@@ -188,7 +184,7 @@ identifyCC <- function(Results,
                        th.pvalue       = 0.05,
                        th.correlation  = 0.75){
     
-    message("[START] - computing CCs")
+    message("[START] - Identification of Correlated Clusters")
     
     cells.count  <- Results@cells.count
     variable     <- na.omit(variable) 
@@ -233,8 +229,10 @@ identifyCC <- function(Results,
                        th.correlation  = th.correlation,
                        th.pvalue       = th.pvalue,
                        result          = result)
-    
-    message("[END] - computing CCs")
+
+    print(CC)
+
+    message("[END] - Identification of Correlated Clusters")
     
     return(CC)
 }

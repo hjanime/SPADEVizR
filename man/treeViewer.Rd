@@ -10,7 +10,7 @@ treeViewer(SPADEResults, samples = NULL, highlight = NULL, marker = NULL,
 \arguments{
 \item{SPADEResults}{a SPADEResults object (Results object is not accepted)}
 
-\item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
+\item{samples}{a character vector providing the sample names to used (all samples by default)}
 
 \item{highlight}{an AC, DEC or CC object to highligth identified significant clusters in the SPADE tree}
 

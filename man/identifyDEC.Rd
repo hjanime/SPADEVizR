@@ -4,14 +4,16 @@
 \alias{identifyDEC}
 \title{Identification of the Differentially Enriched Clusters}
 \usage{
-identifyDEC(Results, conditions, use.percentages = TRUE, method = "t.test",
-  method.adjust = NULL, method.paired = FALSE, th.pvalue = 0.05,
-  th.fc = 1)
+identifyDEC(Results, condition1, condition2, use.percentages = TRUE,
+  method = "t.test", method.adjust = NULL, method.paired = FALSE,
+  th.pvalue = 0.05, th.fc = 1)
 }
 \arguments{
 \item{Results}{a 'Results' or 'SPADEResults' object}
 
-\item{conditions}{a named vector providing the correspondence between a sample name (in row names) and the condition of this sample : 1 or 2 to attribute this sample, respectively to the first or second condition}
+\item{condition1}{a character vector providing the sample names defined as the first condition}
+
+\item{condition2}{a character vector providing the sample names defined as the second condition}
 
 \item{use.percentages}{a logical specifying if the computations should be performed on percentage}
 

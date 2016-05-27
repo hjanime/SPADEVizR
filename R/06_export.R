@@ -35,6 +35,7 @@ setMethod("export",c("Results"),
                 cat(file = filename, "#quantiles below :\n", append = TRUE)
                 write.table(object@quantiles, file = filename, append = TRUE, sep = "\t", col.names = NA)
             }
+
         }
 )
 

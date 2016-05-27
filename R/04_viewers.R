@@ -4,7 +4,7 @@
 #' Generate a two dimensional vizualisation showing the number of cells (sum of selected samples) of each cluster.
 #' 
 #' @param Results a SPADEResults or Results object
-#' @param samples a named vector providing the correspondence between samples name (in row-names) and the logical value TRUE to use these samples (all samples by default)
+#' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param clusters a character vector containing the clusters names to be visualized (by default all clusters will be displayed)
 #' @param min.cells a numeric specifying the minimum number of cell (sum of all selected samples) to display a cluster
 #' @param sort a logical specifying if clusters will be to be sorted (descending) based on the sum of all selected samples for each cluster
@@ -27,7 +27,7 @@ countViewer <- function(Results,
     if(is.null(samples)){ 
         data <- Results@cells.count
     }else{
-        data  <- Results@cells.count[, names(samples[ samples == TRUE]), drop = FALSE]
+        data  <- Results@cells.count[, samples, drop = FALSE]
     }
     
     if(!is.null(clusters)){
@@ -94,7 +94,7 @@ countViewer <- function(Results,
 #' If the 'marker' parameter is provided, the nodes are colored according to mean expression for the selected marker using selected samples.
 #' 
 #' @param SPADEResults a SPADEResults object (Results object is not accepted)
-#' @param samples a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)
+#' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param marker a character specifying the marker name to display
 #' @param highlight an AC, DEC or CC object to highligth identified significant clusters in the SPADE tree
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
@@ -117,7 +117,7 @@ treeViewer <- function(SPADEResults,
     data   <- SPADEResults@cells.count
     
     if(!is.null(samples)){ 
-        data   <- data[ , names(samples[ samples == TRUE ]), drop = FALSE]
+        data   <- data[ , samples, drop = FALSE]
     }else{
         data   <- data
     }
@@ -130,8 +130,8 @@ treeViewer <- function(SPADEResults,
                               size = vertex.size)
     
     if (!is.null(marker)){
-        if(!is.null(samples)){ 
-            expr   <- subset(SPADEResults@marker.expressions, sample %in% names(samples[ samples == TRUE]), drop = FALSE)
+        if(!is.null(samples)){
+            expr   <- subset(SPADEResults@marker.expressions, sample %in% samples, drop = FALSE)
         }else{
             expr   <- SPADEResults@marker.expressions
         }
@@ -476,8 +476,11 @@ globalVariables(c("cluster", "sum.of.samples", "ymax", "ymin", "value", "ybase")
 #' Generate a streamgraph representation showing the dynamic evolution of the number of cells in clusters across samples.
 #' The 'clusters' parameter is required.
 #'
+#' @details
+#' The order of samples in the 'samples' vector corespond to the order where the sample will be displayed
+#'
 #' @param Results a SPADEResults or Results object
-#' @param sample.order a named vector providing the correspondence between a sample name (in rownames) and an integer ordering samples
+#' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param clusters a character vector containing the clusters names to be vizualised
 #' @param use.relative a logical specifying if the visualization should be performed on relative abundance
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
@@ -488,15 +491,15 @@ globalVariables(c("cluster", "sum.of.samples", "ymax", "ymin", "value", "ybase")
 #' 
 #' @export
 streamgraphViewer <- function(Results,
-                              sample.order   = NULL,
+                              samples        = NULL,
                               clusters       = NULL,
                               use.relative   = FALSE,
                               show.on_device = TRUE) {
     
     data <- Results@cells.count
     
-    if (!is.null(sample.order)) {
-        data <- data[, names(sample.order[!is.na(sample.order)]), drop = FALSE]
+    if (!is.null(samples)) {
+        data <- data[, samples, drop = FALSE]
     }
     
     if(is.null(clusters)){
@@ -580,7 +583,7 @@ streamgraphViewer <- function(Results,
 #'
 #' @param Results a SPADEResults or Result object
 #' @param clusters a character vector containing the clusters names to be visualized (by default all clusters will be displayed)
-#' @param samples a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)
+#' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param markers a character vector specifying the markers to be displayed 
 #' @param show.mean a character specifying if marker means expression should be displayed, possible value are among : "none", "only" or "both"
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
@@ -605,8 +608,8 @@ phenoViewer <- function(Results,
         data        <- Results@marker.expressions
         cells.count <- Results@cells.count
     }else{
-        data        <- subset(Results@marker.expressions, sample %in% names(samples[ samples == TRUE]), drop = FALSE)
-        cells.count <- Results@cells.count[, c(names(samples[ samples == TRUE] )), drop = FALSE]
+        data        <- subset(Results@marker.expressions, sample %in% samples, drop = FALSE)
+        cells.count <- Results@cells.count[, samples, drop = FALSE]
     }
     
     data <- na.omit(data)# NA values are removed, generate a warning ?
@@ -797,7 +800,7 @@ MDSViewer <- function(Results,
 
         plot <- ggplot2::ggplot() +
                 ggplot2::ggtitle(paste("MDS with samples (", format(cells.number, big.mark = " "), " cells)", sep = ""))
-        print(data_i)
+
         if (!is.null(assignments)) {
             data_i             <- cbind(data_i, assignments)
             data_i$individuals <- as.factor(data_i$individuals)
@@ -884,7 +887,7 @@ MDSViewer <- function(Results,
 #' @param SPADEResults a SPADEResults object (Results object is not accepted)
 #' @param x.marker a character indicating the marker name of the first dimension
 #' @param y.marker a character indicating the marker name of the second dimension
-#' @param samples  a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)
+#' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param clusters a character vector containing the clusters names to be visualized (by default all clusters will be used)
 #' @param sample.merge a logical specifying if the selected samples must be merged in a single biplot
 #' @param resample.ratio a numeric ratio (between 0 and 1) specifying the downsample ratio to show less dots (or NULL)
@@ -923,18 +926,13 @@ biplotViewer <- function(SPADEResults,
     plots <- list()
     
     if(is.null(samples)){
-        samples        <- rep(TRUE, length(SPADEResults@sample.names)) 
-        names(samples) <- SPADEResults@sample.names
-    }else{
-        diff.samples              <- setdiff(SPADEResults@sample.names, names(samples))
-        unselected.samples        <- rep(FALSE, length(diff.samples))
-        names(unselected.samples) <- diff.samples
-        samples                   <- c(samples, unselected.samples)
+        samples <- SPADEResults@sample.names
     }
-    
+
     for (sample in flowset.samples){
-        
-        if (samples[sample]){
+
+        if (is.element(sample, samples)) {
+            
             flowframe <- flowset[[which(sample == flowset.samples),]]
             exprs     <- flowframe@exprs
             if (!is.null(clusters)){
@@ -952,13 +950,13 @@ biplotViewer <- function(SPADEResults,
     if(is.null(samples)){
         cells.count <- SPADEResults@cells.count
     }else{
-        cells.count <- SPADEResults@cells.count[, c(names(samples[ samples == TRUE] )), drop = FALSE]
+        cells.count <- SPADEResults@cells.count[, samples, drop = FALSE]
     }
     cells.number.by.sample <- colSums(cells.count)
-    
+
     if (sample.merge){
         data <- data.frame(x = x.data, y = y.data)
-    }else{
+    } else {
         data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, " (" , format(cells.number.by.sample[facet], big.mark = " "), " cells)"))
     }
     
@@ -1013,7 +1011,7 @@ biplotViewer <- function(SPADEResults,
 #'
 #' @param Results a SPADEResults or Results object
 #' @param clusters a character vector containing the clusters names to be use (by default all clusters will be used)
-#' @param samples a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)
+#' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param markers a character vector specifying the markers to be displayed 
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
 #'
@@ -1032,8 +1030,8 @@ distogramViewer <- function(Results,
         data        <- Results@marker.expressions
         cells.count <- Results@cells.count
     }else{
-        data        <- subset(Results@marker.expressions, sample %in% names(samples[ samples == TRUE]), drop = FALSE)
-        cells.count <- Results@cells.count[, c(names(samples[ samples == TRUE] )), drop = FALSE]
+        data        <- subset(Results@marker.expressions, sample %in% samples, drop = FALSE)
+        cells.count <- Results@cells.count[, samples, drop = FALSE]
     }
     
     if(!is.null(clusters)){

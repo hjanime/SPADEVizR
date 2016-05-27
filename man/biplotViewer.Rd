@@ -15,7 +15,7 @@ biplotViewer(SPADEResults, x.marker, y.marker, samples = NULL,
 
 \item{y.marker}{a character indicating the marker name of the second dimension}
 
-\item{samples}{a named vector providing the correspondence between samples name (in rowname) and the logical value TRUE to use these samples (all samples by default)}
+\item{samples}{a character vector providing the sample names to used (all samples by default)}
 
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be used)}
 

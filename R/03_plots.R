@@ -352,9 +352,9 @@ classificationViewer <- function(CCR,
 #' @title Graphical representation for some SPADEVizR objects
 #'
 #' @description 
-#' This function generates a graphical representation for 'AC', 'DEC', 'CC', 'PhenoProfiles' and 'EnrichmentProfiles' objects.
+#' This function generates a graphical representation for 'AC', 'DEC', 'CC', 'CCR' and objects.
 #'
-#' @param x a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object
+#' @param x a 'AC', 'DEC', 'CC' and 'CCR' object
 #' @param y a supplementary parameter transmited respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions
 #' @param ... some supplementaries parameters transmited respectively to \code{\link[SPADEVizR]{abundantClustersViewer}}, \code{\link[SPADEVizR]{volcanoViewer}} or \code{\link[SPADEVizR]{correlatedClustersViewer}} functions
 #' 

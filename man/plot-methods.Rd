@@ -20,7 +20,7 @@ plot(x, y = NULL, ...)
 \S4method{plot}{CCR,missing}(x, y = NULL, ...)
 }
 \arguments{
-\item{x}{a 'AC', 'DEC', 'CC', 'PhenoProfiles' or 'EnrichmentProfiles' object}
+\item{x}{a 'AC', 'DEC', 'CC' and 'CCR' object}
 
 \item{y}{a supplementary parameter transmited respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions}
 
@@ -30,6 +30,6 @@ plot(x, y = NULL, ...)
 a 'ggplot' object
 }
 \description{
-This function generates a graphical representation for 'AC', 'DEC', 'CC', 'PhenoProfiles' and 'EnrichmentProfiles' objects.
+This function generates a graphical representation for 'AC', 'DEC', 'CC', 'CCR' and objects.
 }
 
