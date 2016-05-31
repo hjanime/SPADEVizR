@@ -6,8 +6,8 @@
 \usage{
 generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
   "heatmap", "tree", "disto", "MDSclusters", "pheno"), clusters = NULL,
-  markers = NULL, assignments = NULL, conditions = NULL,
-  stat.objects = list(), width = 29.7, height = 21)
+  markers = NULL, samples = NULL, assignments = NULL, conditions = NULL,
+  stat.objects = list(), width = 30, height = 15, verbose = TRUE)
 }
 \arguments{
 \item{Results}{a 'SPADEResults' or 'Result' object}
@@ -20,11 +20,13 @@ generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
 
 \item{markers}{a character vector of markers to include in the report (all will be included by default)}
 
+\item{samples}{a character vector providing the sample names to used (all samples by default)}
+
 \item{assignments}{a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment}
 
 \item{conditions}{conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude}
 
-\item{stat.objects}{a vector of plotable objects to be displayed in the report (object of class 'DEC', 'AC', 'CC' or 'CCR' accepted)}
+\item{stat.objects}{a vector of plotable objects to be displayed in the report (object of class 'DAC', 'AC', 'CC' or 'CCR' accepted)}
 
 \item{width}{a numeric specifying the plot width in centimeter}
 

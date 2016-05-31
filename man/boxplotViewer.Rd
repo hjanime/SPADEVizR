@@ -5,7 +5,8 @@
 \title{Visualization of cluster enrichment profiles conditions}
 \usage{
 boxplotViewer(Results, conditions, clusters = NULL, use.percentages = TRUE,
-  show.legend = FALSE, show.violin = TRUE, show.on_device = TRUE)
+  show.legend = FALSE, show.violin = TRUE, show.on_device = TRUE,
+  verbose = FALSE)
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
@@ -21,6 +22,8 @@ boxplotViewer(Results, conditions, clusters = NULL, use.percentages = TRUE,
 \item{show.violin}{a logical specifying if the count distribution must be displayed}
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+
+\item{verbose}{a logical specifying if the details of computation must be printed}
 }
 \value{
 a 'ggplot' object

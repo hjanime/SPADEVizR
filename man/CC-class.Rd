@@ -22,7 +22,7 @@ This object is returned by the 'identifyCC()' function.
 
 \item{\code{variable}}{a numeric vector containing the expression values of the associated variable}
 
-\item{\code{cluster.size}}{a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster}
+\item{\code{cluster.size}}{a numeric vector containing the number of cells for each cluster}
 
 \item{\code{use.percentages}}{a logical specifying if computation was performed on percentage of cell abundance}
 

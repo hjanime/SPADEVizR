@@ -7,7 +7,7 @@
 importSPADEResults(path, dictionary = data.frame(),
   exclude.markers = c("cell_length", "FileNum", "density", "time"),
   probs = c(0.05, 0.95), use.raw.medians = FALSE,
-  quantile.approximation = FALSE)
+  quantile.approximation = FALSE, th.min_cells = 50)
 }
 \arguments{
 \item{path}{a character specify the path of SPADE results folder}
@@ -21,6 +21,8 @@ importSPADEResults(path, dictionary = data.frame(),
 \item{use.raw.medians}{a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)}
 
 \item{quantile.approximation}{a logical specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
+
+\item{th.min_cells}{a numeric specifying the minimun number of cell in a cluster of a sample to take in account its phenotype}
 }
 \value{
 a S4 object of class 'SPADEResults'

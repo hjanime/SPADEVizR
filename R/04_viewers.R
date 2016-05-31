@@ -52,7 +52,7 @@ countViewer <- function(Results,
     
     data.melted           <- reshape2::melt(data, id = c("cluster"))  
     colnames(data.melted) <- c("cluster", "sample", "value")
-    data.melted$total     <- ifelse(data.melted[,"sample"] == "sum.of.samples","sum of selected samples","")
+    data.melted$total     <- ifelse(data.melted[, "sample"] == "sum.of.samples", "sum of selected samples","")
     
     plot <- ggplot2::ggplot(data = data.melted) +
             ggplot2::ggtitle(paste("Count Viewer (", format(cells.number, big.mark=" "), " cells)", sep = ""))
@@ -65,15 +65,20 @@ countViewer <- function(Results,
                                             alpha  = 0.4)
     }
 
+    step <- 1000
+
+    cluster.maxsize <- max(data.melted$value)
+    dot_size.breaks <- seq(0, round(ceiling(cluster.maxsize / step) * step), by = step)
+
     plot <- plot + ggplot2::geom_point(data = subset(data.melted, sample == "sum.of.samples"),
                                        ggplot2::aes_string(x = "cluster", y = "value", size = "value", shape = "total"),
                                        fill = "grey40") +
-                   ggplot2::scale_size(name = "number.of.cells") +
+                   ggplot2::scale_size(name = "number.of.cells", breaks = dot_size.breaks, range = c(0, 10)) +
                    ggplot2::scale_shape_manual(values = 21) +
                    ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(data.melted$value))) +
                    ggplot2::ylab("# of cells") +
                    ggplot2::theme_bw() +
-                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1))
+                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1))
 
     if (show.on_device) {
         plot(plot)
@@ -96,7 +101,7 @@ countViewer <- function(Results,
 #' @param SPADEResults a SPADEResults object (Results object is not accepted)
 #' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param marker a character specifying the marker name to display
-#' @param highlight an AC, DEC or CC object to highligth identified significant clusters in the SPADE tree
+#' @param highlight an AC, DAC or CC object to highligth identified significant clusters in the SPADE tree
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
 #'
 #' @return a list of 'ggplot' objects
@@ -141,8 +146,13 @@ treeViewer <- function(SPADEResults,
         rownames(expr) <- expr$cluster
         expr           <- expr[, -1]
         mean.expr      <- apply(expr, 1, mean, na.rm = TRUE)
+
         pos.vertex     <- cbind(pos.vertex, marker = mean.expr)
-        colnames(pos.vertex)[length(colnames(pos.vertex))] <- marker
+        colnames(pos.vertex)[ncol(pos.vertex)] <- marker
+
+        max.mean.expr <- max(mean.expr)
+        seq.mean.expr <- seq(from = -1, to = ceiling(max.mean.expr), by = 1)
+
     }   
     
     edges    <- igraph::get.edgelist(SPADEResults@graph,names = FALSE)
@@ -163,49 +173,50 @@ treeViewer <- function(SPADEResults,
         if(!is.null(marker)){
             plot <- plot + ggplot2::geom_point(data   = pos.vertex,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size", fill = marker, colour = highlight.name),
-                                               stroke = 3,
-                                               shape  = 21)
+                                               stroke = 2.5,
+                                               shape = 21) +
+                           ggplot2::scale_fill_gradient(low = "#ECE822", high = "#EE302D", limits = c(-1, max(max.mean.expr)), breaks = seq.mean.expr)
         }else{
             plot <- plot + ggplot2::geom_point(data   = pos.vertex,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size", colour = highlight.name),
                                                fill   = "grey80",
-                                               stroke = 3,
+                                               stroke = 2.5,
                                                shape  = 21)
         }
     }else{
         if(!is.null(marker)){
             plot <- plot + ggplot2::geom_point(data   = pos.vertex,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size", fill = marker),
-                                               stroke = 3,
-                                               shape  = 21)
+                                               stroke = 2.5,
+                                               shape = 21) +
+                           ggplot2::scale_fill_gradient(low = "#ECE822", high = "#EE302D", limits = c(-1, max(max.mean.expr)), breaks = seq.mean.expr) #low = yellow, high = red
         }else{
             plot <- plot + ggplot2::geom_point(data   = pos.vertex,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size"),
                                                fill   = "grey80",
-                                               stroke = 3,
+                                               stroke = 2.5,
                                                shape  = 21)
         }
     }
-    plot <- plot + ggplot2::scale_fill_gradient(low = "#ECE822", high = "#EE302D") +#low = yellow, high = red
-            ggplot2::scale_color_manual(values = c("black", "blue")) +
-            ggplot2::scale_size_area(max_size = 15) +
-            ggrepel::geom_label_repel(data          = pos.vertex, 
-                                      ggplot2::aes_string(x = "x", y = "y", label = "id"),
-                                      size          = 4,
-                                      color         = "black",
-                                      box.padding   = grid::unit(0.1, "lines"),
-                                      point.padding = grid::unit(0.1, "lines")) +
-            ggplot2::coord_fixed() +
-            ggplot2::theme(panel.background = ggplot2::element_blank(),
-                           panel.border     = ggplot2::element_blank(),
-                           axis.text.x      = ggplot2::element_blank(),
-                           axis.text.y      = ggplot2::element_blank(),
-                           axis.title.x     = ggplot2::element_blank(),
-                           axis.title.y     = ggplot2::element_blank(),
-                           panel.grid.minor = ggplot2::element_blank(),
-                           panel.grid.major = ggplot2::element_blank(),
-                           axis.ticks       = ggplot2::element_blank(),
-                           legend.position = "right")
+    plot <- plot + ggplot2::scale_color_manual(values = c("black", "blue")) +
+                   ggplot2::scale_size_area(max_size = 15) +
+                   ggrepel::geom_label_repel(data          = pos.vertex, 
+                                             ggplot2::aes_string(x = "x", y = "y", label = "id"),
+                                             size          = 4,
+                                             color         = "black",
+                                             box.padding   = grid::unit(0.1, "lines"),
+                                             point.padding = grid::unit(0.1, "lines")) +
+                   ggplot2::coord_fixed() +
+                   ggplot2::theme(panel.background = ggplot2::element_blank(),
+                                  panel.border     = ggplot2::element_blank(),
+                                  axis.text.x      = ggplot2::element_blank(),
+                                  axis.text.y      = ggplot2::element_blank(),
+                                  axis.title.x     = ggplot2::element_blank(),
+                                  axis.title.y     = ggplot2::element_blank(),
+                                  panel.grid.minor = ggplot2::element_blank(),
+                                  panel.grid.major = ggplot2::element_blank(),
+                                  axis.ticks       = ggplot2::element_blank(),
+                                  legend.position = "right")
 
     if (show.on_device) {
         plot(plot)
@@ -279,6 +290,7 @@ heatmapViewer <- function(Results,
 #' @param show.legend a logical specifying if the legend must be displayed
 #' @param show.violin a logical specifying if the count distribution must be displayed
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param verbose a logical specifying if the details of computation must be printed
 #'
 #' @return a 'ggplot' object
 #' 
@@ -291,7 +303,8 @@ boxplotViewer <- function(Results,
                           use.percentages = TRUE,
                           show.legend     = FALSE,
                           show.violin     = TRUE,
-                          show.on_device  = TRUE) {
+                          show.on_device  = TRUE,
+                          verbose         = FALSE) {
 
     data <- Results@cells.count[, names(conditions[!is.na(conditions)]), drop = FALSE]
     cells.count <- data
@@ -328,7 +341,10 @@ boxplotViewer <- function(Results,
 
     plots            <- list()
     
-    for(current.cluster in clusters){
+    for (current.cluster in clusters) {
+        if (verbose) {
+            message(paste0("\tCluster ", current.cluster, " on ", length(clusters)))
+        }
         data.temp <- data.melted[data.melted$cluster == current.cluster,]
 
         max.value <- max(data.temp$value)
@@ -358,7 +374,7 @@ boxplotViewer <- function(Results,
         plots[[i]] <- plots[[i]] + ggplot2::ylab(legendy) +
                                    ggplot2::xlab("biological conditions") +
                                    ggplot2::theme_bw() +
-                                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0),
+                                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0),
                                                   legend.text = ggplot2::element_text(size = 6))
         
     }
@@ -383,6 +399,7 @@ boxplotViewer <- function(Results,
 #' @param clusters a character vector containing the clusters names to be visualized (by default all clusters will be displayed)
 #' @param use.percentages a logical specifying if the visualization should be performed on percentage
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param verbose a logical specifying if the details of computation must be printed
 #'
 #' @return a 'ggplot' object
 #' 
@@ -393,7 +410,8 @@ kineticsViewer <- function(Results,
                            assignments,
                            clusters        = NULL,
                            use.percentages = TRUE,
-                           show.on_device  = TRUE) {
+                           show.on_device  = TRUE,
+                           verbose         = FALSE) {
     
     if(missing(assignments) || is.null(assignments)){
         stop("Error : the 'assignments' parameter is required")   
@@ -433,32 +451,35 @@ kineticsViewer <- function(Results,
     data.melted$timepoints  <- factor(data.melted$timepoints, levels = gtools::mixedsort(unique(data.melted$timepoints)))
 
     plots <- list()
-    for(current.cluster in clusters){
-        data.temp  <- data.melted[data.melted$cluster == current.cluster,]
-        
-        max.value  <- max(data.temp$value)
-        max.value  <- max.value + max.value*0.1 + 1
-        
+    for (current.cluster in clusters) {
+        if (verbose) {
+            message(paste0("\tCluster ", current.cluster, " on ", length(clusters)))
+        }
+        data.temp <- data.melted[data.melted$cluster == current.cluster,]
+
+        max.value <- max(data.temp$value)
+        max.value <- max.value + max.value * 0.1 + 1
+
         i <- length(plots) + 1
-        
+
         cells.number <- sum(cells.count[current.cluster,])
-        
+
         plots[[i]] <- ggplot2::ggplot(data = data.temp, ggplot2::aes_string(x = "as.factor(timepoints)", y = "value", group = "individuals", color = "individuals")) +
-                ggplot2::ggtitle(paste("cluster ",current.cluster," - Kinetics Viewer (", format(cells.number, big.mark = " "), " cells)",sep = "")) +
+                ggplot2::ggtitle(paste("cluster ", current.cluster, " - Kinetics Viewer (", format(cells.number, big.mark = " "), " cells)", sep = "")) +
                 ggplot2::geom_line() +
                 ggplot2::geom_point(na.rm = TRUE) +
-                ggplot2::scale_x_discrete(expand = c(0,0.05))
-        if(use.percentages){    
+                ggplot2::scale_x_discrete(expand = c(0, 0.05))
+        if (use.percentages) {
             plots[[i]] <- plots[[i]] + ggplot2::scale_y_continuous(limits = c(0, max.value), breaks = round(seq(0, max.value)), minor_breaks = NULL)
-        }else{
+        } else {
             plots[[i]] <- plots[[i]] + ggplot2::scale_y_continuous(limits = c(0, max.value))
         }
-        
+
         plots[[i]] <- plots[[i]] + ggplot2::ylab(legendy) +
                 ggplot2::xlab("timepoints") +
                 ggplot2::theme_bw() +
-                ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0),
-                               legend.text = ggplot2::element_text(size = 6))            
+                ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0),
+                               legend.text = ggplot2::element_text(size = 6))
     }
 
     if (show.on_device) {
@@ -527,8 +548,9 @@ streamgraphViewer <- function(Results,
     melted.data           <- reshape2::melt(data, id = "cluster")
     colnames(melted.data) <- c("cluster", "sample", "value")
     
-    melted.data         <- melted.data[order(melted.data$sample, melted.data$cluster, decreasing = TRUE),]
-    
+    melted.data         <- melted.data[order(melted.data$sample, decreasing = TRUE),]
+    melted.data$cluster <- factor(melted.data$cluster, levels = rev(clusters))
+
     dt.melted.data <- data.table::setDT(melted.data)
     dt.melted.data[, ymax := cumsum(value) - (sum(value) / 2), by = sample]
     dt.melted.data[, ymin := ymax - value, by = sample]
@@ -538,14 +560,14 @@ streamgraphViewer <- function(Results,
     title <- paste("Streamgraph with ",ifelse(use.relative,"relative","absolute")," abundance (", format(cells.number, big.mark=" "), " cells)", sep = "")
     plot  <- ggplot2::ggplot(data = dt.melted.data) +
              ggplot2::ggtitle(title) +
-             ggplot2::geom_ribbon(ggplot2::aes_string(x = "sample", ymin = "ymin", ymax = "ymax", group = "cluster", fill = "cluster")) +
+             ggplot2::geom_ribbon(ggplot2::aes_string(x = "sample", ymin = "ymin", ymax = "ymax", group = "cluster", fill = "cluster"), color = "grey40", size = 0.1) +
              ggplot2::geom_point(ggplot2::aes_string(x = "sample", y = "ymax", group = "cluster"), shape = 45) +
              ggplot2::geom_point(ggplot2::aes_string(x = "sample", y = "ybase", group = "cluster"), shape = 45) +
              ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ymax", label = "label"), angle = 360, hjust = 1.1, size = 3) +
              ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ybase"), label = "0", angle = 360, hjust = 1.1, size = 3) +
              ggplot2::theme_bw() +
              ggplot2::theme(legend.text      = ggplot2::element_text(size = 6),
-                            axis.text.x      = ggplot2::element_text(angle = 290, hjust = 0),
+                            axis.text.x      = ggplot2::element_text(angle = 90, hjust = 0),
                             axis.line        = ggplot2::element_blank(),
                             axis.text.y      = ggplot2::element_blank(),
                             axis.ticks       = ggplot2::element_blank(),
@@ -587,6 +609,7 @@ streamgraphViewer <- function(Results,
 #' @param markers a character vector specifying the markers to be displayed 
 #' @param show.mean a character specifying if marker means expression should be displayed, possible value are among : "none", "only" or "both"
 #' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param verbose a logical specifying if the details of computation must be printed
 #'
 #' @return a list of 'ggplot' objects
 #'
@@ -598,7 +621,8 @@ phenoViewer <- function(Results,
                         samples        = NULL,
                         markers        = NULL,
                         show.mean      = "both",
-                        show.on_device = TRUE) {
+                        show.on_device = TRUE,
+                        verbose        = FALSE) {
     
     if(show.mean != "none" && show.mean != "both" && show.mean != "only"){
         stop("Error : show.mean must be one of those : 'none', 'both' or 'only' ")
@@ -647,7 +671,9 @@ phenoViewer <- function(Results,
     plots <- list()
     
     for(current.cluster in clusters){
-        
+        if (verbose) {
+            message(paste0("\tCluster ", current.cluster, " on ", length(clusters)))
+        }
         data.temp  <- data[data["cluster"] == current.cluster,]
         max.value <- max(c(data.temp$value, data.temp$upper.bound))
         min.value <- min(c(data.temp$value, data.temp$lower.bound))
@@ -691,10 +717,10 @@ phenoViewer <- function(Results,
                                    ggplot2::theme_bw()         
         
         if (names(Results) == "SPADEResults"){
-            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1, face = bold.markers),
+            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1, face = bold.markers),
                                                       legend.text = ggplot2::element_text(size = 6))                 
         }else{
-            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1),
+            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1),
                                                       legend.text = ggplot2::element_text(size = 6))
         }
         
@@ -712,7 +738,7 @@ phenoViewer <- function(Results,
 #' @title Visualization of SPADE cluster or sample similarities using MDS
 #'
 #' @description 
-#' Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs enrichment.
+#' Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs abundances.
 #' 
 #' @details 
 #' The 'space' parameter specifying if the cluster or sample similarities will be determined using MDS.
@@ -720,7 +746,7 @@ phenoViewer <- function(Results,
 #'
 #' @param Results a SPADEResults or Results object
 #' @param use.percentages a logical specifying if the visualization should be performed on percentage
-#' @param assignments a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment
+#' @param assignments a 2 column data.frame with the samples names in row names providing firstly the biologicial condition and secondly the individuals of the experiment
 #' @param clusters a character vector containing the clusters names to be visualized (by default all clusters will be displayed)
 #' @param space a character specifying the space ("clusters" or "samples", "cluster" by default)
 #' @param dist.method a character string containing the name of the distance measure to use
@@ -770,7 +796,7 @@ MDSViewer <- function(Results,
 
     if(space == "samples"){
         if (!is.null(assignments)) {
-            colnames(assignments) <- c("timepoints","individuals")
+            colnames(assignments) <- c("biological.conditions","individuals")
             data <- data[, rownames(assignments), drop = FALSE]
             cells.number <- sum(colSums(cells.count[, rownames(assignments)]))
         }
@@ -798,21 +824,24 @@ MDSViewer <- function(Results,
     
     if (space == "samples") {
 
+        title    <- paste("MDS at the sample level (", format(cells.number, big.mark = " "), " cells)", sep = "")
+        subtitle <- paste0("Kruskal Stress : ", round(stress, 2))
+        
         plot <- ggplot2::ggplot() +
-                ggplot2::ggtitle(paste("MDS with samples (", format(cells.number, big.mark = " "), " cells)", sep = ""))
+                ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), ""))))
 
         if (!is.null(assignments)) {
-            data_i             <- cbind(data_i, assignments)
-            data_i$individuals <- as.factor(data_i$individuals)
-            data_i$timepoints  <- factor(data_i$timepoints, levels = gtools::mixedsort(unique(data_i$timepoints)))
-            data.table_i       <- data.table::data.table(data_i, key = "individuals")
-            hulls              <- data.table_i[, .SD[grDevices::chull(x, y)], by = "individuals"]
+            data_i                       <- cbind(data_i, assignments)
+            data_i$individuals           <- as.factor(data_i$individuals)
+            data_i$biological.conditions <- factor(data_i$biological.conditions, levels = gtools::mixedsort(unique(data_i$biological.conditions)))
+            data.table_i                 <- data.table::data.table(data_i, key = "biological.conditions")
+            hulls                        <- data.table_i[, .SD[grDevices::chull(x, y)], by = "biological.conditions"]
 
             plot <- plot + ggplot2::geom_polygon(data = hulls,
-                                                 ggplot2::aes_string(x = "x", y = "y", group = "individuals", fill = "individuals"),
+                                                 ggplot2::aes_string(x = "x", y = "y", group = "biological.conditions", fill = "biological.conditions"),
                                                  colour = "black",
                                                  alpha = 0.3) +
-                           ggplot2::geom_point(data = data_i, ggplot2::aes_string(x = "x", y = "y", colour = "individuals", shape = "timepoints"), size = 4)
+                           ggplot2::geom_point(data = data_i, ggplot2::aes_string(x = "x", y = "y", colour = "biological.conditions", shape = "individuals"), size = 4)
         } else {
             data_i$sample <- rownames(data_i)
             
@@ -836,15 +865,17 @@ MDSViewer <- function(Results,
                                       panel.grid.minor = ggplot2::element_blank(),
                                       panel.grid.major = ggplot2::element_blank(),
                                       axis.ticks = ggplot2::element_blank(),
-                                      legend.position = "right") +
-                       ggplot2::annotate(geom = "text", x = Inf, y = -Inf, hjust = 1.1, vjust = -1, label = paste0("Kruskal Stress : ", round(stress, 2)))
+                                      legend.position = "right")
 
     } else {
         data_i <- cbind(data_i, cluster = data[, "cluster"])
         data_i$cluster <- as.factor(data_i$cluster)
-        
+
+        title <- paste("MDS at the cluster level (", format(cells.number, big.mark = " "), " cells)", sep = "")
+        subtitle <- paste0("Kruskal Stress : ", round(stress, 2))
+
         plot <- ggplot2::ggplot(data = data_i) +
-                ggplot2::ggtitle(paste("MDS with clusters (", format(cells.number, big.mark = " "), " cells)", sep = "")) +
+                ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
                 ggplot2::geom_hline(yintercept = (min.lim + max.lim) / 2, linetype = "dashed") +
                 ggplot2::geom_vline(xintercept = (min.lim + max.lim) / 2, linetype = "dashed") +
                 ggplot2::geom_point(ggplot2::aes_string(x = "x", y = "y", color = "cluster"),
@@ -864,8 +895,7 @@ MDSViewer <- function(Results,
                                panel.grid.minor = ggplot2::element_blank(),
                                panel.grid.major = ggplot2::element_blank(),
                                axis.ticks = ggplot2::element_blank(),
-                               legend.position = "none") +
-                ggplot2::annotate(geom = "text", x = Inf, y = -Inf, hjust = 1.1, vjust = -1, label = paste0("Kruskal Stress : ", round(stress, 2)))
+                               legend.position = "none")
     }
 
     if (show.on_device) {

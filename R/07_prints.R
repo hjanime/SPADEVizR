@@ -71,9 +71,9 @@ setMethod("print","AC",
 
 #' @rdname print-methods
 #' @export
-setMethod("print","DEC",
+setMethod("print","DAC",
         function(x){
-            cat("Object class: Differentially Enriched Clusters (DEC)\n")
+            cat("Object class: Differentially Abundant Clusters (DAC)\n")
             cat(paste0("Sample of Condition 1: "))
             cat(paste0(x@sample.cond1, collapse = "; "))
             cat("\n")
@@ -133,7 +133,7 @@ setMethod("print","CC",
 #' @export
 setMethod("print","CCR",
         function(x){
-            cat("Object class: CRR\n")
+            cat("Object class: CCR\n")
             cat(paste0("type: ", x@type))
             cat("\n")
             cat(paste0("Number of class: "))
@@ -180,7 +180,7 @@ setMethod("show","AC",
 
 #' @rdname show-methods
 #' @export
-setMethod("show","DEC",
+setMethod("show","DAC",
         definition = function(object){print(object)}
 )
 

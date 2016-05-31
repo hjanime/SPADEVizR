@@ -6,7 +6,7 @@
 \alias{print,AC-method}
 \alias{print,CC-method}
 \alias{print,CCR-method}
-\alias{print,DEC-method}
+\alias{print,DAC-method}
 \alias{print,Results-method}
 \alias{print,SPADEResults-method}
 \title{Textual previews for all SPADEVizR objects}
@@ -17,7 +17,7 @@
 
 \S4method{print}{AC}(x)
 
-\S4method{print}{DEC}(x)
+\S4method{print}{DAC}(x)
 
 \S4method{print}{CC}(x)
 

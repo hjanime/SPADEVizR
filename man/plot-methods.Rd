@@ -6,12 +6,12 @@
 \alias{plot,AC,missing-method}
 \alias{plot,CC,missing-method}
 \alias{plot,CCR,missing-method}
-\alias{plot,DEC,missing-method}
+\alias{plot,DAC,missing-method}
 \title{Graphical representation for some SPADEVizR objects}
 \usage{
 plot(x, y = NULL, ...)
 
-\S4method{plot}{DEC,missing}(x, y = NULL, ...)
+\S4method{plot}{DAC,missing}(x, y = NULL, ...)
 
 \S4method{plot}{AC,missing}(x, y = NULL, ...)
 
@@ -20,7 +20,7 @@ plot(x, y = NULL, ...)
 \S4method{plot}{CCR,missing}(x, y = NULL, ...)
 }
 \arguments{
-\item{x}{a 'AC', 'DEC', 'CC' and 'CCR' object}
+\item{x}{a 'AC', 'DAC', 'CC' and 'CCR' object}
 
 \item{y}{a supplementary parameter transmited respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions}
 
@@ -30,6 +30,6 @@ plot(x, y = NULL, ...)
 a 'ggplot' object
 }
 \description{
-This function generates a graphical representation for 'AC', 'DEC', 'CC', 'CCR' and objects.
+This function generates a graphical representation for 'AC', 'DAC', 'CC', 'CCR' and objects.
 }
 

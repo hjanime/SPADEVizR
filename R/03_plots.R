@@ -28,8 +28,12 @@ abundantClustersViewer <- function(AC,
         data.text <- subset(AC@result, AC@result$significant)
     }
 
+    title <- paste("Abundant Clusters")
+    subtitle <- ifelse(AC@use.percentages, "Using relative abundances", "Using absolutes abundances")
+
+
     plot <-  ggplot2::ggplot(data = AC@result) +
-             ggplot2::ggtitle(paste0("Cell abundances of clusters (", format(sum(AC@cluster.size), big.mark=" "), " cells)", sep = "")) +
+             ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
              ggplot2::geom_hline(yintercept = AC@th.mean,
                                  linetype   = "dashed",
                                  alpha      = 0.3,
@@ -41,12 +45,21 @@ abundantClustersViewer <- function(AC,
                                  color      = "red",
                                  size       = 1)
 
-    if (show.cluster_sizes){
+    if (show.cluster_sizes) {
+
+        step <- 1000
+
+        cluster.maxsize <- max(AC@result$cluster.size)
+        dot_size.breaks <- seq(0, round(ceiling(cluster.maxsize / step) * step), by = step)
+
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significant", size = "cluster.size"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1) +
-                       ggplot2::scale_size(name = "number.of.cells", guide = ggplot2::guide_legend(order = 2))
+                       ggplot2::scale_size(name = "number.of.cells",
+                                           breaks = dot_size.breaks,
+                                           range = c(0, 10),
+                                           guide = ggplot2::guide_legend(order = 2))
     }else{
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "-log10(pvalue)", y = "mean", fill = "significant"),
                                            shape = 21,
@@ -80,15 +93,15 @@ abundantClustersViewer <- function(AC,
 
 }
 
-#' @title Visualization of differentially enriched clusters
+#' @title Visualization of differentially abundant clusters
 #'
 #' @description 
 #' Generates a Volcano plot representation showing for each cluster
 #' 
 #' @details 
-#' By default, only significant differentially enriched clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE. 
+#' By default, only significant differentially abundant clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE. 
 #'
-#' @param DEC an object of class 'DEC' (object returned by the 'computeDEC()' function)
+#' @param DEC an object of class 'DAC' (object returned by the 'computeDAC()' function)
 #' @param fc.log2 a logical specifying if fold-change or log2(fold-change) is use 
 #' @param show.cluster.sizes a logical specifying if dot sizes are proportional to cell counts
 #' @param show.all_labels a logical specifying if all cluster labels must be show or just significant cluster
@@ -99,56 +112,66 @@ abundantClustersViewer <- function(AC,
 #' @import ggplot2 grid
 #' 
 #' @export
-volcanoViewer <- function(DEC                = NULL,
+volcanoViewer <- function(DAC                = NULL,
                           fc.log2            = TRUE,
                           show.cluster.sizes = TRUE,
                           show.all_labels    = FALSE,
                           show.on_device     = TRUE) {
     
-    th.fc <- DEC@th.fc
+    th.fc <- DAC@th.fc
     
     if(fc.log2){
         th.fc <- log2(th.fc)
-        temp <- DEC@result$fold.change
-        for(i in 1:nrow(DEC@result)){
-            DEC@result$fold.change[i] <- ifelse (temp[i] > 0, log2(DEC@result$fold.change[i]), -log2(abs(DEC@result$fold.change[i])))
+        temp <- DAC@result$fold.change
+        for(i in 1:nrow(DAC@result)){
+            DAC@result$fold.change[i] <- ifelse (temp[i] > 0, log2(DAC@result$fold.change[i]), -log2(abs(DAC@result$fold.change[i])))
         }
     }
     
-    DEC@result <- cbind (DEC@result, cluster.size = DEC@cluster.size)
+    DAC@result <- cbind (DAC@result, cluster.size = DAC@cluster.size)
     
-    data.text <- DEC@result
+    data.text <- DAC@result
     if (!show.all_labels){
-        data.text <- subset(DEC@result, DEC@result$significant)
+        data.text <- subset(DAC@result, DAC@result$significant)
     }
-    x.min    <- floor(min(DEC@result$fold.change))
-    x.max    <- ceiling(max(DEC@result$fold.change))
+    x.min    <- floor(min(DAC@result$fold.change, na.rm = TRUE))
+    x.max    <- ceiling(max(DAC@result$fold.change, na.rm = TRUE))
     x.max    <- max(x.max, abs(x.min))
-    x.breaks <- c(round(c(-th.fc, th.fc), 2), seq(-x.max, x.max, by = 1))
+    print(x.max)
+    x.breaks <- c(round(c( -th.fc, th.fc), 2), seq( -x.max, x.max, by = 1))
 
-    y.max    <- ceiling(max(-log10(DEC@th.pvalue), -log10(DEC@result$pvalue)))
-    y.breaks <- c(seq(0, y.max, by = 1), round(-log10(DEC@th.pvalue), 2))
+    y.max    <- ceiling(max(-log10(DAC@th.pvalue), -log10(DAC@result$pvalue)))
+    y.breaks <- c(seq(0, y.max, by = 1), round(-log10(DAC@th.pvalue), 2))
 
-    title.details <- ifelse(DEC@use.percentages, "using % of cells", "using # of cells")
-        
-    plot <- ggplot2::ggplot(data = DEC@result, ggplot2::aes_string(x = "fold.change", y = "-log10(pvalue)")) +
-            ggplot2::ggtitle(paste0("Volcano plot showing differentially enriched clusters ", title.details, " (", format(sum(DEC@cluster.size), big.mark=" "), " cells)", sep = "")) +
+    title.details <- ifelse(DAC@use.percentages, "using % of cells", "using # of cells")
+
+    title <- paste("Differentially Abundant Clusters")
+    subtitle <- ifelse(DAC@use.percentages, "Using relative abundances", "Using absolutes abundances")
+
+    plot <- ggplot2::ggplot(data = DAC@result, ggplot2::aes_string(x = "fold.change", y = "-log10(pvalue)")) +
+            ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
             ggplot2::geom_vline(xintercept = c(th.fc, -th.fc),
                                 linetype   = "dashed",
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1) +  
-            ggplot2::geom_hline(yintercept = -log10(DEC@th.pvalue),
+            ggplot2::geom_hline(yintercept = -log10(DAC@th.pvalue),
                                 linetype   = "dashed",
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1)
-    if (show.cluster.sizes){
+    if (show.cluster.sizes) {
+
+        step <- 1000
+
+        cluster.maxsize <- max(DAC@result$cluster.size)
+        dot_size.breaks <- seq(0, round(ceiling(cluster.maxsize / step) * step), by = step)
+
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significant", size = "cluster.size"),
-                                           shape = 21,
+                                           shape  = 21,
                                            colour = "black",
                                            stroke = 1) +
-                       ggplot2::scale_size(name = "number.of.cells")
+                       ggplot2::scale_size(name = "number.of.cells", breaks = dot_size.breaks, range = c(0, 10))
     }else{
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(fill = "significant"),
                                            shape = 21,
@@ -164,7 +187,7 @@ volcanoViewer <- function(DEC                = NULL,
                    ggplot2::scale_fill_manual(values = c("grey", "red")) +
                    ggplot2::scale_x_continuous(limits = c(-x.max, x.max), minor_breaks = NULL, breaks = x.breaks) +
                    ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
-                   ggplot2::xlab(paste0(ifelse(fc.log2,"log2(fold.change)","fold.change"),"\ncond2 < enriched > cond1")) +
+                   ggplot2::xlab(paste0(ifelse(fc.log2,"log2(fold.change)","fold.change"),"\ncond2 <- enriched -> cond1")) +
                    ggplot2::ylab("-log10(p-value)") +
                    ggplot2::theme_bw()
     
@@ -204,9 +227,12 @@ correlatedClustersViewer <- function(CC,
     if (!show.all_labels){
         data.text <- subset(CC@result, CC@result$significant)
     }
-    title.details <- ifelse(CC@use.percentages, "using % of cells", "using # of cells")
+    
+    title <- paste("Correlated Clusters")
+    subtitle <- ifelse(CC@use.percentages, "Using relative abundances", "Using absolutes abundances")
+    
     plot <- ggplot2::ggplot(data = CC@result) +
-            ggplot2::ggtitle(paste0("Correlation of clusters kinetics ", title.details, " (", format(sum(CC@cluster.size), big.mark=" "), " cells)", sep = "")) +
+            ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
             ggplot2::geom_hline(yintercept = -log10(CC@th.pvalue),
                                 linetype   = "dashed",
                                 alpha      = 0.3,
@@ -217,12 +243,18 @@ correlatedClustersViewer <- function(CC,
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1)
-    if(show.cluster.sizes){
+    if (show.cluster.sizes) {
+
+        step <- 1000
+
+        cluster.maxsize <- max(CC@result$cluster.size)
+        dot_size.breaks <- seq(0, round(ceiling(cluster.maxsize / step) * step), by = step)
+        
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significant", size = "cluster.size"),
                                            shape = 21,
                                            colour = "black",
                                            stroke = 1) +
-                       ggplot2::scale_size(name = "number.of.cells")
+                       ggplot2::scale_size(name = "number.of.cells", breaks = dot_size.breaks, range = c(0, 10))
     }else{
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significant"),
                                            shape = 21,
@@ -268,93 +300,72 @@ correlatedClustersViewer <- function(CC,
 #'
 #' @return a 'ggplot' object
 #' 
-#' @import ggplot2 ggnetwork network grDevices gridExtra
+#' @import ggplot2 grDevices grid gridExtra
 #' @importFrom network %s% set.vertex.attribute add.edges get.edge.attribute add.vertices %c% list.vertex.attributes set.edge.attribute is.directed set.vertex.attribute get.vertex.attribute delete.edges is.bipartite get.edges list.edge.attributes delete.vertices
 #' @export
 #' 
 classificationViewer <- function(CCR,
                                  show.on_device = TRUE) {
 
-    classes        <- CCR@classes
-    classes        <- na.omit(classes)
+    classes <- CCR@classes
+    classes <- na.omit(classes)
     sorted.classes <- names(sort(table(classes$class), decreasing = TRUE))
 
-    colours <- grDevices::rainbow(n = length(sorted.classes), alpha = 0.5)
+    colours <- grDevices::rainbow(n = length(sorted.classes))
 
-    plots   <- list()
+    plots <- list()
 
-    for (i in sorted.classes){
+    for (i in sorted.classes) {
 
         same.class <- classes[classes$class == i,]
-        index <- length(plots) + 1
-        if (nrow(same.class) >= 2) {
+        same.class <- data.frame(cluster = same.class$cluster, size = CCR@cluster.size[same.class$cluster])
+        plots[[i]] <- buildCircles(circles = same.class, colours[as.numeric(i)], class = i)
 
-            x <- c()
-            y <- c()
+    }
 
-            previous <- NA
-            for (j in 1:nrow(same.class)) {
+    title    <- paste("ClassificationViewer")
+    subtitle <- paste0("based on ", CCR@type, " using ", CCR@method, " method")
 
-                x <- c(x, j)
-                y <- c(y, previous)
-                previous <- j
+    grob.title <- grid::textGrob(bquote(atop(.(title), atop(italic(.(subtitle)), ""))))
 
+    if (length(plots) == 0) {
+        grobs <- gridExtra::arrangeGrob(grobs = list(grid::textGrob("Empty CCR object")),
+                                        top   = grob.title)
+    } else {
+        extra_space <- (length(plots) %% 3)
+
+        if (extra_space) {
+            empty_space <- 3 - extra_space
+            for (i in 1:empty_space) {
+                plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
             }
-            y[1] <- previous
+        }
 
-            #            temp <- base::tempfile()
-            #            sink(temp) 
-            graph <- network::network.initialize(nrow(same.class), directed = FALSE)
-            network::set.vertex.attribute(x = graph, attrname = "cluster", value = as.character(same.class$cluster))
-            network::add.edges(x = graph, tail = x, head = y)
+        plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
+        plots[[length(plots) + 1]] <- buildCirclesLegend()
+        plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
 
-            graph <- ggnetwork::ggnetwork(graph, layout = "circle")
-            #            sink()
-            #            
-            #            if (file.info(temp)$size > 0){
-            #                cat(file = temp)
-            #            }
-            #            file.remove(temp) 
+        grobs <- gridExtra::arrangeGrob(grobs = plots, ncol = 3,
+                                        top   = grob.title)
 
-            
-            plots[[index]] <- ggplot2::ggplot(data = graph, ggplot2::aes_string(x = "x", y = "y", xend = "xend", yend = "yend")) +
-                              ggnetwork::geom_edges(linetype = "twodash", color = "grey90", size = 1, curvature = 0.1) +
-                              ggnetwork::geom_nodes(size = 6, fill = "grey", color = colours[as.numeric(i)], shape = 21, stroke = 3) +
-                              ggnetwork::geom_nodetext(ggplot2::aes_string(label = "cluster"), size = 2) +
-                              ggnetwork::theme_blank()
-
-        } else {
-
-            plots[[index]] <- ggplot2::ggplot(data = data.frame(x = 0, y = 0), ggplot2::aes_string(x = "x", y = "y")) +
-                              ggplot2::geom_point(size = 6, fill = "grey", color = colours[as.numeric(i)], shape = 21, stroke = 3) +
-                              ggplot2::geom_text(x = 0, y = 0, label = as.character(same.class$cluster), size = 2) +
-                              ggnetwork::theme_blank()
-            
-        }                       
-        
     }
 
-    if(length(plots) == 0){
-        plots <- list(grid::rectGrob())
-    }
-
-    plot <- gridExtra::arrangeGrob(grobs = plots, top = paste0("ClassificationViewer - (based on ", CCR@type, " using ", CCR@method, " method)"))
-
+    
     if (show.on_device) {
         grid::grid.newpage()
-        grid::grid.draw(plot)
+        grid::grid.draw(grobs)
     }
 
-    invisible(plot)
+    invisible(grobs)
 
 }
 
 #' @title Graphical representation for some SPADEVizR objects
 #'
 #' @description 
-#' This function generates a graphical representation for 'AC', 'DEC', 'CC', 'CCR' and objects.
+#' This function generates a graphical representation for 'AC', 'DAC', 'CC', 'CCR' and objects.
 #'
-#' @param x a 'AC', 'DEC', 'CC' and 'CCR' object
+#' @param x a 'AC', 'DAC', 'CC' and 'CCR' object
 #' @param y a supplementary parameter transmited respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions
 #' @param ... some supplementaries parameters transmited respectively to \code{\link[SPADEVizR]{abundantClustersViewer}}, \code{\link[SPADEVizR]{volcanoViewer}} or \code{\link[SPADEVizR]{correlatedClustersViewer}} functions
 #' 
@@ -367,7 +378,7 @@ setGeneric("plot", function(x, y=NULL, ...){ standardGeneric("plot") })
 
 #' @rdname plot-methods
 #' @export
-setMethod("plot", c("DEC", "missing"),
+setMethod("plot", c("DAC", "missing"),
         function(x, ...){
             return(volcanoViewer(x, ...))
         }

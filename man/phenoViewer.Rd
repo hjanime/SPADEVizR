@@ -5,7 +5,7 @@
 \title{Visualization of cluster phenotypes}
 \usage{
 phenoViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
-  show.mean = "both", show.on_device = TRUE)
+  show.mean = "both", show.on_device = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{Results}{a SPADEResults or Result object}
@@ -19,6 +19,8 @@ phenoViewer(Results, clusters = NULL, samples = NULL, markers = NULL,
 \item{show.mean}{a character specifying if marker means expression should be displayed, possible value are among : "none", "only" or "both"}
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+
+\item{verbose}{a logical specifying if the details of computation must be printed}
 }
 \value{
 a list of 'ggplot' objects

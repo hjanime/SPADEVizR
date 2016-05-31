@@ -12,7 +12,7 @@ treeViewer(SPADEResults, samples = NULL, highlight = NULL, marker = NULL,
 
 \item{samples}{a character vector providing the sample names to used (all samples by default)}
 
-\item{highlight}{an AC, DEC or CC object to highligth identified significant clusters in the SPADE tree}
+\item{highlight}{an AC, DAC or CC object to highligth identified significant clusters in the SPADE tree}
 
 \item{marker}{a character specifying the marker name to display}
 

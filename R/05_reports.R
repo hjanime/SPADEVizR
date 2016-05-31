@@ -23,9 +23,10 @@
 #' @param plot.names a character vector specifying the names (see details) and the order of the desired plots
 #' @param clusters a character vector of clusters to include in the report (all will be included by default)
 #' @param markers a character vector of markers to include in the report (all will be included by default)
+#' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param assignments a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment
 #' @param conditions conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude
-#' @param stat.objects a vector of plotable objects to be displayed in the report (object of class 'DEC', 'AC', 'CC' or 'CCR' accepted)
+#' @param stat.objects a vector of plotable objects to be displayed in the report (object of class 'DAC', 'AC', 'CC' or 'CCR' accepted)
 #' @param width a numeric specifying the plot width in centimeter
 #' @param height a numeric specifying the plot height in centimeter
 #'
@@ -37,11 +38,13 @@ generateReport <- function(Results,
                            plot.names      = c("count", "heatmap", "tree", "disto", "MDSclusters", "pheno"),
                            clusters        = NULL,
                            markers         = NULL,
+                           samples         = NULL,
                            assignments     = NULL,
                            conditions      = NULL,
                            stat.objects    = list(),
-                           width           = 29.7,
-                           height          = 21){
+                           width           = 30,
+                           height          = 15,
+                           verbose         = TRUE) {
     
     message("[BEGIN] - report")
 
@@ -56,62 +59,76 @@ generateReport <- function(Results,
     if (is.element(c("boxplot_pheno", "boxplot"), plot.names) && is.null(conditions)){
         stop("Error in generateReport : 'boxplot_pheno' and/or 'boxplot' report required conditions")
     }
-    
-    for(i in 1:length(plot.names)){
-        switch(plot.names[i],
-               "count"           = {
-               plots <- c(plots, list(countViewer(Results, clusters = clusters, show.on_device = FALSE)))
+
+    nb.plot <- length(plot.names) + length(stat.objects)
+    i       <- 0   
+
+    if (length(plot.names)) {
+        for (i in 1:length(plot.names)) {
+            if (verbose) {
+                message(paste0("\t Generate: ", plot.names[i],", ", i, " on ", nb.plot))
+            }
+            switch(plot.names[i],
+               "count" = {
+                   plots <- c(plots, list(countViewer(Results, samples = samples, clusters = clusters, show.on_device = FALSE)))
                },
-               "MDS_clusters"    = {
-               plots <- c(plots, list(MDSViewer(Results, space = "clusters", clusters = clusters, show.on_device = FALSE)))
+               "MDS_clusters" = {
+                   plots <- c(plots, list(MDSViewer(Results, space = "clusters", clusters = clusters, show.on_device = FALSE)))
                },
-               "MDS_samples"     = {
-               plots <- c(plots, list(MDSViewer(Results, space = "samples", clusters = clusters, assignments = assignments, show.on_device = FALSE)))
+               "MDS_samples" = {
+                   plots <- c(plots, list(MDSViewer(Results, space = "samples", clusters = clusters, assignments = assignments, show.on_device = FALSE)))
                },
-               "heatmap"           = {
-               plots <- c(plots, list(heatmapViewer(Results, show.on_device = FALSE)))
+               "heatmap" = {
+                   plots <- c(plots, list(heatmapViewer(Results, show.on_device = FALSE)))
                },
-               "tree"            = {
-               plots <- c(plots, list(treeViewer(Results, show.on_device = FALSE)))
+               "tree" = {
+                   plots <- c(plots, list(treeViewer(Results, samples = samples, show.on_device = FALSE)))
                },
                "kinetics_pheno" = {
                    kinetics.plots <- kineticsViewer(Results, clusters = clusters, assignments = assignments, show.on_device = FALSE)
-                   cluster.plots  <- phenoViewer(Results, clusters = clusters, markers = markers, show.on_device = FALSE)
-                   
-                   for (i in 1:length(kinetics.plots)){
-                       plots <- c(plots, list(gridExtra::arrangeGrob(kinetics.plots[[i]], cluster.plots[[i]], ncol = 2)))
+                   cluster.plots  <- phenoViewer(Results, samples = samples, clusters = clusters, markers = markers, show.on_device = FALSE)
+
+                   for (j in 1:length(kinetics.plots)) {
+                       if (verbose) {
+                           message(paste0("\tCluster ", j, " on ", length(kinetics.plots)))
+                       }
+                       plots <- c(plots, list(gridExtra::arrangeGrob(kinetics.plots[[j]], cluster.plots[[j]], ncol = 2)))
                    }
                },
                "boxplot_pheno" = {
                    boxplot.plots <- boxplotViewer(Results, clusters = clusters, conditions = conditions, show.on_device = FALSE)
-                   cluster.plots <- phenoViewer(Results, clusters = clusters, markers = markers, show.on_device = FALSE)
-                   
-                   for (i in 1:length(boxplot.plots)){
-                       plots <- c(plots, list(gridExtra::arrangeGrob(boxplot.plots[[i]], cluster.plots[[i]], ncol = 2)))
+                   cluster.plots <- phenoViewer(Results, samples = samples, clusters = clusters, markers = markers, show.on_device = FALSE)
+
+                   for (j in 1:length(boxplot.plots)) {
+                       if (verbose) {
+                            message(paste0("\tCluster ", j, " on ", length(boxplot.plots)))
+                       }
+                       plots <- c(plots, list(gridExtra::arrangeGrob(boxplot.plots[[j]], cluster.plots[[j]], ncol = 2)))
                    }
                },
-               "boxplot"         = {
-                   plots <- c(plots, boxplotViewer(Results, clusters = clusters, conditions = conditions, show.on_device = FALSE))
+               "boxplot" = {
+                       plots <- c(plots, boxplotViewer(Results, clusters = clusters, conditions = conditions, verbose = verbose, show.on_device = FALSE))
                },
-               "kinetics"         = {
-                   plots <- c(plots, kineticsViewer(Results, assignments = assignments, clusters = clusters, show.on_device = FALSE))
+               "kinetics" = {
+                       plots <- c(plots, kineticsViewer(Results, assignments = assignments, clusters = clusters, verbose = verbose, show.on_device = FALSE))
                },
-               "cluster"         = {
-                   plots <- c(plots, phenoViewer(Results, clusters = clusters, markers = markers, show.on_device = FALSE))
+               "pheno" = {
+                       plots <- c(plots, phenoViewer(Results, samples = samples, clusters = clusters, markers = markers, verbose = verbose, show.on_device = FALSE))
                },
-               "disto"           = {
-                   plots <- c(plots, list(distogramViewer(Results, show.on_device = FALSE)))
+               "disto" = {
+                       plots <- c(plots, list(distogramViewer(Results, samples = samples, show.on_device = FALSE)))
                },
-               "stream"          = {
-                   plots <- c(plots, list(streamgraphViewer(Results, clusters = clusters, show.on_device = FALSE)))
-               },
-               "count"           = {
-                   plots <- c(plots, list(countViewer(Results, clusters = clusters, show.on_device = FALSE)))
+               "stream" = {
+                       plots <- c(plots, list(streamgraphViewer(Results, samples = samples, clusters = clusters, show.on_device = FALSE)))
                })
-       
-    }
 
-    for(stat.object in c(stat.objects)){
+        }
+    }
+    for (stat.object in stat.objects) {
+        if (verbose) {
+            i <- i + 1
+            message(paste0("\t Generate: ", names(stat.object), ", ", i, " on ", nb.plot))
+        }
         plots <- c(plots, list(plot(stat.object, show.on_device = FALSE)))
     }
 

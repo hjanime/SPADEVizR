@@ -25,15 +25,19 @@
 #' 
 #' @param cluster.abundances a dataframe of cells abundances with clusters in row and samples in column 
 #' @param cluster.phenotypes a dataframe containing median marker expression values for each cluster of each sample. In additions of markers, the 2 two first columns are are dedicated to "cluster" and "sample" 
-#' 
+#' @param th.min_cells a numeric specifying the minimun number of cell in a cluster of a sample to take in account its phenotype
+#'
 #' @return a S4 object of class 'Results'
 #' 
 #' @export 
 importResults <- function(cluster.abundances,
-                          cluster.phenotypes) {
+                          cluster.phenotypes,
+                          th.min_cells = 50) {
 
     colnames(cluster.phenotypes)[1] <- "sample"
     colnames(cluster.phenotypes)[2] <- "cluster"
+
+    cluster.abundances[cluster.abundances < th.min_cells] <- 0
 
     min.bounds <- apply(cluster.phenotypes[, - c(1, 2)], 2, min, na.rm = TRUE)
     max.bounds <- apply(cluster.phenotypes[, - c(1, 2)], 2, max, na.rm = TRUE)
@@ -69,7 +73,8 @@ importResults <- function(cluster.abundances,
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute maker range quantiles. First is the lower bound and second is the upper bound.
 #' @param use.raw.medians a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)
 #' @param quantile.approximation a logical specifying if maker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
-#' 
+#' @param th.min_cells a numeric specifying the minimun number of cell in a cluster of a sample to take in account its phenotype
+#'
 #' @return a S4 object of class 'SPADEResults'
 #' 
 #' @import flowCore 
@@ -80,7 +85,8 @@ importSPADEResults <- function(path,
                                exclude.markers        = c("cell_length", "FileNum", "density", "time"),
                                probs                  = c(0.05,0.95),
                                use.raw.medians        = FALSE,
-                               quantile.approximation = FALSE){
+                               quantile.approximation = FALSE,
+                               th.min_cells           = 50) {
     
     message("[START] - extracting SPADE results")
     message(paste0(basename(path), "\n"))
@@ -111,21 +117,28 @@ importSPADEResults <- function(path,
         name <- gsub('.fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$', '', basename(file))
         SPADE.matrix       <- read.table(file, sep = ",", header = TRUE, stringsAsFactors = FALSE, check.names = FALSE)
         cells.count.sample <- SPADE.matrix [,"count"]
-                
+
+        cells.count.sample[cells.count.sample < th.min_cells] <- 0
+
         if(nrow(cells.count)){
             cells.count     <- cbind(cells.count, cells.count.sample)
             samples.headers <- append(samples.headers, name)
         }else{
-            cells.count     <- data.frame(row.names = SPADE.matrix [,"ID"], cells.count.sample)
+            cells.count     <- data.frame(row.names = SPADE.matrix [, "ID"], cells.count.sample)
             samples.headers <- name
         }
         
         marker.expressions.sample <- SPADE.matrix[, grep("count|percenttotal", colnames(SPADE.matrix), invert = TRUE)]
+
+        marker.expressions.sample[cells.count.sample == 0,] <- rep(NA, ncol(marker.expressions.sample))
+
         marker.expressions.sample <- cbind(name = rep(name, nrow(marker.expressions.sample)), marker.expressions.sample)
         marker.expressions        <- rbind(marker.expressions, marker.expressions.sample)
 
+
+
     }
-    
+
     nb.cluster            <- nrow(cells.count)
     colnames(cells.count) <- samples.headers
 
@@ -191,9 +204,9 @@ importSPADEResults <- function(path,
 #'
 #' @param header a character vector containing the original maker names
 #' @param dictionary a character vector containing a correspondence between the original and the new marker names
-#' 
+#'
 #' @return a character vector containing the renamed marker names
-rename.markers <- function(header,dictionary){
+rename.markers <- function(header, dictionary) {
       
     dictionary[,1] <- as.vector(dictionary[,1])
     dictionary[,2] <- as.vector(dictionary[,2])
@@ -208,7 +221,7 @@ rename.markers <- function(header,dictionary){
     for(i in 1:nrow(dictionary)){
         header[which(header == dictionary[i, 1])[1]] <- dictionary[i, 2]
     }
-    
+
     return(header)
 }
 

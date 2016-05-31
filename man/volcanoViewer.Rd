@@ -2,14 +2,12 @@
 % Please edit documentation in R/03_plots.R
 \name{volcanoViewer}
 \alias{volcanoViewer}
-\title{Visualization of differentially enriched clusters}
+\title{Visualization of differentially abundant clusters}
 \usage{
-volcanoViewer(DEC = NULL, fc.log2 = TRUE, show.cluster.sizes = TRUE,
+volcanoViewer(DAC = NULL, fc.log2 = TRUE, show.cluster.sizes = TRUE,
   show.all_labels = FALSE, show.on_device = TRUE)
 }
 \arguments{
-\item{DEC}{an object of class 'DEC' (object returned by the 'computeDEC()' function)}
-
 \item{fc.log2}{a logical specifying if fold-change or log2(fold-change) is use}
 
 \item{show.cluster.sizes}{a logical specifying if dot sizes are proportional to cell counts}
@@ -17,6 +15,8 @@ volcanoViewer(DEC = NULL, fc.log2 = TRUE, show.cluster.sizes = TRUE,
 \item{show.all_labels}{a logical specifying if all cluster labels must be show or just significant cluster}
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+
+\item{DEC}{an object of class 'DAC' (object returned by the 'computeDAC()' function)}
 }
 \value{
 a 'ggplot' object
@@ -25,6 +25,6 @@ a 'ggplot' object
 Generates a Volcano plot representation showing for each cluster
 }
 \details{
-By default, only significant differentially enriched clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.
+By default, only significant differentially abundant clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.
 }
 

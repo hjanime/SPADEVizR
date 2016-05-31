@@ -6,7 +6,7 @@
 \alias{export,AC-method}
 \alias{export,CC-method}
 \alias{export,CCR-method}
-\alias{export,DEC-method}
+\alias{export,DAC-method}
 \alias{export,Results-method}
 \title{Exportation of SPADEVizR objects}
 \usage{
@@ -16,7 +16,7 @@ export(object, filename = "export.txt")
 
 \S4method{export}{AC}(object, filename = "export.txt")
 
-\S4method{export}{DEC}(object, filename = "export.txt")
+\S4method{export}{DAC}(object, filename = "export.txt")
 
 \S4method{export}{CC}(object, filename = "export.txt")
 

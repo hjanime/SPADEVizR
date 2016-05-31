@@ -6,7 +6,7 @@
 \alias{show,AC-method}
 \alias{show,CC-method}
 \alias{show,CCR-method}
-\alias{show,DEC-method}
+\alias{show,DAC-method}
 \alias{show,Results-method}
 \alias{show,SPADEResults-method}
 \title{Textual previews for SPADEVizR objects}
@@ -17,7 +17,7 @@
 
 \S4method{show}{AC}(object)
 
-\S4method{show}{DEC}(object)
+\S4method{show}{DAC}(object)
 
 \S4method{show}{CC}(object)
 

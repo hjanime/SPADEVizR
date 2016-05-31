@@ -30,12 +30,12 @@ setOldClass("igraph") # give access to igraph class
 #' @rdname Results-class
 #' @exportClass Results
 Results <- setClass("Results",
-                    slots=c(cells.count        = "data.frame",
-                            marker.expressions = "data.frame",
-                            sample.names       = "character",
-                            marker.names       = "character",
-                            cluster.number     = "numeric",
-                            bounds             = "data.frame"),
+                    slots = c(cells.count        = "data.frame",
+                              marker.expressions = "data.frame",
+                              sample.names       = "character",
+                              marker.names       = "character",
+                              cluster.number     = "numeric",
+                              bounds             = "data.frame"),
                     validity = function(object){
                         if((length(object@marker.names) + 2) != ncol(object@marker.expressions)){
                             message(paste0("Object Results, Error : marker.names length (",
@@ -173,7 +173,7 @@ SPADEResults <- setClass("SPADEResults",
 #' This object is returned by the 'identifyAC()' function. 
 #' 
 #' @slot sample.names a character vector containing the samples used to compute the abundant clusters
-#' @slot cluster.size a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster
+#' @slot cluster.size a numeric vector containing the number of cells for each cluster
 #' @slot use.percentages a logical specifying if computation was performed on percentage of cell abundance
 #' @slot method a character containing the name of the statistical test used to identify the abundant clusters
 #' @slot method.adjust a character containing the name of the multiple correction method used (if any)
@@ -228,33 +228,33 @@ AC <- setClass("AC",
                }
 )
 
-#' @title Differentially Enriched Clusters (DEC class) definition
+#' @title Differentially Abundant Clusters (DAC class) definition
 #' 
 #' @description 
-#' The 'DEC' object is a S4 object containing the information related to the differentially enriched clusters between two given biological conditions. 
+#' The 'DAC' object is a S4 object containing the information related to the differentially abundant clusters between two given biological conditions. 
 #' Moreover this object contains all parameters used in the statistical analysis.  
 #' 
 #' @details 
 #' A cluster is considered as a differentially enriched cluster if its associated p-value and fold-change are below the specific thresholds 'th.pvalue' and 'th.fc'.  
 #' 
 #' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
-#' This object is returned by the 'identifyDEC()' function. 
+#' This object is returned by the 'identifyDAC()' function. 
 #' 
 #' @slot sample.cond1 a character specifying the names of the samples of the first biological condition
 #' @slot sample.cond2 a character specifying the names of the samples of the second biological condition
-#' @slot cluster.size a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster
+#' @slot cluster.size a numeric vector containing the number of cells for each cluster
 #' @slot use.percentages a logical specifying if computation was performed on percentage of cell abundance
-#' @slot method a character containing the name of the statistical test used to identify the DEC
+#' @slot method a character containing the name of the statistical test used to identify the DAC
 #' @slot method.adjust a character containing the name of the multiple correction method used (if any)
 #' @slot method.paired a logical indicating if the statistical test have been performed in a paired manner
 #' @slot th.fc a numeric value specifying the fold-change threshold
 #' @slot th.pvalue a numeric value specifying the p-value threshold
-#' @slot result a data.frame containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially enriched.
+#' @slot result a data.frame containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially abundant.
 #'
-#' @name DEC-class
-#' @rdname DEC-class
-#' @exportClass DEC
-DEC <- setClass("DEC",
+#' @name DAC-class
+#' @rdname DAC-class
+#' @exportClass DAC
+DAC <- setClass("DAC",
         slots=c(sample.cond1    = "character",
                 sample.cond2    = "character",
                 cluster.size    = "numeric",
@@ -268,36 +268,36 @@ DEC <- setClass("DEC",
         validity = function(object){
 
             if(length(object@sample.cond1) == 0){
-                message("Object DEC, Error : sample.cond1 length can't be equal to 0")
+                message("Object DAC, Error : sample.cond1 length can't be equal to 0")
                 return(FALSE)
             }
             if(length(object@sample.cond2) == 0){
-                message("Object DEC, Error : sample.cond2 length can't be equal to 0")
+                message("Object DAC, Error : sample.cond2 length can't be equal to 0")
                 return(FALSE)
             }
             if(!any(object@method %in% c("t.test","wilcox.test"))){
-                message("Object DEC, Error : method must match 't.test' or 'wilcox.test'")
+                message("Object DAC, Error : method must match 't.test' or 'wilcox.test'")
                 message(paste0("method founded is : ", object@method))
                 return(FALSE)
             }
             if(!any(object@method.adjust %in% c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"))){
-                message("Object DEC, Error : method.adjust must match 'holm', 'hochberg', 'hommel', 'bonferroni', 'BH', 'BY', 'fdr', 'none')")
+                message("Object DAC, Error : method.adjust must match 'holm', 'hochberg', 'hommel', 'bonferroni', 'BH', 'BY', 'fdr', 'none')")
                 message(paste0("method.adjust founded is : ", object@method.adjust))
                 return(FALSE)
             }
             if(object@th.pvalue < 0 || object@th.pvalue > 1){
-                message("Object DEC, Error : th.pvalue must be include into [0,1] interval")
+                message("Object DAC, Error : th.pvalue must be include into [0,1] interval")
                 message(paste0("th.pvalue founded is : ", object@th.pvalue))
                 return(FALSE)
             }
             if(object@th.fc == 0){
-                message("Object DEC, Error : th.fc can't be equal to 0")
+                message("Object DAC, Error : th.fc can't be equal to 0")
                 message(paste0("th.fc founded is : ", object@th.fc))
                 return(FALSE)
             }
             if(!identical(colnames(object@result),c("cluster","mean.cond1","sd.cond1","mean.cond2","sd.cond2","fold.change","pvalue","significant"))){
                 print(colnames(object@result))
-                message("Object DEC, Error in result slot, result must have this colmuns : 'cluster','mean.cond1','sd.cond1','mean.cond2','sd.cond2','fold.change','pvalue','significant'")
+                message("Object DAC, Error in result slot, result must have this colmuns : 'cluster','mean.cond1','sd.cond1','mean.cond2','sd.cond2','fold.change','pvalue','significant'")
                 message("Colmuns found are : ")
                 message(paste(colnames(object@result)))
                 return(FALSE)
@@ -322,7 +322,7 @@ DEC <- setClass("DEC",
 #' 
 #' @slot sample.names a character vector containing the samples used to compute correlated clusters
 #' @slot variable a numeric vector containing the expression values of the associated variable
-#' @slot cluster.size a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster
+#' @slot cluster.size a numeric vector containing the number of cells for each cluster
 #' @slot use.percentages a logical specifying if computation was performed on percentage of cell abundance
 #' @slot method a character containing the name of the statistical test used to identify the CC
 #' @slot method.adjust a character containing the name of the multiple correction method used (if any)
@@ -395,7 +395,7 @@ CC <- setClass("CC",
 #' The 'CR' is a S4 object containing the information related to the cluster classification based on theirs marker expressions.
 #' 
 #' 
-#' This object contains all information about the classification method and parameters used.  
+#' This object contains all information about the classification method and parameters used.
 #' 	
 #' @details 
 #' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
@@ -405,6 +405,7 @@ CC <- setClass("CC",
 #'
 #' @slot type a character specifying if the classification is based on the phenotype profiles or on the enrichment profiles
 #' @slot class.number a numeric value specifying the number of clusters
+#' @slot cluster.size a numeric vector containing the number of cells for each cluster
 #' @slot method a character specifying the method used to classify cluster
 #' @slot method.parameter a named list of parameters used by the classification method
 #' @slot classes a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
@@ -415,12 +416,13 @@ CC <- setClass("CC",
 CCR <- setClass("CCR",
                 slots = c(type             = "character", 
                           class.number     = "numeric",
+                          cluster.size     = "numeric",
                           method           = "character",
                           method.parameter = "numeric",
                           classes          = "data.frame"),
                 validity = function(object) {
 
-                    if (!is.element(object@type, c("phenotype", "enrichment"))) {
+                    if (!is.element(object@type, c("phenotype", "abundance"))) {
                         message("Object CCR, Error : the 'type' slot must be 'phenotype' or 'enrichment' ")
                         return(FALSE)
                     }
@@ -439,7 +441,6 @@ CCR <- setClass("CCR",
                      
                     return(TRUE)
                })
-
 
 #' @title Definition of class names 
 #'
@@ -474,8 +475,8 @@ setMethod("names", "AC",
 
 #' @rdname names-methods
 #' @export
-setMethod("names", "DEC",
-         definition = function(x){return("DEC")}
+setMethod("names", "DAC",
+         definition = function(x){return("DAC")}
 )
 
 #' @rdname names-methods

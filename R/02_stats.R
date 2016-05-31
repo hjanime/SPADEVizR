@@ -66,10 +66,10 @@ identifyAC <- function(Results,
     return(AC)
 }
 
-#' @title Identification of the Differentially Enriched Clusters
+#' @title Identification of the Differentially Abundant Clusters
 #' 
 #' @description
-#' This function is used to identify differentially enriched clusters. 
+#' This function is used to identify differentially abundant clusters. 
 #' That is to say clusters that are differentially abundant between two biologicals conditions.
 #' 
 #' @param Results a 'Results' or 'SPADEResults' object
@@ -82,10 +82,10 @@ identifyAC <- function(Results,
 #' @param th.pvalue a numeric specifying the p-value threshold
 #' @param th.fc a numeric specifying the fold-change threshold
 #'
-#' @return a S4 object of class 'DEC'
+#' @return a S4 object of class 'DAC'
 #' 
 #' @export
-identifyDEC <- function(Results,
+identifyDAC <- function(Results,
                         condition1,
                         condition2,
                         use.percentages = TRUE,
@@ -95,7 +95,7 @@ identifyDEC <- function(Results,
                         th.pvalue       = 0.05,
                         th.fc           = 1){
     
-    message("[START] - Identification of Differentially Enriched Clusters\n")
+    message("[START] - Identification of Differentially Abundant Clusters\n")
 
     data         <- Results@cells.count
     data.cond1   <- data[, condition1, drop = FALSE]
@@ -125,9 +125,16 @@ identifyDEC <- function(Results,
                     if(!is.na(fc) && fc < 1){
                         fc <- (-1 / fc)
                     }
+                    if (is.na(fc)) {
+                        warning("Fold-change is NA due to division by infinite")
+                    }
+                    if (is.infinite(fc)) {
+                        fc <- NA
+                        warning("Fold-change is infinite due to division by 0")
+                    }
                     return(fc)
                })
-    
+    print(fc)
     result <- data.frame(cluster     = rownames(Results@cells.count),
                          mean.cond1  = apply(data.cond1, 1, mean),
                          sd.cond1    = apply(data.cond1, 1, sd),
@@ -141,7 +148,7 @@ identifyDEC <- function(Results,
     
     thresholds <- c(pvalue = th.pvalue, fc = th.fc)
     
-    DEC <- methods::new("DEC",
+    DAC <- methods::new("DAC",
                         sample.cond1    = colnames(data.cond1),
                         sample.cond2    = colnames(data.cond2),
                         cluster.size    = cluster.size, 
@@ -152,11 +159,11 @@ identifyDEC <- function(Results,
                         th.fc           = th.fc,
                         th.pvalue       = th.pvalue,
                         result          = result)
-    print(DEC)
+    print(DAC)
 
-    message("[END] - Identification of Differentially Enriched Clusters")
+    message("[END] - Identification of Differentially Abundant Clusters")
     
-    return(DEC)
+    return(DAC)
 }
 
 #' @title Identification of the correlation of SPADE cluster with a phenotype
@@ -237,10 +244,10 @@ identifyCC <- function(Results,
     return(CC)
 }
 
-#' @title Classification of clutering results based on the phenotype profiles or enrichment profiles
+#' @title Classification of clutering results based on the phenotype profiles or abundance profiles
 #' 
 #' @description 
-#' Classifies clusters based on their phenotype profiles (expressions of markers) or enrichment profiles (number of cells for each cluster).
+#' Classifies clusters based on their phenotype profiles (expressions of markers) or abundance profiles (number of cells for each cluster).
 #' 
 #' @details 
 #' The classification is done on cell abundances of each clusters and could be performed using 5 methods:
@@ -267,7 +274,7 @@ identifyCC <- function(Results,
 #' }
 #' 
 #' @param Results a Results or SPADEResults object
-#' @param type a character specifying if the classification is based on the phenotype profiles or on the enrichment profiles
+#' @param type a character specifying if the classification is based on the phenotype profiles or on the abundance profiles
 #' @param method a character specifying the clustering method among one of those : "hierarchical_h", "hierarchical_k","k-means","eigencell","clique"
 #' @param method.parameter a numeric specifying the numeric value required by the selected method 
 #' 
@@ -295,10 +302,10 @@ classifyClusteringResults <- function(Results,
         data           <- data[, colnames(data) != "cluster"]
         rownames(data) <- rownames(Results@cells.count)
         data           <- stats::na.omit(data) # NA values are removed, generate a warning ?
-    }else if (type == "enrichment"){
+    }else if (type == "abundance"){
         data           <- Results@cells.count
     }else{
-        stop("Error : In classifyClusteringResults, 'type' parameter must be 'phenotype' or 'enrichment'")
+        stop("Error : In classifyClusteringResults, 'type' parameter must be 'phenotype' or 'abundance'")
     }
 
     switch(method,
@@ -336,21 +343,26 @@ classifyClusteringResults <- function(Results,
     classes$class <- as.numeric(classes$class)
     classes       <- classes[order(classes$class),]
 
-    pheno <- methods::new("CCR",
-                          type             = type,
-                          class.number     = length(unique(classes[!is.na(classes$class), 2])),
-                          method           = method,
-                          method.parameter = method.parameter,
-                          classes          = classes)
+    cluster.size <- apply(Results@cells.count, 1, sum)
+    names(cluster.size) <- rownames(data)
+    
+    CCR <- methods::new("CCR",
+                        type             = type,
+                        class.number     = length(unique(classes[!is.na(classes$class), 2])),
+                        cluster.size     = cluster.size,
+                        method           = method,
+                        method.parameter = method.parameter,
+                        classes          = classes)
+    print(CCR)
 
     message("[END] - computing classifyClusteringResults")
-    return(pheno)
+    return(CCR)
 }
 
 #' @title Internal - Hierarchical classification
 #' 
 #' @description 
-#' This function is used internally to classify clusters enrichment profiles or phenotype profiles using a hierarchical algorithm. 
+#' This function is used internally to classify clusters abundance profiles or phenotype profiles using a hierarchical algorithm. 
 #' 
 #' @details 
 #' This function compute the Pearson correlation matrix associated to the provided matrix. 
@@ -390,7 +402,7 @@ computeHierarchicalClustering <- function (data,
 #' @title Internal - Kmeans classification
 #' 
 #' @description 
-#' This function is used internally to classify clusters enrichment profilies or phenotype profiles using a k-means algorithm. 
+#' This function is used internally to classify clusters abundance profilies or phenotype profiles using a k-means algorithm. 
 #' 
 #' @details 
 #' This method works as described in the R stats documentation (?kmeans) using the 'k' parameter to specify the desired number of classes.
@@ -412,7 +424,7 @@ computeKmeans <- function(data,
 #' @title Internal - Eigen vector classification
 #' 
 #' @description 
-#' This function is used internally to classify clusters enrichment profiles or phenotype profiles using eigen vector decomposition. 
+#' This function is used internally to classify clusters abundance profiles or phenotype profiles using eigen vector decomposition. 
 #' 
 #' @details 
 #' This method compute the performs a eigen vector decomposition and then calculate the correlations between the matrix rows and these vectors.
@@ -462,7 +474,7 @@ computeEigenCellClusters <- function(data,
 #' @title Internal - Clique percolation classification
 #' 
 #' @description 
-#' This function is used internally to classify clusters enrichment profiles or phenotype profiles using a clique percolation algorithm. 
+#' This function is used internally to classify clusters abundance profiles or phenotype profiles using a clique percolation algorithm. 
 #' 
 #' @details 
 #' This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.

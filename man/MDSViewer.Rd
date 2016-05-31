@@ -13,7 +13,7 @@ MDSViewer(Results, use.percentages = TRUE, assignments = NULL,
 
 \item{use.percentages}{a logical specifying if the visualization should be performed on percentage}
 
-\item{assignments}{a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment}
+\item{assignments}{a 2 column data.frame with the samples names in row names providing firstly the biologicial condition and secondly the individuals of the experiment}
 
 \item{clusters}{a character vector containing the clusters names to be visualized (by default all clusters will be displayed)}
 
@@ -27,7 +27,7 @@ MDSViewer(Results, use.percentages = TRUE, assignments = NULL,
 a list of 'ggplot' objects
 }
 \description{
-Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs enrichment.
+Generate a Multidimensional Scaling (MDS) representation showing the similarities between SPADE results based on theirs abundances.
 }
 \details{
 The 'space' parameter specifying if the cluster or sample similarities will be determined using MDS.

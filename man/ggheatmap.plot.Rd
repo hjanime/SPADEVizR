@@ -17,6 +17,6 @@ ggheatmap.plot(list, col.width = 0.15, row.width = 0.15)
 a ggplot2 axis
 }
 \description{
-This function displays the heatmap elements build by 'ggheatmap()'
+This function is used internally to displays the heatmap elements build by 'ggheatmap()'
 }
 

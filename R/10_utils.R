@@ -14,8 +14,9 @@
 #' @import gtools plyr
 #' @importFrom plyr is.discrete
 computePhenoTable <- function(SPADEResults, num = 5){
-    
-    data        <- SPADEResults@marker.expressions[colnames(SPADEResults@marker.expressions)]
+
+    data        <- SPADEResults@marker.expressions
+
     data        <- na.omit(data)# NA values are removed, generate a warning ?
     data.melted <- reshape2::melt(data, id.vars = c("sample", "cluster"))
     
@@ -28,10 +29,12 @@ computePhenoTable <- function(SPADEResults, num = 5){
         
         cluster <- means[i, "cluster"]
         value   <- means[i, "value"]
+
         min     <- SPADEResults@bounds[1, means[i, "marker"]]
         max     <- SPADEResults@bounds[2, means[i, "marker"]]
+
         seq     <- seq(from = min, to = max, length.out = num)
-        means[i,"value"] <- which.min(abs(value - seq))
+        means[i, "value"] <- which.min(abs(value - seq))
         
     }
     
@@ -91,7 +94,7 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
                                                                                                    title.position = "top")) + 
                    ggplot2::theme(legend.text          = ggplot2::element_text(size = 4),
                                   panel.background     = ggplot2::element_rect("white"),
-                                  axis.text.x          = ggplot2::element_text(angle = 290, hjust = 0, vjust = 1),
+                                  axis.text.x          = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1),
                                   legend.position      = c(ifelse(num >= 5, 0.6, 1 - (num * 0.1)), 0.5),
                                   legend.background    = ggplot2::element_blank())
 
@@ -201,7 +204,7 @@ g_axis <- function(gplot, x.axis =! y.axis, y.axis =! x.axis ){
 #' @title Internal - Generate an heatmap by assembling elements
 #'
 #' @description 
-#' This function displays the heatmap elements build by 'ggheatmap()'
+#' This function is used internally to displays the heatmap elements build by 'ggheatmap()'
 #'
 #' @param list the list of ggplot object provided by ggheatmap
 #' @param col.width size of horizontal dendrogram
@@ -247,4 +250,111 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
                                   top           = "Pheno Viewer")
 
     return(ret)
+}
+
+#' @title Internal - Generate a circle representation
+#'
+#' @description 
+#' This function is used internally to generate a packed circles representation
+#'
+#' @param circles a 2 column dataframe the clusters to be displayed and theirs sizes
+#' @param class a numeric specifyng the class number to be displayed
+#' @param color a character specifying the color of the packed circles representation
+#' @param npoint a numeric specifying the levels of details of polygones
+#' @param limits a numeric specifying the size of the coordinate system centered on (0,0)
+#'
+#' @return a ggplot2 object
+#'
+#' @import ggplot2 ggrepel gridExtra grid packcircles
+buildCircles <- function(circles,
+                         color   = "grey80",
+                         class   = NA,
+                         npoint  = 100,
+                         limits  = 30000,
+                         maxiter = 100) {
+
+    xyr <- data.frame(x = runif(nrow(circles), 0, 1),
+                      y = runif(nrow(circles), 0, 1),
+                      r = circles$size)
+
+    res  <- packcircles::circleLayout(xyr, xlim = c( - limits, limits), ylim = c( - limits, limits), maxiter = 1000, wrap = FALSE)
+    data <- packcircles::circlePlotData(layout = res$layout, npoints = npoint)
+    text <- cbind(res$layout, cluster = circles$cluster)
+    
+    plot <- ggplot2::ggplot(data = data) +
+            ggplot2::ggtitle(paste0("Class ", class)) +
+            ggplot2::geom_polygon(ggplot2::aes_string(x = "x", y = "y", group = "id"),
+                                  fill = color,
+                                  color = "grey80",
+                                  alpha = 0.2) +
+            ggrepel::geom_text_repel(data = text, ggplot2::aes_string(x = "x", y = "y", label = "cluster"), size = 3,
+                                     box.padding = grid::unit(0.35, "lines"),
+                                     point.padding = grid::unit(0.3, "lines")) +
+            ggplot2::coord_equal(xlim = c( - limits, limits), ylim = c( - limits, limits)) +
+            ggplot2::theme(axis.line = ggplot2::element_blank(),
+                           axis.text.x = ggplot2::element_blank(),
+                           axis.text.y = ggplot2::element_blank(),
+                           axis.ticks = ggplot2::element_blank(),
+                           axis.title.x = ggplot2::element_blank(),
+                           axis.title.y = ggplot2::element_blank(),
+                           legend.position = "none",
+                           panel.background = ggplot2::element_blank(),
+                           panel.border = ggplot2::element_blank(),
+                           panel.grid.major = ggplot2::element_blank(),
+                           panel.grid.minor = ggplot2::element_blank(),
+                           plot.background = ggplot2::element_blank(),
+                           plot.margin = grid::unit(c(0, 0, 0, 0), "cm"),
+                           panel.margin = grid::unit(c(0, 0, 0, 0), "cm"))
+
+    return(plot)
+
+}
+
+#' @title Internal - Generate an legend for circles representation
+#'
+#' @description 
+#' This function is used internally to generate the legend of a packed circles representation
+#'
+#' @param circles a 3 colmuns data frame with the x, y coordinate of points and their raduis
+#' @param npoint a numeric specifying the levels of details of polygones
+#' @param limits a numeric specifying the size of the coordinate system centered on (0,0)
+#' 
+#' @return a ggplot2 object
+#'
+#' @import ggplot2 ggrepel gridExtra grid packcircles
+buildCirclesLegend <- function(circles = data.frame(x = c(-29500, -19000, -8000, 3000, 20000),
+                                                    y = c(0, 0, 0, 0, 0),
+                                                    r = c(500, 1000, 2000, 5000, 10000)),
+                               npoint  = 100,
+                               limits  = 30000) {
+
+    data <- packcircles::circlePlotData(layout = circles, npoints = npoint)
+    text <- circles
+    colnames(text) <- c("x", "y", "cluster")
+
+    plot <- ggplot2::ggplot(data = data) +
+            ggplot2::ggtitle("number.of.cells") +
+            ggplot2::geom_polygon(ggplot2::aes_string(x = "x", y = "y", group = "id"),
+                                  fill  = "white",
+                                  color = "grey80",
+                                  alpha = 0.2) +
+            ggplot2::geom_text(data = text, ggplot2::aes_string(x = "x", y = "y+20000", label = "cluster"), size = 3) +
+            ggplot2::coord_equal(xlim = c( - limits, limits), ylim = c( - limits, limits)) +
+            ggplot2::theme(axis.line        = ggplot2::element_blank(),
+                           axis.text.x      = ggplot2::element_blank(),
+                           axis.text.y      = ggplot2::element_blank(),
+                           axis.ticks       = ggplot2::element_blank(),
+                           axis.title.x     = ggplot2::element_blank(),
+                           axis.title.y     = ggplot2::element_blank(),
+                           legend.position  = "none",
+                           panel.background = ggplot2::element_blank(),
+                           panel.border     = ggplot2::element_blank(),
+                           panel.grid.major = ggplot2::element_blank(),
+                           panel.grid.minor = ggplot2::element_blank(),
+                           plot.background  = ggplot2::element_blank(),
+                           plot.margin      = grid::unit(c(0, 0, 0, 0), "cm"),
+                           panel.margin     = grid::unit(c(0, 0, 0, 0), "cm"))
+
+    return(plot)
+                       
 }

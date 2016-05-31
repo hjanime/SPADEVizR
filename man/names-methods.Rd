@@ -5,7 +5,7 @@
 \alias{names}
 \alias{names,AC-method}
 \alias{names,CCR-method}
-\alias{names,DEC-method}
+\alias{names,DAC-method}
 \alias{names,Results-method}
 \alias{names,SPADEResults-method}
 \title{Definition of class names}
@@ -16,7 +16,7 @@
 
 \S4method{names}{AC}(x)
 
-\S4method{names}{DEC}(x)
+\S4method{names}{DAC}(x)
 
 \S4method{names}{CCR}(x)
 }

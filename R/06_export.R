@@ -58,9 +58,9 @@ setMethod("export",c("AC"),
 
 #' @rdname export-methods
 #' @export
-setMethod("export",c("DEC"),
+setMethod("export",c("DAC"),
         function(object,filename){
-            cat(file = filename, "#Object DEC\n")
+            cat(file = filename, "#Object DAC\n")
             cat(file = filename, "#sample.cond1\t", paste0("\"", object@sample.cond1, "\"", collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#sample.cond2\t", paste0("\"", object@sample.cond2, "\"", collapse = "\t"), "\n", sep = "", append = TRUE)
             cat(file = filename, "#cluster.size\t", paste0(object@cluster.size, collapse = "\t"), "\n", sep = "", append = TRUE)

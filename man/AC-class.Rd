@@ -20,7 +20,7 @@ This object is returned by the 'identifyAC()' function.
 \describe{
 \item{\code{sample.names}}{a character vector containing the samples used to compute the abundant clusters}
 
-\item{\code{cluster.size}}{a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster}
+\item{\code{cluster.size}}{a numeric vector containing the number of cells for each cluster}
 
 \item{\code{use.percentages}}{a logical specifying if computation was performed on percentage of cell abundance}
 

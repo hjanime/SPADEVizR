@@ -18,7 +18,7 @@ computeHierarchicalClustering(data, class.number = NULL,
 a dataframe containing for each cluster, its name and class
 }
 \description{
-This function is used internally to classify clusters enrichment profiles or phenotype profiles using a hierarchical algorithm.
+This function is used internally to classify clusters abundance profiles or phenotype profiles using a hierarchical algorithm.
 }
 \details{
 This function compute the Pearson correlation matrix associated to the provided matrix. 

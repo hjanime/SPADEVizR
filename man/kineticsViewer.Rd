@@ -5,7 +5,7 @@
 \title{Visualization of cluster enrichment profiles kinetics}
 \usage{
 kineticsViewer(Results, assignments, clusters = NULL,
-  use.percentages = TRUE, show.on_device = TRUE)
+  use.percentages = TRUE, show.on_device = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{Results}{a SPADEResults or Results object}
@@ -17,6 +17,8 @@ kineticsViewer(Results, assignments, clusters = NULL,
 \item{use.percentages}{a logical specifying if the visualization should be performed on percentage}
 
 \item{show.on_device}{a logical specifying if the respresentation will be displayed on device}
+
+\item{verbose}{a logical specifying if the details of computation must be printed}
 }
 \value{
 a 'ggplot' object

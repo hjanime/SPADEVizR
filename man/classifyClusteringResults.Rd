@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_stats.R
 \name{classifyClusteringResults}
 \alias{classifyClusteringResults}
-\title{Classification of clutering results based on the phenotype profiles or enrichment profiles}
+\title{Classification of clutering results based on the phenotype profiles or abundance profiles}
 \usage{
 classifyClusteringResults(Results, type = "phenotype",
   method = "hierarchical_h", method.parameter = NULL)
@@ -10,7 +10,7 @@ classifyClusteringResults(Results, type = "phenotype",
 \arguments{
 \item{Results}{a Results or SPADEResults object}
 
-\item{type}{a character specifying if the classification is based on the phenotype profiles or on the enrichment profiles}
+\item{type}{a character specifying if the classification is based on the phenotype profiles or on the abundance profiles}
 
 \item{method}{a character specifying the clustering method among one of those : "hierarchical_h", "hierarchical_k","k-means","eigencell","clique"}
 
@@ -20,7 +20,7 @@ classifyClusteringResults(Results, type = "phenotype",
 a S4 object of class 'CCR'
 }
 \description{
-Classifies clusters based on their phenotype profiles (expressions of markers) or enrichment profiles (number of cells for each cluster).
+Classifies clusters based on their phenotype profiles (expressions of markers) or abundance profiles (number of cells for each cluster).
 }
 \details{
 The classification is done on cell abundances of each clusters and could be performed using 5 methods:

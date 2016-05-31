@@ -13,7 +13,7 @@ Guillaume Gautreau and Nicolas Tchitchek
 	2.  [Importing results from other algorithms](#loading_other_data)
 4.  [Statistical analyses](#stat_functions)
 	1.  [Identification of abundant clusters](#stat_function_identifyAC)
-	2.  [Identification of differentially enriched clusters](#stat_function_identifyDEC)
+	2.  [Identification of differentially abundant clusters](#stat_function_identifyDAC)
 	3.  [Identification of correlated Clusters](#stat_function_identifyCC)
 	4.  [Classification of Clustering Results](#stat_function_classify_clustering_results)
 6.  [Visual representations](#viewer_functions)
@@ -34,7 +34,7 @@ Guillaume Gautreau and Nicolas Tchitchek
 	2.  [Results object](#object_structure_results)
 	3.  [SPADEResults object](#object_structure_SPADE_results)
 	4.  [Abundant clusters (AC object)](#object_structure_AC)
-	5.  [Differentially enriched clusters (DEC object)](#object_structure_DEC)
+	5.  [Differentially abundant clusters (DAC object)](#object_structure_DAC)
 	6.  [Correlated clusters (CC object)](#object_structure_CC)
 	7.  [Classification of Clustering Results (CCR object)](#object_structure_CCR)
 9.  [License](#license)
@@ -67,13 +67,13 @@ For instance, parallel coordinates can efficiently displayed the marker expressi
 Multidimensional scaling and streamgraph representations provide overviews of cell cluster similarities and behaviors.
 In addition, SPADEVizR can identify cell populations with relevant biological behaviors. This package allows to identify: 
 (i) clusters with an abundance statistically greater than a specific threshold for a given condition; 
-(ii) clusters having a different enrichment between two biological conditions; 
+(ii) clusters having a different abundance between two biological conditions; 
 (iii) clusters having an abundance correlating with any biological variable. Cell clusters can also be classified to identified those having similar phenotypes or abundances in the dataset. 
 
 SPADEVizR has been designed in a way that both biologists and bioinformaticians can interpret more easily the results provided by SPADE.
 Moreover, SPADEVizR can be used with clustering results from any automatic gating algorithm (as long as a 'phenotype matrix' and a 'count matrix' can be provided).
 
-SPADEVizR has six S4 objects to handle the clustering results inputs and analyses results (`Results`, `SPADEResults`, `AC`, `DEC`, `CC`, `CCR` objects).
+SPADEVizR has six S4 objects to handle the clustering results inputs and analyses results (`Results`, `SPADEResults`, `AC`, `DAC`, `CC`, `CCR` objects).
 These objects are detailed in the section [8. Object structures](#object_structures). 
 
 # <a name="package_installation"/> 2. Package installation
@@ -156,7 +156,8 @@ For instance, an import of a SPADE result using a dictionary and by excluding th
 results  <- importSPADEResults("ImMemoryB-#00008_[MARKERSET10]_K070_P025",
 							   dictionary             = dictionary,
 							   quantile.approximation = TRUE,
-							   exclude.markers        = c("cell_length", "FileNum", "density", "time", "Live"))
+							   exclude.markers        = c("cell_length", "FileNum", "density", "time", "Live", "Ki67","B5R", "beads140", "IR193", "IR191"),
+							   th.min_cells           = 0)
 ## [START] - extracting SPADE results
 ## ImMemoryB-#00008_[MARKERSET10]_K070_P025
 ## FCS files loading:
@@ -211,7 +212,7 @@ results_other <- importResults(cluster.abundances = cluster.abundances, cluster.
 
 # <a name="stat_functions"/> 4. Statistical analyses
 
-## <a name="stat_function_identifyAC"/> 4.1 Identification of abundant clusters
+## <a name="stat_function_identifyAC"/> 4.1 Identification of Abundant Clusters
 The `identifyAC()` function identifies clusters having a number of associated cells statistically greater than a specific threshold in a biological condition. The `identifyAC()` function returns an `AC` object which can be ploted.
 
 The `identifyAC()` function takes as parameter a `Results` or `SPADEResults` object and a named logical vector `condition` specifying the samples to use in the statistical computation. 
@@ -247,20 +248,42 @@ plot(resultsAC)
 ```
 
 <img src="README.figures/AbundantClusters-1.png" style="display: block; margin: auto;" />
-In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as abondant clusters, that is to say statistically greater than 2% of all clusters for the selected samples with a p-value < 0.01.
-## <a name="stat_function_identifyDEC"/> 4.2 Identification of differentially enriched clusters
-The `identifyDEC()` function identifies clusters with a number of associated cells statistically different between two biological conditions. The `identifyDEC()` function returns a `DEC` object which can be plotted.
 
-The `identifyDEC()` function takes as parameter: a `Results` or `SPADEResults` object and a named numeric vector `conditions` specifying the samples to consider in the two conditions. This named vector must provide the correspondence between samples (in names) and conditions (`1` to specify the first biological condition, `2` to indicate the second biological condition and `NA` otherwise). Differentially enriched clusters are characterized by two thresholds: the p-value threshold (`th.pvalue` parameter, set by default to `0.05`) and the fold-change threshold (`th.fc` parameter, set by default to `1`).
+** In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as abondant clusters, that is to say statistically greater than 2% of all clusters for the selected samples with a p-value < 0.01. **
 
-For instance, the identification of clusters differentially enriched with a fold-change greater than 2 in the selected conditions with a p-value < 0.05 can be done using the following command:
+## <a name="stat_function_identifyDAC"/> 4.2 Identification of Differentially Abundant Clusters
+The `identifyDAC()` function identifies clusters with a number of associated cells statistically different between two biological conditions. The `identifyDAC()` function returns a `DAC` object which can be plotted.
+
+The `identifyDAC()` function takes as parameter: a `Results` or `SPADEResults` object and a named numeric vector `conditions` specifying the samples to consider in the two conditions. This named vector must provide the correspondence between samples (in names) and conditions (`1` to specify the first biological condition, `2` to indicate the second biological condition and `NA` otherwise). Differentially abundant clusters are characterized by two thresholds: the p-value threshold (`th.pvalue` parameter, set by default to `0.05`) and the fold-change threshold (`th.fc` parameter, set by default to `1`).
+
+For instance, the identification of clusters differentially abundant with a fold-change greater than 2 in the selected conditions with a p-value < 0.05 can be done using the following command:
 
 ```r
 condition1 <- c("CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD008_BD619", "CD20_PBD008_BD620")
 condition2 <- c("CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641", "CD20_PBD028_BD619", "CD20_PBD028_BD620")
-resultsDEC <- identifyDEC(results, condition1 = condition1, condition2 = condition2, th.pvalue = 0.05, th.fc = 2)
-## [START] - Identification of Differentially Enriched Clusters
-## Object class: Differentially Enriched Clusters (DEC)
+resultsDAC <- identifyDAC(results, condition1 = condition1, condition2 = condition2, th.pvalue = 0.05, th.fc = 2)
+## [START] - Identification of Differentially Abundant Clusters
+##         1         2         3         4         5         6         7 
+## -1.125493  1.446483 -1.379818 -1.751854 -1.626054 -1.936860  1.610059 
+##         8         9        10        11        12        13        14 
+##  1.717427  4.991661 -1.201887 -1.523239  1.088518  1.317744 -1.019193 
+##        15        16        17        18        19        20        21 
+##  1.290411 -1.168040 -1.621211  1.643258 -1.964662  2.435418  1.974361 
+##        22        23        24        25        26        27        28 
+##  1.778394  3.035122 -1.432098 -1.555777  1.133267  1.180173 -2.317255 
+##        29        30        31        32        33        34        35 
+## -1.351052 -1.514089  1.358543 -1.106600 -2.066988  2.561700  1.107869 
+##        36        37        38        39        40        41        42 
+## -2.782571 -1.359129  1.799757 -2.791269  1.825989 -1.398291 -1.629067 
+##        43        44        45        46        47        48        49 
+##  1.534387  1.842281 -2.019405 -2.752944  4.467736 -1.832606 -1.895596 
+##        50        51        52        53        54        55        56 
+##  2.443446  1.211786 -2.286871 -1.510945 -2.830736  2.022319 -1.165281 
+##        57        58        59        60        61        62        63 
+## -1.614722 -2.028832  1.050578 -2.215853 -1.616339 -1.927436 -1.401680 
+##        64        65        66        67        68        69        70 
+## -1.303779 -1.353643  2.365023 -1.970827 -3.021065 -1.672286 -5.922343 
+## Object class: Differentially Abundant Clusters (DAC)
 ## Sample of Condition 1: CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620
 ## Sample of Condition 2: CD20_PBD028_BB078; CD20_PBD028_BB231; CD20_PBD028_BC641; CD20_PBD028_BD619; CD20_PBD028_BD620
 ## Use matrix of percent: TRUE
@@ -270,50 +293,51 @@ resultsDEC <- identifyDEC(results, condition1 = condition1, condition2 = conditi
 ## Paired: FALSE
 ## P-value threshold:  0.05
 ## Fold-change threshold:  2
-## [END] - Identification of Differentially Enriched Clusters
+## [END] - Identification of Differentially Abundant Clusters
 ```
 
-This returned `DEC` object can be plotted to visualize identified differentially enriched clusters using the `plot()` function. 
+This returned `DAC` object can be plotted to visualize identified differentially abundant clusters using the `plot()` function. 
 The volcano plot [6] representation displays the p-value (shown as -log10(p-value)) in the Y-axis and the fold-change of cell abundances in the X-axis in a two dimensional chart. 
-Each dot represents a cluster, threshold are shown using red dashed lines and differentially enriched clusters are shown in red. 
+Each dot represents a cluster, threshold are shown using red dashed lines and differentially abundant clusters are shown in red. 
 The size of dots is proportional to the number of associated cells in the 2 conditions merged.
 
 By default, the fold-change is represented with a log2 transformation (which can be changed using the `fc.log2` parameter).
 
-For instance, results contained in an `DEC` object can be shown using the following command:
+For instance, results contained in an `DAC` object can be shown using the following command:
 
 ```r
-plot(resultsDEC, fc.log2 = FALSE)
+plot(resultsDAC, fc.log2 = FALSE)
 ```
 
 <img src="README.figures/VolcanoViewer-1.png" style="display: block; margin: auto;" />
 
 ```r
 # It is to note that fold-change axis is displayed by default using a log2 transformation
-plot(resultsDEC)
+plot(resultsDAC)
 ```
 
 <img src="README.figures/VolcanoViewer-2.png" style="display: block; margin: auto;" />
-In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as differentially enriched clusters, that is to say with a fold-change greater than 2 for the selected samples with a p-value < 0.05.
 
-## <a name="stat_function_identifyCC"/> 4.3 Identification of correlated clusters
+** In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as differentially abundant clusters, that is to say with a fold-change greater than 2 for the selected samples with a p-value < 0.05. **
+
+## <a name="stat_function_identifyCC"/> 4.3 Identification of Correlated Clusters
 The `identifyCC()` function identifies clusters correlated with an additional phenotypical variable. The `identifyCC()` function returns a `CC` object which can be plotted.
 
 The `identifyCC()` function takes as parameter: a `Results` or `SPADEResults` object and a named numeric vector `variable` specifying the expression values of the external biological variable. 
 This named vector must provide the correspondence between samples (in names) and the expression values (`NA` to exclude this sample from analysis). 
 Significant correlated clusters are characterized by two thresholds: the p-value threshold (`th.pvalue` parameter, set by default to `0.05`) and the coefficient of correlation (R) threshold (`th.correlation` parameter, set by default to `0.7`).
 
-For instance, results contained in an `DEC` object can be shown using the following command:
+For instance, results contained in an `DAC` object can be shown using the following command:
 
 ```r
-variable <- c(CD20_PBD008_BB078 = 8, CD20_PBD008_BB231 = 1.7, CD20_PBD008_BC641 = 4, CD20_PBD008_BD619 = 23, CD20_PBD008_BD620 = 10)
+variable <- c(CD20_PPD000_BB078 = 50, CD20_PPD000_BB231 = 50, CD20_PPD000_BC641 = 50, CD20_PPD000_BD619 = 50, CD20_PPD000_BD620 = 50, CD20_PBD008_BB078 = 32541, CD20_PBD008_BB231 = 16769, CD20_PBD008_BC641 = 16987, CD20_PBD008_BD619 = 11592, CD20_PBD008_BD620 = 7419, CD20_PBD028_BB078 = 14621, CD20_PBD028_BB231 = 7030, CD20_PBD028_BC641 = 1048, CD20_PBD028_BD619 = 3369, CD20_PBD028_BD620 = 3881)
 resultsCC <- identifyCC(results, variable = variable, th.pvalue = 0.05, th.correlation = 0.8)
 ## [START] - Identification of Correlated Clusters
 ## Object class: Correlated Clusters (CC)
-## Samples: CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620
-## Phenotypic variables: 8; 1.7; 4; 23; 10
+## Samples: CD20_PPD000_BB078; CD20_PPD000_BB231; CD20_PPD000_BC641; CD20_PPD000_BD619; CD20_PPD000_BD620; CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620; CD20_PBD028_BB078; CD20_PBD028_BB231; CD20_PBD028_BC641; CD20_PBD028_BD619; CD20_PBD028_BD620
+## Phenotypic variables: 50; 50; 50; 50; 50; 32541; 16769; 16987; 11592; 7419; 14621; 7030; 1048; 3369; 3881
 ## Use matrix of percent: TRUE
-## Number of identified clusters: 2
+## Number of identified clusters: 1
 ## Statistical test used is: pearson
 ## Adjusted : none
 ## P-value threshold: 
@@ -332,11 +356,12 @@ plot(resultsCC)
 ```
 
 <img src="README.figures/CorrelatedClusters-1.png" style="display: block; margin: auto;" />
-In this representation, 2 clusters (30) and (39) has been identified as statistically correlated with the provided numerical vector above a coefficient of correlation of 0.8 and with a p-value < 0.05.
+
+** In this representation, 2 clusters (30) and (39) has been identified as statistically correlated with the provided numerical vector above a coefficient of correlation of 0.8 and with a p-value < 0.05. **
 
 ## <a name="stat_function_classify_clustering_results"/> 4.4 Classification of Clustering Results
 
-The `classifyClusteringResults()` function takes a `Results` or `SPADEResults` object and classifies each cell cluster in different groups. Classification can be done based on phenotype profiles or enrichment profiles. This type of profile is specify using the `type` parameter wich take value "phenotype" or "enrichment".
+The `classifyClusteringResults()` function takes a `Results` or `SPADEResults` object and classifies each cell cluster in different groups. Classification can be done based on phenotype profiles or abundance profiles. This type of profile is specify using the `type` parameter wich take value "phenotype" or "abundance".
 
 Different classification methods are available among:
 
@@ -364,25 +389,35 @@ For instance, cell clusters can be classified via a hierarchical clustering, bas
 # performs a hierarchical clustering of cell clusters (dendrogram will be cut at a correlation threshold of 0.9)
 results_CCR_phenotypes <- classifyClusteringResults(results, type = "phenotype", method = "hierarchical_h", method.parameter = 0.9)
 ## [START] - computing classifyClusteringResults
+## Object class: CCR
+## type: phenotype
+## Number of class: 8
+## Classification method used: hierarchical_h
+## Parameter used = 0.9
 ## [END] - computing classifyClusteringResults
 print(results_CCR_phenotypes)
-## Object class: CRR
+## Object class: CCR
 ## type: phenotype
 ## Number of class: 8
 ## Classification method used: hierarchical_h
 ## Parameter used = 0.9
 ```
 
-In the same way, cell clusters can be classified via a k-means, based on their enrichment profiles, using the following command: 
+In the same way, cell clusters can be classified via a k-means, based on their abundance profiles, using the following command: 
 
 ```r
 # performs a k-means to identify 9 classes of clusters
-results_CCR_enrichment <- classifyClusteringResults(results, type = "enrichment", method = "k-means", method.parameter = 9)
+results_CCR_abundance <- classifyClusteringResults(results, type = "abundance", method = "k-means", method.parameter = 9)
 ## [START] - computing classifyClusteringResults
+## Object class: CCR
+## type: abundance
+## Number of class: 9
+## Classification method used: k-means
+## Parameter used = 9
 ## [END] - computing classifyClusteringResults
-print(results_CCR_enrichment)
-## Object class: CRR
-## type: enrichment
+print(results_CCR_abundance)
+## Object class: CCR
+## type: abundance
 ## Number of class: 9
 ## Classification method used: k-means
 ## Parameter used = 9
@@ -394,33 +429,12 @@ For instance, the previously created `CCR` objects can be displayed using the fo
 
 ```r
 plot(results_CCR_phenotypes)
-## Loading required package: sna
-## sna: Tools for Social Network Analysis
-## Version 2.3-2 created on 2014-01-13.
-## copyright (c) 2005, Carter T. Butts, University of California-Irvine
-##  For citation information, type citation("sna").
-##  Type help(package="sna") to get started.
-## Loading required package: network
-## network: Classes for Relational Data
-## Version 1.13.0 created on 2015-08-31.
-## copyright (c) 2005, Carter T. Butts, University of California-Irvine
-##                     Mark S. Handcock, University of California -- Los Angeles
-##                     David R. Hunter, Penn State University
-##                     Martina Morris, University of Washington
-##                     Skye Bender-deMoll, University of Washington
-##  For citation information, type citation("network").
-##  Type help("network-package") to get started.
-## 
-## Attaching package: 'network'
-## The following object is masked from 'package:sna':
-## 
-##     %c%
 ```
 
 <img src="README.figures/ProfileViewer-1.png" style="display: block; margin: auto;" />
 
 ```r
-plot(results_CCR_enrichment)
+plot(results_CCR_abundance)
 ```
 
 <img src="README.figures/ProfileViewer-2.png" style="display: block; margin: auto;" />
@@ -440,7 +454,7 @@ For instance, such representation can be generated using the following command:
 ```r
 # The following command describe how to select samples
 samples <- c("CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD008_BD619", "CD20_PBD008_BD620")
-countViewer(results, samples = samples, clusters = c("1","8","7","4","5","6","3","19","45","22"))
+countViewer(results, samples = samples)
 ```
 
 <img src="README.figures/CountViewer-1.png" style="display: block; margin: auto;" />
@@ -455,7 +469,7 @@ Node sizes are proportional to number of associated cells.
 
 This representation can be displayed using the `treeViewer()` function and takes a `Results` object in input. 
 This viewer improves the original SPADE tree representation by allowing to combine trees from several samples. 
-It is possible to highlight significant clusters (node borders are colored in blue) by providing a `DEC`, `AC` or `CC` object (using the `highligth` parameter).
+It is possible to highlight significant clusters (node borders are colored in blue) by providing a `DAC`, `AC` or `CC` object (using the `highligth` parameter).
 As with the original SPADE tree representation nodes can be colored by the marker median expression of a selected marker (using the `marker` parameter). 
 It is to note than this function can only handle `SPADEResults` objects (but not `Results` objects). 
 
@@ -464,7 +478,7 @@ For instance, such representation can be generated using the following command:
 ```r
 # The following command describe how to select samples
 samples <- c("CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD008_BD619", "CD20_PBD008_BD620")
-treeViewer(results, samples = samples, highlight = resultsDEC, marker = "HLADR")
+treeViewer(results, samples = samples, highlight = resultsDAC, marker = "HLADR")
 ```
 
 <img src="README.figures/TreeViewer-1.png" style="display: block; margin: auto;" />
@@ -505,7 +519,7 @@ For instance, such representation can be generated using the following command:
 conditions <- c(CD20_PPD000_BB078 = "day 00", CD20_PPD000_BB231 = "day 00", CD20_PPD000_BC641 = "day 00",
 				CD20_PBD008_BB078 = "day 08", CD20_PBD008_BB231 = "day 08", CD20_PBD008_BC641 = "day 08",
 				CD20_PBD028_BB078 = "day 28", CD20_PBD028_BB231 = "day 28", CD20_PBD028_BC641 = "day 28")
-boxplotViewer(results, show.legend = TRUE, conditions = conditions, clusters = c("1","3"))
+boxplotViewer(results, show.legend = TRUE, conditions = conditions, clusters = c("9"))
 ```
 
 <img src="README.figures/BoxplotViewer-1.png" style="display: block; margin: auto;" />
@@ -528,7 +542,7 @@ assignments <- data.frame(row.names = c("CD20_PPD000_BB078", "CD20_PPD000_BB231"
 						  timepoints = c(0, 0, 0, 8, 8, 8, 28, 28, 28),
 						  individuals = c("BB078", "BB231", "BC641", "BB078", "BB231", "BC641", "BB078", "BB231", "BC641"))
 
-kineticsViewer(results, assignments = assignments, clusters = c("1", "3"))
+kineticsViewer(results, assignments = assignments, clusters = c("9", "10"))
 ```
 
 <img src="README.figures/KineticViewer-1.png" style="display: block; margin: auto;" />
@@ -540,20 +554,19 @@ This representation displays cell abundance using a stacked area graph which is 
 
 This representation can be displayed using the `streamgraphViewer()` function and takes a `Results` or `SPADEResults` object in input.
 The cell clusters to represent must be specified using the `clusters` parameter. 
-Moreover, specific samples to represent and the sample order can specified using the `sample.order` parameter.
+Moreover, specific samples to represent and the sample order can specified using the `samples` parameter.
 
 For instance, such representation can be generated using the following command:
 
 ```r
-samples <- c("CD20_PPD000_BB078", "CD20_PBD008_BB078", "CD20_PBD028_BB078")
-streamgraphViewer(results, samples = samples, clusters = c("1", "2", "3", "4", "5"))
+streamgraphViewer(results, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"))
 ```
 
 <img src="README.figures/StreamgraphViewer_absolute-1.png" style="display: block; margin: auto;" />
 
 ```r
 # The same could be done in a relative manner using the `use.relative = TRUE` parameter
-streamgraphViewer(results, samples = samples, clusters = c("1", "2", "3", "4", "5"), use.relative = TRUE)
+streamgraphViewer(results, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"), use.relative = TRUE)
 ```
 
 <img src="README.figures/StreamgraphViewer_absolute-2.png" style="display: block; margin: auto;" />
@@ -594,17 +607,18 @@ It is to note than this function can only handle `SPADEResults` objects (but not
 For instance, such representation can be generated using the following command:
 
 ```r
-MDSViewer(results, space = "clusters", clusters = c("2","3","4","5","6","7","9"))
+MDSViewer(results, space = "clusters", clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"))
 ```
 
 <img src="README.figures/MDSViewer_clusters-1.png" style="display: block; margin: auto;" />
 
 ```r
 # The following command describe how to visualize the distances between all samples associated with the contextual informations provided in the `assignments` parameter
-assignments <- data.frame(row.names = c("CD20_PPD000_BB078", "CD20_PPD000_BB231", "CD20_PPD000_BC641", "CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641"),
-						  timepoints = c(0,0,0,8,8,8,28,28,28),
-						  individuals = c("BB078","BB231","BC641","BB078","BB231","BC641","BB078","BB231","BC641"))
-MDSViewer(results, space = "samples", assignments = assignments, clusters = c("2","3","4","5","6","7","9"))
+assignments <- data.frame(row.names = results@sample.names,
+                          biological.conditions = c("day 00", "day 00", "day 00", "day 00", "day 00", "day 08", "day 08", "day 08", "day 08", "day 08", "day 28", "day 28", "day 28", "day 28", "day 28"),
+                          individuals           = c("BB078", "BB231", "BC641", "BD619", "BD620", "BB078", "BB231", "BC641", "BD619", "BD620", "BB078", "BB231", "BC641", "BD619", "BD620"))
+
+MDSViewer(results, space = "samples", assignments = assignments, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"))
 ```
 
 <img src="README.figures/MDSViewer_clusters-2.png" style="display: block; margin: auto;" />
@@ -679,12 +693,15 @@ The `generateReport()` function allows to easily generate a PDF file containing 
 
 The report will follows the order of plot names in the vector.
 
-You can also provided an objects vector of class `AC`, `DEC`, `CC` and `CCR` objects with the `stat.objects` parameter.
+You can also provided an objects vector of class `AC`, `DAC`, `CC` and `CCR` objects with the `stat.objects` parameter.
 
 For instance, such kind of report can be generated using the following command:
 
 ```r
-#generateReport(results, PDFfile = "report.pdf", assignments = assignments, plot.names = c("heamap", "kinetics_pheno", "tree", "disto", "MDSsamples", "MDSclusters"), stat.objects = c(resultsAC, resultsDEC, resultsCC, results_CCR_phenotypes))
+assignments <- data.frame(row.names   = c("CD20_PPD000_BB078", "CD20_PPD000_BB231", "CD20_PPD000_BC641", "CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641"),
+						  timepoints  = c(0,0,0,8,8,8,28,28,28),
+						  individuals = c("BB078","BB231","BC641","BB078","BB231","BC641","BB078","BB231","BC641"))
+generateReport(results, PDFfile = "report.pdf", assignments = assignments, plot.names = c("heatmap", "kinetics_pheno", "tree", "disto", "MDSsamples", "MDSclusters"), stat.objects = c(resultsAC, resultsDAC, resultsCC, results_CCR_phenotypes), verbose = FALSE)
 ```
 
 The generated PDF file can be download here <a href="report.pdf"> report.pdf </a>
@@ -695,7 +712,7 @@ The generated PDF file can be download here <a href="report.pdf"> report.pdf </a
 
 ## <a name="object_structure_uml"/> 9.1 Overview of SPADEVizR objects
 
-In SPADEVizR, six objects are available: `Results`, `SPADEResults`, `AC` (Abundant Cluster), `DEC` (Differentially Enriched Clusters), `CC` (Correlated Clusters) and `CCR` (Classification of Clustering Results).
+In SPADEVizR, six objects are available: `Results`, `SPADEResults`, `AC` (Abundant Cluster), `DAC` (Differentially Abundant Clusters), `CC` (Correlated Clusters) and `CCR` (Classification of Clustering Results).
 
 The following UML diagram summarize the structure of those objects:
 ![](README.figures/UMLDiagram.png)
@@ -727,15 +744,15 @@ cells.count        | a dataframe containing the number of cells for each cluster
 marker.expressions | a numerical dataframe containing marker median expressions for each cluster of each sample                                                      | &#9745;
 sample.names       | a character vector containing the sample names                                                                                                  | &#9745;
 marker.names       | a character vector containing the markers names                                                                                                 | &#9745;
-cluster.number     | a numeric specifying the number of clusters                                                                                                      | &#9745;
+cluster.number     | a numeric specifying the number of clusters                                                                                                     | &#9745;
 bounds             | **overriden** a numeric data frame containing the marker expression quantiles                                                                   | &#9745;
-use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data                                                        | &#9746;
-dictionary         | a two column data frame providing the correspondence between the original marker names (first column) and the real marker names (second column) | &#9746;
-marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure                                                         | &#9746;
-flowset            | a flowSet object (from flowCore package) containing the imported SPADE FCS file                                                                 | &#9746;
-fcs.files          | a character vector containing the absolute path of the original FCS files                                                                       | &#9746;
-graph              | an igraph object containing the SPADE tree                                                                                                      | &#9746;
-graph.layout       | a numeric matrix containing the layout of the SPADE tree                                                                                        | &#9746;
+use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data                                                        | &#9744;
+dictionary         | a two column data frame providing the correspondence between the original marker names (first column) and the real marker names (second column) | &#9744;
+marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure                                                         | &#9744;
+flowset            | a flowSet object (from flowCore package) containing the imported SPADE FCS file                                                                 | &#9744;
+fcs.files          | a character vector containing the absolute path of the original FCS files                                                                       | &#9744;
+graph              | an igraph object containing the SPADE tree                                                                                                      | &#9744;
+graph.layout       | a numeric matrix containing the layout of the SPADE tree                                                                                        | &#9744;
 
 ## <a name="object_structure_AC"/> 9.4 Abundant Clusters (AC object)
 The `AC` object is a S4 object containing the main information related to the abundant clusters, that is to say xxx, identify by the [`identifyAC()`](#stat_function_identifyAC) function.  
@@ -753,10 +770,10 @@ th.mean            | a numeric value specifying the mean threshold
 th.pvalue          | a numeric value specifying the p-value threshold
 result             | a dataframe containing for each cluster (first column): the mean (second column) and the standard deviation (third column) of the biological condition, the associated p-value (fourth column) and a logical (fifth column) specifying if the cluster is significantly abundant.
 
-## <a name="object_structure_DEC"/> 9.5 Differentially Enriched Clusters (DEC object)
-The `DEC` object is a S4 object containing the main information related to the differentially enriched clusters, that is to say xxx, identify by the [`identifyDEC()`](#stat_function_identifyDEC)  
+## <a name="object_structure_DAC"/> 9.5 Differentially Abundant Clusters (DAC object)
+The `DAC` object is a S4 object containing the main information related to the differentially abundant clusters, that is to say xxx, identify by the [`identifyDAC()`](#stat_function_identifyDAC)  
 
-Different slots are available for a given `DEC` object:
+Different slots are available for a given `DAC` object:
 
 Slot       | Description
 -----------|----------------------------------------------------------------------------------------
@@ -764,12 +781,12 @@ sample.cond1       | a character specifying the names of the samples of the firs
 sample.cond2       | a character specifying the names of the samples of the second biological condition
 cluster.size       | a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster
 use.percentages    | a logical specifying if computation was performed on percentage of cell abundance
-method             | a character containing the name of the statistical test used to identify the DEC
+method             | a character containing the name of the statistical test used to identify the DAC
 method.adjust      | a character containing the name of the multiple correction method used (if any)
 method.paired      | a logical indicating if the statistical test have been performed in a paired manner
 th.fc              | a numeric value specifying the fold-change threshold
 th.pvalue          | a numeric value specifying the p-value threshold
-result             | a dataframe containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially enriched.
+result             | a dataframe containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially abundant.
 
 ## <a name="object_structure_CC"/> 9.6 Correlated Clusters (CC object)
 The `CC` object is a S4 object containing object containing the main information related to the correlated clusters, that is to say xxx, identify by the [`identifyCC()`](#stat_function_identifyCC)  
@@ -795,8 +812,9 @@ Different slots are available for a given `CCR` object:
 
 Slot               | Description
 -------------------|----------------------------------------------------------------------------------------
-type               | a character specifying if the classification is based on the "phenotype" profiles or on the "enrichment" profiles
+type               | a character specifying if the classification is based on the "phenotype" profiles or on the "abundance" profiles
 class.number       | a numeric value specifying the number of classes
+cluster.size       | a numeric vector containing the number of cells for each cluster
 method             | a character specifying the method used to classify cluster
 method.parameter   | a named list of parameters used by the classification method
 classes            | a two column dataframe with the cluster in first column and corresponding class in the second column
