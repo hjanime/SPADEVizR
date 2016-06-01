@@ -16,17 +16,17 @@
 #' \item {"disto" (included by default):}{Display a distogram representation showing the marker co-expressions}
 #' \item {"kinetics_cluster":}{Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
 #' \item {"boxplot_cluster":}{Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
+#' \item {AC, DAC, CC and CCR objects}
 #' }
 #' 
 #' @param Results a 'SPADEResults' or 'Result' object
 #' @param PDFfile a character specifying the output path
-#' @param plot.names a character vector specifying the names (see details) and the order of the desired plots
+#' @param select.plots a vector combining character and stat objects ('AC', 'DAC', 'CC' and 'CCR) specifying the order of the desired plots (see details) 
 #' @param clusters a character vector of clusters to include in the report (all will be included by default)
 #' @param markers a character vector of markers to include in the report (all will be included by default)
 #' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param assignments a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment
 #' @param conditions conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude
-#' @param stat.objects a vector of plotable objects to be displayed in the report (object of class 'DAC', 'AC', 'CC' or 'CCR' accepted)
 #' @param width a numeric specifying the plot width in centimeter
 #' @param height a numeric specifying the plot height in centimeter
 #'
@@ -35,15 +35,15 @@
 #' @export
 generateReport <- function(Results,
                            PDFfile         = "report.pdf",
-                           plot.names      = c("count", "heatmap", "tree", "disto", "MDSclusters", "pheno"),
+                           select.plots    = c("count", "heatmap", "tree", "disto", "MDSclusters", "pheno"),
                            clusters        = NULL,
                            markers         = NULL,
                            samples         = NULL,
                            assignments     = NULL,
                            conditions      = NULL,
                            stat.objects    = list(),
-                           width           = 30,
-                           height          = 15,
+                           width           = 50,
+                           height          = 30,
                            verbose         = TRUE) {
     
     message("[BEGIN] - report")
@@ -52,23 +52,27 @@ generateReport <- function(Results,
     
     plots  <- list()
 
-    if (is.element(c("kinetics_pheno", "kinetics"), plot.names) && is.null(assignments)){
+    if (is.element(c("kinetics_pheno", "kinetics"), select.plots) && is.null(assignments)){
         stop("Error in generateReport : 'kinetics_pheno' and/or 'kinetics' report required assignments")
     }
     
-    if (is.element(c("boxplot_pheno", "boxplot"), plot.names) && is.null(conditions)){
+    if (is.element(c("boxplot_pheno", "boxplot"), select.plots) && is.null(conditions)){
         stop("Error in generateReport : 'boxplot_pheno' and/or 'boxplot' report required conditions")
     }
 
-    nb.plot <- length(plot.names) + length(stat.objects)
-    i       <- 0   
+    nb.plot <- length(select.plots)
 
-    if (length(plot.names)) {
-        for (i in 1:length(plot.names)) {
+    if (length(select.plots)) {
+        for (i in 1:length(select.plots)) {
+
+            current.name <- ifelse(typeof(select.plots[[i]]) == "character", select.plots[[i]], "object")
+
             if (verbose) {
-                message(paste0("\t Generate: ", plot.names[i],", ", i, " on ", nb.plot))
+                message(paste0("\t Generate: ",
+                               ifelse(current.name == "object", names(select.plots[[i]]), current.name),
+                               ", ", i, " on ", nb.plot))
             }
-            switch(plot.names[i],
+            switch(current.name,
                "count" = {
                    plots <- c(plots, list(countViewer(Results, samples = samples, clusters = clusters, show.on_device = FALSE)))
                },
@@ -120,16 +124,12 @@ generateReport <- function(Results,
                },
                "stream" = {
                        plots <- c(plots, list(streamgraphViewer(Results, samples = samples, clusters = clusters, show.on_device = FALSE)))
+               },
+               "object" = {
+                       plots <- c(plots, list(plot(select.plots[[i]], show.on_device = FALSE)))
                })
 
         }
-    }
-    for (stat.object in stat.objects) {
-        if (verbose) {
-            i <- i + 1
-            message(paste0("\t Generate: ", names(stat.object), ", ", i, " on ", nb.plot))
-        }
-        plots <- c(plots, list(plot(stat.object, show.on_device = FALSE)))
     }
 
     pages.plots <- gridExtra::marrangeGrob(grobs = plots, nrow = 1, ncol = 1)

@@ -277,7 +277,8 @@ correlatedClustersViewer <- function(CC,
                     ggplot2::scale_y_continuous(limits = c(0, y.max), minor_breaks = NULL, breaks = y.breaks) +
                     ggplot2::xlab(paste(CC@method, "coeficient of correlation")) +
                     ggplot2::ylab("-log10(p-value)") +
-                    ggplot2::theme_bw()
+                    ggplot2::theme_bw() +
+                    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 1))     
 
     if (show.on_device) {
         plot(plot)
@@ -307,12 +308,14 @@ correlatedClustersViewer <- function(CC,
 classificationViewer <- function(CCR,
                                  show.on_device = TRUE) {
 
+
+
     classes <- CCR@classes
     classes <- na.omit(classes)
     sorted.classes <- names(sort(table(classes$class), decreasing = TRUE))
 
     colours <- grDevices::rainbow(n = length(sorted.classes))
-
+    set.seed(42)
     plots <- list()
 
     for (i in sorted.classes) {

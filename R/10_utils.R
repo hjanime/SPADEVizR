@@ -94,7 +94,7 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
                                                                                                    title.position = "top")) + 
                    ggplot2::theme(legend.text          = ggplot2::element_text(size = 4),
                                   panel.background     = ggplot2::element_rect("white"),
-                                  axis.text.x          = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1),
+                                  axis.text.x          = ggplot2::element_text(angle = 90, hjust = 1, vjust = 1),
                                   legend.position      = c(ifelse(num >= 5, 0.6, 1 - (num * 0.1)), 0.5),
                                   legend.background    = ggplot2::element_blank())
 

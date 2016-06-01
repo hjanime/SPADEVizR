@@ -4,17 +4,17 @@
 \alias{generateReport}
 \title{Generate a report including SPADEVizR plots.}
 \usage{
-generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
+generateReport(Results, PDFfile = "report.pdf", select.plots = c("count",
   "heatmap", "tree", "disto", "MDSclusters", "pheno"), clusters = NULL,
   markers = NULL, samples = NULL, assignments = NULL, conditions = NULL,
-  stat.objects = list(), width = 30, height = 15, verbose = TRUE)
+  stat.objects = list(), width = 50, height = 30, verbose = TRUE)
 }
 \arguments{
 \item{Results}{a 'SPADEResults' or 'Result' object}
 
 \item{PDFfile}{a character specifying the output path}
 
-\item{plot.names}{a character vector specifying the names (see details) and the order of the desired plots}
+\item{select.plots}{a vector combining character and stat objects ('AC', 'DAC', 'CC' and 'CCR) specifying the order of the desired plots (see details)}
 
 \item{clusters}{a character vector of clusters to include in the report (all will be included by default)}
 
@@ -25,8 +25,6 @@ generateReport(Results, PDFfile = "report.pdf", plot.names = c("count",
 \item{assignments}{a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment}
 
 \item{conditions}{conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude}
-
-\item{stat.objects}{a vector of plotable objects to be displayed in the report (object of class 'DAC', 'AC', 'CC' or 'CCR' accepted)}
 
 \item{width}{a numeric specifying the plot width in centimeter}
 
@@ -48,6 +46,7 @@ Available plots are :
 \item {"disto" (included by default):}{Display a distogram representation showing the marker co-expressions}
 \item {"kinetics_cluster":}{Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
 \item {"boxplot_cluster":}{Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
+\item {AC, DAC, CC and CCR objects}
 }
 }
 

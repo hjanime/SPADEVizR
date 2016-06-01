@@ -78,7 +78,7 @@ countViewer <- function(Results,
                    ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(data.melted$value))) +
                    ggplot2::ylab("# of cells") +
                    ggplot2::theme_bw() +
-                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1))
+                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 1))
 
     if (show.on_device) {
         plot(plot)

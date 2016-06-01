@@ -1,4 +1,4 @@
-# SPADEVizR: an R package for the visualization and analysis of SPADE clustering results
+# SPADEVizR: an R package for Visualization, Analysis and Integration of SPADE results.
 Guillaume Gautreau and Nicolas Tchitchek  
 
 
@@ -11,12 +11,12 @@ Guillaume Gautreau and Nicolas Tchitchek
 3.  [Importing automatic gating results](#loading_data)
 	1.  [Importing results from SPADE](#loading_SPADE_data)
 	2.  [Importing results from other algorithms](#loading_other_data)
-4.  [Statistical analyses](#stat_functions)
-	1.  [Identification of abundant clusters](#stat_function_identifyAC)
-	2.  [Identification of differentially abundant clusters](#stat_function_identifyDAC)
-	3.  [Identification of correlated Clusters](#stat_function_identifyCC)
+4.  [Statistical methods](#stat_functions)
+	1.  [Identification of Abundant Clusters](#stat_function_identifyAC)
+	2.  [Identification of Differentially Abundant Clusters](#stat_function_identifyDAC)
+	3.  [Identification of Correlated Clusters](#stat_function_identifyCC)
 	4.  [Classification of Clustering Results](#stat_function_classify_clustering_results)
-6.  [Visual representations](#viewer_functions)
+6.  [Visualisation methods](#viewer_functions)
 	1.  [Visualization of the number of cells associated to each cluster (Count Viewer)](#count_viewer_function)
 	2.  [Visualization of combined SPADE trees (Tree Viewer)](#tree_viewer_function)
 	3.  [Visualization of clusters phenotypes using categorical heatmap (Heatmap Viewer)](#heatmap_viewer_function)
@@ -27,10 +27,10 @@ Guillaume Gautreau and Nicolas Tchitchek
 	8.  [Visualisation of sample or cluster similarities using Multidimensional Scaling (MDS Viewer)](#MDS_viewer_function)
 	9.  [Visualisation of marker co-expressions using a biplot representation (Biplot Viewer)](#biplot_viewer_function)
 	10. [Visualisation of marker co-expressions using a distogram (Distogram Viewer)](#distogram_viewer_function)
-6.  [Export](#export)
+6.  [Export of SPADEVizR objects](#export)
 7.  [Generate report](#report)
 8.  [Object structures](#object_structures)
-	1.  [UML diagram](#object_structure_uml)
+	1.  [Overview of SPADEVizR objects](#object_structure_uml)
 	2.  [Results object](#object_structure_results)
 	3.  [SPADEResults object](#object_structure_SPADE_results)
 	4.  [Abundant clusters (AC object)](#object_structure_AC)
@@ -226,7 +226,11 @@ samples <- c("CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD2
 resultsAC <- identifyAC(results, samples = samples, th.pvalue = 0.01, th.mean = 2)
 ## [START] - Identification of Abundant Clusters
 ## Object class: Abundant Clusters (AC)
-## Samples: CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620
+## Samples: CD20_PBD008_BB078
+##  CD20_PBD008_BB231
+##  CD20_PBD008_BC641
+##  CD20_PBD008_BD619
+##  CD20_PBD008_BD620
 ## Use matrix of percent: TRUE
 ## Number of identified clusters: 6
 ## Statistical test used is: t.test
@@ -264,8 +268,16 @@ condition2 <- c("CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641", "
 resultsDAC <- identifyDAC(results, condition1 = condition1, condition2 = condition2, th.pvalue = 0.05, th.fc = 2)
 ## [START] - Identification of Differentially Abundant Clusters
 ## Object class: Differentially Abundant Clusters (DAC)
-## Sample of Condition 1: CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620
-## Sample of Condition 2: CD20_PBD028_BB078; CD20_PBD028_BB231; CD20_PBD028_BC641; CD20_PBD028_BD619; CD20_PBD028_BD620
+## Sample of Condition 1: CD20_PBD008_BB078
+##  CD20_PBD008_BB231
+##  CD20_PBD008_BC641
+##  CD20_PBD008_BD619
+##  CD20_PBD008_BD620
+## Sample of Condition 2: CD20_PBD028_BB078
+##  CD20_PBD028_BB231
+##  CD20_PBD028_BC641
+##  CD20_PBD028_BD619
+##  CD20_PBD028_BD620
 ## Use matrix of percent: TRUE
 ## Number of identified clusters: 6
 ## Statistical test used is: t.test
@@ -314,7 +326,21 @@ variable <- c(CD20_PPD000_BB078 = 50, CD20_PPD000_BB231 = 50, CD20_PPD000_BC641 
 resultsCC <- identifyCC(results, variable = variable, th.pvalue = 0.05, th.correlation = 0.8)
 ## [START] - Identification of Correlated Clusters
 ## Object class: Correlated Clusters (CC)
-## Samples: CD20_PPD000_BB078; CD20_PPD000_BB231; CD20_PPD000_BC641; CD20_PPD000_BD619; CD20_PPD000_BD620; CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620; CD20_PBD028_BB078; CD20_PBD028_BB231; CD20_PBD028_BC641; CD20_PBD028_BD619; CD20_PBD028_BD620
+## Samples: CD20_PPD000_BB078
+##  CD20_PPD000_BB231
+##  CD20_PPD000_BC641
+##  CD20_PPD000_BD619
+##  CD20_PPD000_BD620
+##  CD20_PBD008_BB078
+##  CD20_PBD008_BB231
+##  CD20_PBD008_BC641
+##  CD20_PBD008_BD619
+##  CD20_PBD008_BD620
+##  CD20_PBD028_BB078
+##  CD20_PBD028_BB231
+##  CD20_PBD028_BC641
+##  CD20_PBD028_BD619
+##  CD20_PBD028_BD620
 ## Phenotypic variables: 50; 50; 50; 50; 50; 32541; 16769; 16987; 11592; 7419; 14621; 7030; 1048; 3369; 3881
 ## Use matrix of percent: TRUE
 ## Number of identified clusters: 1
@@ -657,7 +683,7 @@ export(AC,filename = "export.txt")
 ```
 
 # <a name="report"/> 8. Generate report 
-The `generateReport()` function allows to easily generate a PDF file containing all desired plots. In order to select the plots to include in the report, you could provided a character vector containing the names of desired plots to the `plot.names` parameter among: 
+The `generateReport()` function allows to easily generate a PDF file containing all desired plots. A vector combining viewer names and stat objects ('AC', 'DAC', 'CC' and 'CCR) specifying the order of the desired plots can be provided to the `select.plots` parameter among: 
 
  * "[count](#count_viewer_function)" (included by default): Display an representation showing the number of cells for each cluster
  * "[tree](#tree_viewer_function)" (included by default): Display a tree representation showing combined SPADE trees
@@ -669,12 +695,9 @@ The `generateReport()` function allows to easily generate a PDF file containing 
  * "[MDSclusters](#MDS_viewer_function)" (included by default): Display the cluster similarities using MDS
  * "[MDSsamples](#MDS_viewer_function)": Display the samples similarities using MDS. This plot required to provide the 'assignments' parameter
  * "[disto](#distogram_viewer_function)" (included by default): Display a distogram representation showing the marker co-expressions
- * "kinetics_cluster": Display a "[kinetics](#kinetics_viewer_function)" and "[cluster](#cluster_viewer_function)" representation juxtaposed (are arranged one on the side of the other) for each cluster.
- * "boxplot_cluster": Display a "[boxplot](#boxplot_viewer_function)" and "[cluster](#cluster_viewer_function)" representation juxtaposed (are arranged one on the side of the other) for each cluster.
-
-The report will follows the order of plot names in the vector.
-
-You can also provided an objects vector of class `AC`, `DAC`, `CC` and `CCR` objects with the `stat.objects` parameter.
+ * "kinetics_cluster": Display a "[kinetics](#kinetics_viewer_function)" and "[cluster](#cluster_viewer_function)" representation juxtaposed (are arranged one on the side of the other) for each cluster
+ * "boxplot_cluster": Display a "[boxplot](#boxplot_viewer_function)" and "[cluster](#cluster_viewer_function)" representation juxtaposed (are arranged one on the side of the other) for each cluster
+ * `AC`, `DAC`, `CC` and `CCR` objects
 
 For instance, such kind of report can be generated using the following command:
 
@@ -682,7 +705,7 @@ For instance, such kind of report can be generated using the following command:
 assignments <- data.frame(row.names   = c("CD20_PPD000_BB078", "CD20_PPD000_BB231", "CD20_PPD000_BC641", "CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641"),
 						  timepoints  = c(0,0,0,8,8,8,28,28,28),
 						  individuals = c("BB078","BB231","BC641","BB078","BB231","BC641","BB078","BB231","BC641"))
-generateReport(results, PDFfile = "SPADEVizR-report.pdf", assignments = assignments, plot.names = c("heatmap", "tree", "disto", "MDSsamples", "MDSclusters", "kinetics_pheno"), stat.objects = c(resultsAC, resultsDAC, resultsCC, results_CCR_phenotypes), verbose = FALSE)
+generateReport(results, PDFfile = "SPADEVizR-report.pdf", assignments = assignments, select.plots = c("heatmap", resultsAC, resultsDAC, resultsCC, results_CCR_phenotypes, "tree", "disto", "MDSsamples", "MDSclusters", "kinetics_pheno"), verbose = FALSE)
 ```
 
 The generated PDF file can be download here <a href="README.figures/SPADEVizR-report.pdf"> SPADEVizR-report.pdf </a>
