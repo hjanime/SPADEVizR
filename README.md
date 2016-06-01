@@ -153,7 +153,7 @@ By this way, the importation will be more efficient in term of loading time and 
 For instance, an import of a SPADE result using a dictionary and by excluding the "cell_length", "FileNum", "density", "time", and "Live" markers can be done using the following command:
 
 ```r
-results  <- importSPADEResults("ImMemoryB-#00008_[MARKERSET10]_K070_P025",
+results <- importSPADEResults("ImMemoryB-#00008_[MARKERSET10]_K070_P025",
 							   dictionary             = dictionary,
 							   quantile.approximation = TRUE,
 							   exclude.markers        = c("cell_length", "FileNum", "density", "time", "Live", "Ki67","B5R", "beads140", "IR193", "IR191"),
@@ -249,7 +249,7 @@ plot(resultsAC)
 
 <img src="README.figures/AbundantClusters-1.png" style="display: block; margin: auto;" />
 
-** In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as abondant clusters, that is to say statistically greater than 2% of all clusters for the selected samples with a p-value < 0.01. **
+*In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as abondant clusters, that is to say statistically greater than 2% of all clusters for the selected samples with a p-value < 0.01.*
 
 ## <a name="stat_function_identifyDAC"/> 4.2 Identification of Differentially Abundant Clusters
 The `identifyDAC()` function identifies clusters with a number of associated cells statistically different between two biological conditions. The `identifyDAC()` function returns a `DAC` object which can be plotted.
@@ -263,26 +263,6 @@ condition1 <- c("CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "
 condition2 <- c("CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641", "CD20_PBD028_BD619", "CD20_PBD028_BD620")
 resultsDAC <- identifyDAC(results, condition1 = condition1, condition2 = condition2, th.pvalue = 0.05, th.fc = 2)
 ## [START] - Identification of Differentially Abundant Clusters
-##         1         2         3         4         5         6         7 
-## -1.125493  1.446483 -1.379818 -1.751854 -1.626054 -1.936860  1.610059 
-##         8         9        10        11        12        13        14 
-##  1.717427  4.991661 -1.201887 -1.523239  1.088518  1.317744 -1.019193 
-##        15        16        17        18        19        20        21 
-##  1.290411 -1.168040 -1.621211  1.643258 -1.964662  2.435418  1.974361 
-##        22        23        24        25        26        27        28 
-##  1.778394  3.035122 -1.432098 -1.555777  1.133267  1.180173 -2.317255 
-##        29        30        31        32        33        34        35 
-## -1.351052 -1.514089  1.358543 -1.106600 -2.066988  2.561700  1.107869 
-##        36        37        38        39        40        41        42 
-## -2.782571 -1.359129  1.799757 -2.791269  1.825989 -1.398291 -1.629067 
-##        43        44        45        46        47        48        49 
-##  1.534387  1.842281 -2.019405 -2.752944  4.467736 -1.832606 -1.895596 
-##        50        51        52        53        54        55        56 
-##  2.443446  1.211786 -2.286871 -1.510945 -2.830736  2.022319 -1.165281 
-##        57        58        59        60        61        62        63 
-## -1.614722 -2.028832  1.050578 -2.215853 -1.616339 -1.927436 -1.401680 
-##        64        65        66        67        68        69        70 
-## -1.303779 -1.353643  2.365023 -1.970827 -3.021065 -1.672286 -5.922343 
 ## Object class: Differentially Abundant Clusters (DAC)
 ## Sample of Condition 1: CD20_PBD008_BB078; CD20_PBD008_BB231; CD20_PBD008_BC641; CD20_PBD008_BD619; CD20_PBD008_BD620
 ## Sample of Condition 2: CD20_PBD028_BB078; CD20_PBD028_BB231; CD20_PBD028_BC641; CD20_PBD028_BD619; CD20_PBD028_BD620
@@ -318,7 +298,7 @@ plot(resultsDAC)
 
 <img src="README.figures/VolcanoViewer-2.png" style="display: block; margin: auto;" />
 
-** In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as differentially abundant clusters, that is to say with a fold-change greater than 2 for the selected samples with a p-value < 0.05. **
+*In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as differentially abundant clusters, that is to say with a fold-change greater than 2 for the selected samples with a p-value < 0.05.*
 
 ## <a name="stat_function_identifyCC"/> 4.3 Identification of Correlated Clusters
 The `identifyCC()` function identifies clusters correlated with an additional phenotypical variable. The `identifyCC()` function returns a `CC` object which can be plotted.
@@ -357,7 +337,7 @@ plot(resultsCC)
 
 <img src="README.figures/CorrelatedClusters-1.png" style="display: block; margin: auto;" />
 
-** In this representation, 2 clusters (30) and (39) has been identified as statistically correlated with the provided numerical vector above a coefficient of correlation of 0.8 and with a p-value < 0.05. **
+*In this representation, 2 clusters (30) and (39) has been identified as statistically correlated with the provided numerical vector above a coefficient of correlation of 0.8 and with a p-value < 0.05.*
 
 ## <a name="stat_function_classify_clustering_results"/> 4.4 Classification of Clustering Results
 
@@ -538,10 +518,9 @@ For instance, such representation can be generated using the following command:
 
 ```r
 # The following command describe how to visualize the kinetics associated with the contextual informations provided in the `assignments` parameter
-assignments <- data.frame(row.names = c("CD20_PPD000_BB078", "CD20_PPD000_BB231", "CD20_PPD000_BC641", "CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641"),
-						  timepoints = c(0, 0, 0, 8, 8, 8, 28, 28, 28),
-						  individuals = c("BB078", "BB231", "BC641", "BB078", "BB231", "BC641", "BB078", "BB231", "BC641"))
-
+assignments <- data.frame(row.names = c("CD20_PPD000_BB078", "CD20_PPD000_BB231", "CD20_PPD000_BC641", "CD20_PPD000_BD619", "CD20_PPD000_BD620", "CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD008_BD619", "CD20_PBD008_BD620", "CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641", "CD20_PBD028_BD619", "CD20_PBD028_BD620"),
+                          timepoints = c(".PPD00", ".PPD00", ".PPD00", ".PPD00", ".PPD00", "PBD08", "PBD08", "PBD08", "PBD08", "PBD08", "PBD28", "PBD28", "PBD28", "PBD28", "PBD28"),
+                          individuals           = c("BB078", "BB231", "BC641", "BD619", "BD620", "BB078", "BB231", "BC641", "BD619", "BD620", "BB078", "BB231", "BC641", "BD619", "BD620"))
 kineticsViewer(results, assignments = assignments, clusters = c("9", "10"))
 ```
 
@@ -559,14 +538,16 @@ Moreover, specific samples to represent and the sample order can specified using
 For instance, such representation can be generated using the following command:
 
 ```r
-streamgraphViewer(results, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"))
+samples <- c("CD20_PPD000_BB078", "CD20_PBD008_BB078", "CD20_PBD028_BB078", "CD20_PPD000_BB231", "CD20_PBD008_BB231", "CD20_PBD028_BB231", "CD20_PPD000_BC641", "CD20_PBD008_BC641", "CD20_PBD028_BC641", "CD20_PPD000_BD619", "CD20_PBD008_BD619", "CD20_PBD028_BD619", "CD20_PPD000_BD620", "CD20_PBD008_BD620", "CD20_PBD028_BD620")
+
+streamgraphViewer(results, samples = samples, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"))
 ```
 
 <img src="README.figures/StreamgraphViewer_absolute-1.png" style="display: block; margin: auto;" />
 
 ```r
 # The same could be done in a relative manner using the `use.relative = TRUE` parameter
-streamgraphViewer(results, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"), use.relative = TRUE)
+streamgraphViewer(results, samples = samples, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"), use.relative = TRUE)
 ```
 
 <img src="README.figures/StreamgraphViewer_absolute-2.png" style="display: block; margin: auto;" />
@@ -587,7 +568,7 @@ For instance, such representation can be generated using the following command:
 phenoViewer(results,clusters = c("1","8"))
 ```
 
-<img src="README.figures/ClusterViewer-1.png" style="display: block; margin: auto;" />
+<img src="README.figures/PhenoViewer-1.png" style="display: block; margin: auto;" />
 It is to note that the markers used by SPADE as clustering markers are shown in bold.
 
 ## <a name="MDS_viewer_function"/> 6.8 Visualisation of sample or cluster similarities using Multidimensional Scaling (MDS Viewer)
@@ -607,17 +588,17 @@ It is to note than this function can only handle `SPADEResults` objects (but not
 For instance, such representation can be generated using the following command:
 
 ```r
+# The following command describe how to visualize the distances between all samples associated with the contextual informations provided in the `assignments` parameter
+assignments <- data.frame(row.names = c("CD20_PPD000_BB078", "CD20_PPD000_BB231", "CD20_PPD000_BC641", "CD20_PPD000_BD619", "CD20_PPD000_BD620", "CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD008_BD619", "CD20_PBD008_BD620", "CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641", "CD20_PBD028_BD619", "CD20_PBD028_BD620"),
+                          biological.conditions = c(".PPD00", ".PPD00", ".PPD00", ".PPD00", ".PPD00", "PBD08", "PBD08", "PBD08", "PBD08", "PBD08", "PBD28", "PBD28", "PBD28", "PBD28", "PBD28"),
+                          individuals           = c("BB078", "BB231", "BC641", "BD619", "BD620", "BB078", "BB231", "BC641", "BD619", "BD620", "BB078", "BB231", "BC641", "BD619", "BD620"))
+
 MDSViewer(results, space = "clusters", clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"))
 ```
 
 <img src="README.figures/MDSViewer_clusters-1.png" style="display: block; margin: auto;" />
 
 ```r
-# The following command describe how to visualize the distances between all samples associated with the contextual informations provided in the `assignments` parameter
-assignments <- data.frame(row.names = results@sample.names,
-                          biological.conditions = c("day 00", "day 00", "day 00", "day 00", "day 00", "day 08", "day 08", "day 08", "day 08", "day 08", "day 28", "day 28", "day 28", "day 28", "day 28"),
-                          individuals           = c("BB078", "BB231", "BC641", "BD619", "BD620", "BB078", "BB231", "BC641", "BD619", "BD620", "BB078", "BB231", "BC641", "BD619", "BD620"))
-
 MDSViewer(results, space = "samples", assignments = assignments, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"))
 ```
 
@@ -701,7 +682,7 @@ For instance, such kind of report can be generated using the following command:
 assignments <- data.frame(row.names   = c("CD20_PPD000_BB078", "CD20_PPD000_BB231", "CD20_PPD000_BC641", "CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641"),
 						  timepoints  = c(0,0,0,8,8,8,28,28,28),
 						  individuals = c("BB078","BB231","BC641","BB078","BB231","BC641","BB078","BB231","BC641"))
-generateReport(results, PDFfile = "report.pdf", assignments = assignments, plot.names = c("heatmap", "kinetics_pheno", "tree", "disto", "MDSsamples", "MDSclusters"), stat.objects = c(resultsAC, resultsDAC, resultsCC, results_CCR_phenotypes), verbose = FALSE)
+#generateReport(results, PDFfile = "SPADEVizR-report.pdf", assignments = assignments, plot.names = c("heatmap", "tree", "disto", "MDSsamples", "MDSclusters", "kinetics_pheno"), stat.objects = c(resultsAC, resultsDAC, resultsCC, results_CCR_phenotypes), verbose = FALSE)
 ```
 
 The generated PDF file can be download here <a href="report.pdf"> report.pdf </a>
@@ -715,6 +696,7 @@ The generated PDF file can be download here <a href="report.pdf"> report.pdf </a
 In SPADEVizR, six objects are available: `Results`, `SPADEResults`, `AC` (Abundant Cluster), `DAC` (Differentially Abundant Clusters), `CC` (Correlated Clusters) and `CCR` (Classification of Clustering Results).
 
 The following UML diagram summarize the structure of those objects:
+
 ![](README.figures/UMLDiagram.png)
 
 The `print` and `show` functions are available for all objects of this package.
@@ -740,19 +722,19 @@ Different slots are available for a given `SPADEResults` object:
 
 Slot          | Description            | Inherited
 --------------|-------------------------------------------------------|--------
-cells.count        | a dataframe containing the number of cells for each cluster of each sample                                                                      | &#9745;
-marker.expressions | a numerical dataframe containing marker median expressions for each cluster of each sample                                                      | &#9745;
-sample.names       | a character vector containing the sample names                                                                                                  | &#9745;
-marker.names       | a character vector containing the markers names                                                                                                 | &#9745;
-cluster.number     | a numeric specifying the number of clusters                                                                                                     | &#9745;
-bounds             | **overriden** a numeric data frame containing the marker expression quantiles                                                                   | &#9745;
-use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data                                                        | &#9744;
-dictionary         | a two column data frame providing the correspondence between the original marker names (first column) and the real marker names (second column) | &#9744;
-marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure                                                         | &#9744;
-flowset            | a flowSet object (from flowCore package) containing the imported SPADE FCS file                                                                 | &#9744;
-fcs.files          | a character vector containing the absolute path of the original FCS files                                                                       | &#9744;
-graph              | an igraph object containing the SPADE tree                                                                                                      | &#9744;
-graph.layout       | a numeric matrix containing the layout of the SPADE tree                                                                                        | &#9744;
+cells.count        | a dataframe containing the number of cells for each cluster of each sample                                                                      | YES
+marker.expressions | a numerical dataframe containing marker median expressions for each cluster of each sample                                                      | YES
+sample.names       | a character vector containing the sample names                                                                                                  | YES
+marker.names       | a character vector containing the markers names                                                                                                 | YES
+cluster.number     | a numeric specifying the number of clusters                                                                                                     | YES
+bounds             | **overriden** a numeric data frame containing the marker expression quantiles                                                                   | YES
+use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data                                                        | NO
+dictionary         | a two column data frame providing the correspondence between the original marker names (first column) and the real marker names (second column) | NO
+marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure                                                         | NO
+flowset            | a flowSet object (from flowCore package) containing the imported SPADE FCS file                                                                 | NO
+fcs.files          | a character vector containing the absolute path of the original FCS files                                                                       | NO
+graph              | an igraph object containing the SPADE tree                                                                                                      | NO
+graph.layout       | a numeric matrix containing the layout of the SPADE tree                                                                                        | NO
 
 ## <a name="object_structure_AC"/> 9.4 Abundant Clusters (AC object)
 The `AC` object is a S4 object containing the main information related to the abundant clusters, that is to say xxx, identify by the [`identifyAC()`](#stat_function_identifyAC) function.  
@@ -760,7 +742,7 @@ The `AC` object is a S4 object containing the main information related to the ab
 Different slots are available for a given `AC` object:
 
 Slot       | Description
------------|----------------------------------------------------------------------------------------
+-----------|---------------------------------------------------
 sample.names       | a character vector containing the samples used to compute the abundant clusters
 cluster.size       | a numeric vector containing the number of cells ( -- sum of all samples -- ) for each cluster
 use.percentages    | a logical specifying if computation was performed on percentage of cell abundance
@@ -776,7 +758,7 @@ The `DAC` object is a S4 object containing the main information related to the d
 Different slots are available for a given `DAC` object:
 
 Slot       | Description
------------|----------------------------------------------------------------------------------------
+-----------|---------------------------------------------------
 sample.cond1       | a character specifying the names of the samples of the first biological condition
 sample.cond2       | a character specifying the names of the samples of the second biological condition
 cluster.size       | a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster
@@ -794,7 +776,7 @@ The `CC` object is a S4 object containing object containing the main information
 Different slots are available for a given `CC` object:
 
 Slot       | Description
------------|----------------------------------------------------------------------------------------
+-----------|---------------------------------------------------
 sample.names       | a character vector containing the samples used to compute correlated clusters
 variable           | a numeric vector containing the expression values of the associated variable
 cluster.size       | a numeric vector containing number of cells ( -- sum of all samples -- ) for each cluster
@@ -811,7 +793,7 @@ The `CCR` object is a S4 object containing the information related of the cluste
 Different slots are available for a given `CCR` object:
 
 Slot               | Description
--------------------|----------------------------------------------------------------------------------------
+-----------|---------------------------------------------------
 type               | a character specifying if the classification is based on the "phenotype" profiles or on the "abundance" profiles
 class.number       | a numeric value specifying the number of classes
 cluster.size       | a numeric vector containing the number of cells for each cluster

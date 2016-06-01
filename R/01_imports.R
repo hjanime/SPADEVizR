@@ -134,9 +134,7 @@ importSPADEResults <- function(path,
 
         marker.expressions.sample <- cbind(name = rep(name, nrow(marker.expressions.sample)), marker.expressions.sample)
         marker.expressions        <- rbind(marker.expressions, marker.expressions.sample)
-
-
-
+        
     }
 
     nb.cluster            <- nrow(cells.count)

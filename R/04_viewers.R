@@ -357,7 +357,7 @@ boxplotViewer <- function(Results,
         cells.number <- sum(cells.count[current.cluster,])
         
         plots[[i]] <- ggplot2::ggplot(data = data.temp, ggplot2::aes_string(x = "cond", y = "value")) +
-                      ggplot2::ggtitle(paste("cluster ", current.cluster, " - Boxplot Viewer (", format(cells.number, big.mark=" "), " cells)", sep = "")) +
+                      ggplot2::ggtitle(paste("Boxplot Viewer - cluster ", current.cluster, " (", format(cells.number, big.mark=" "), " cells) ", sep = " ")) +
                       ggplot2::geom_boxplot() +
                       ggplot2::geom_jitter(ggplot2::aes_string(color = "sample"), width = 0.2, show.legend = show.legend)
         
@@ -465,10 +465,10 @@ kineticsViewer <- function(Results,
         cells.number <- sum(cells.count[current.cluster,])
 
         plots[[i]] <- ggplot2::ggplot(data = data.temp, ggplot2::aes_string(x = "as.factor(timepoints)", y = "value", group = "individuals", color = "individuals")) +
-                ggplot2::ggtitle(paste("cluster ", current.cluster, " - Kinetics Viewer (", format(cells.number, big.mark = " "), " cells)", sep = "")) +
-                ggplot2::geom_line() +
-                ggplot2::geom_point(na.rm = TRUE) +
-                ggplot2::scale_x_discrete(expand = c(0, 0.05))
+                      ggplot2::ggtitle(paste("Kinetics Viewer - cluster ", current.cluster, " (", format(cells.number, big.mark = " "), " cells) ", sep = " ")) +
+                      ggplot2::geom_line() +
+                      ggplot2::geom_point(na.rm = TRUE) +
+                      ggplot2::scale_x_discrete(expand = c(0, 0.05))
         if (use.percentages) {
             plots[[i]] <- plots[[i]] + ggplot2::scale_y_continuous(limits = c(0, max.value), breaks = round(seq(0, max.value)), minor_breaks = NULL)
         } else {
@@ -563,8 +563,8 @@ streamgraphViewer <- function(Results,
              ggplot2::geom_ribbon(ggplot2::aes_string(x = "sample", ymin = "ymin", ymax = "ymax", group = "cluster", fill = "cluster"), color = "grey40", size = 0.1) +
              ggplot2::geom_point(ggplot2::aes_string(x = "sample", y = "ymax", group = "cluster"), shape = 45) +
              ggplot2::geom_point(ggplot2::aes_string(x = "sample", y = "ybase", group = "cluster"), shape = 45) +
-             ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ymax", label = "label"), angle = 360, hjust = 1.1, size = 3) +
-             ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ybase"), label = "0", angle = 360, hjust = 1.1, size = 3) +
+    ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ymax", label = "label"), check_overlap = TRUE, angle = 360, hjust = 1.1, size = 3) +
+    ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ybase"), label = "0", check_overlap = TRUE, angle = 360, hjust = 1.1, size = 3) +
              ggplot2::theme_bw() +
              ggplot2::theme(legend.text      = ggplot2::element_text(size = 6),
                             axis.text.x      = ggplot2::element_text(angle = 90, hjust = 0),
@@ -686,7 +686,7 @@ phenoViewer <- function(Results,
         cells.number <- sum(cells.count[current.cluster,])
         
         plots[[i]] <- ggplot2::ggplot(data = data.temp) +
-                      ggplot2::ggtitle(paste("cluster ", current.cluster, " - Pheno Viewer (", format(cells.number, big.mark=" "), " cells)" , sep = ""))                      
+                      ggplot2::ggtitle(paste("Pheno Viewer - cluster ", current.cluster, " (", format(cells.number, big.mark = " "), " cells)", sep = ""))
         
         if(show.mean == "both" || show.mean == "none"){
             plots[[i]] <- plots[[i]] + ggplot2::geom_line(ggplot2::aes_string(x = "marker", y = "value", group = "sample", color = "sample"),
@@ -792,13 +792,10 @@ MDSViewer <- function(Results,
     
     data <- cbind(cluster = rownames(data), data)               
 
-    cells.number <- sum(colSums(cells.count))
-
     if(space == "samples"){
         if (!is.null(assignments)) {
             colnames(assignments) <- c("biological.conditions","individuals")
             data <- data[, rownames(assignments), drop = FALSE]
-            cells.number <- sum(colSums(cells.count[, rownames(assignments)]))
         }
         
         data <- t(data[, colnames(data) != "cluster"])
@@ -824,7 +821,7 @@ MDSViewer <- function(Results,
     
     if (space == "samples") {
 
-        title    <- paste("MDS at the sample level (", format(cells.number, big.mark = " "), " cells)", sep = "")
+        title    <- "MDS at the sample level"
         subtitle <- paste0("Kruskal Stress : ", round(stress, 2))
         
         plot <- ggplot2::ggplot() +
@@ -871,16 +868,16 @@ MDSViewer <- function(Results,
         data_i <- cbind(data_i, cluster = data[, "cluster"])
         data_i$cluster <- as.factor(data_i$cluster)
 
-        title <- paste("MDS at the cluster level (", format(cells.number, big.mark = " "), " cells)", sep = "")
+        title    <- "MDS at the cluster level"
         subtitle <- paste0("Kruskal Stress : ", round(stress, 2))
 
         plot <- ggplot2::ggplot(data = data_i) +
                 ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
                 ggplot2::geom_hline(yintercept = (min.lim + max.lim) / 2, linetype = "dashed") +
                 ggplot2::geom_vline(xintercept = (min.lim + max.lim) / 2, linetype = "dashed") +
-                ggplot2::geom_point(ggplot2::aes_string(x = "x", y = "y", color = "cluster"),
+                ggplot2::geom_point(ggplot2::aes_string(x = "x", y = "y"),
                                     size = 2) +
-                ggrepel::geom_text_repel(ggplot2::aes_string(x = "x", y = "y", label = "cluster", color = "cluster"),
+                ggrepel::geom_text_repel(ggplot2::aes_string(x = "x", y = "y", label = "cluster"),
                                          size = 5) +
                 ggplot2::xlim(min.lim, max.lim) +
                 ggplot2::ylim(min.lim, max.lim) +

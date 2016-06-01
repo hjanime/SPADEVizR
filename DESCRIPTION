@@ -22,6 +22,7 @@ Imports:
     MASS,
 	methods,
 	network,
+	packcircles,
     plyr,
     reshape2
 LazyData: true

@@ -124,17 +124,14 @@ identifyDAC <- function(Results,
                     fc <- mean(x[1:s1]) / mean(x[-(1:s1)])
                     if(!is.na(fc) && fc < 1){
                         fc <- (-1 / fc)
-                    }
-                    if (is.na(fc)) {
-                        warning("Fold-change is NA due to division by infinite")
-                    }
+                    } 
                     if (is.infinite(fc)) {
                         fc <- NA
                         warning("Fold-change is infinite due to division by 0")
                     }
                     return(fc)
                })
-    print(fc)
+
     result <- data.frame(cluster     = rownames(Results@cells.count),
                          mean.cond1  = apply(data.cond1, 1, mean),
                          sd.cond1    = apply(data.cond1, 1, sd),

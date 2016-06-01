@@ -247,7 +247,7 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
                                   layout_matrix = layout,
                                   widths        = grid::unit(c(col.width, 1-(2*col.width), col.width), "null"),
                                   heights       = grid::unit(c(row.width, 1-(2*row.width), row.width), "null"),
-                                  top           = "Pheno Viewer")
+                                  top           = "Heatmap Viewer")
 
     return(ret)
 }
@@ -323,7 +323,7 @@ buildCircles <- function(circles,
 #'
 #' @import ggplot2 ggrepel gridExtra grid packcircles
 buildCirclesLegend <- function(circles = data.frame(x = c(-29500, -19000, -8000, 3000, 20000),
-                                                    y = c(0, 0, 0, 0, 0),
+                                                    y = c(20000, 20000, 20000, 20000, 20000),
                                                     r = c(500, 1000, 2000, 5000, 10000)),
                                npoint  = 100,
                                limits  = 30000) {
@@ -338,7 +338,7 @@ buildCirclesLegend <- function(circles = data.frame(x = c(-29500, -19000, -8000,
                                   fill  = "white",
                                   color = "grey80",
                                   alpha = 0.2) +
-            ggplot2::geom_text(data = text, ggplot2::aes_string(x = "x", y = "y+20000", label = "cluster"), size = 3) +
+            ggplot2::geom_text(data = text, ggplot2::aes_string(x = "x", y = "y-20000", label = "cluster"), size = 3) +
             ggplot2::coord_equal(xlim = c( - limits, limits), ylim = c( - limits, limits)) +
             ggplot2::theme(axis.line        = ggplot2::element_blank(),
                            axis.text.x      = ggplot2::element_blank(),
