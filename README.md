@@ -682,7 +682,7 @@ For instance, such kind of report can be generated using the following command:
 assignments <- data.frame(row.names   = c("CD20_PPD000_BB078", "CD20_PPD000_BB231", "CD20_PPD000_BC641", "CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641"),
 						  timepoints  = c(0,0,0,8,8,8,28,28,28),
 						  individuals = c("BB078","BB231","BC641","BB078","BB231","BC641","BB078","BB231","BC641"))
-#generateReport(results, PDFfile = "SPADEVizR-report.pdf", assignments = assignments, plot.names = c("heatmap", "tree", "disto", "MDSsamples", "MDSclusters", "kinetics_pheno"), stat.objects = c(resultsAC, resultsDAC, resultsCC, results_CCR_phenotypes), verbose = FALSE)
+generateReport(results, PDFfile = "SPADEVizR-report.pdf", assignments = assignments, plot.names = c("heatmap", "tree", "disto", "MDSsamples", "MDSclusters", "kinetics_pheno"), stat.objects = c(resultsAC, resultsDAC, resultsCC, results_CCR_phenotypes), verbose = FALSE)
 ```
 
 The generated PDF file can be download here <a href="README.figures/SPADEVizR-report.pdf"> SPADEVizR-report.pdf </a>
@@ -722,19 +722,19 @@ Different slots are available for a given `SPADEResults` object:
 
 Slot          | Description            | Inherited
 --------------|-------------------------------------------------------|--------
-cells.count        | a dataframe containing the number of cells for each cluster of each sample                                                                      | YES
-marker.expressions | a numerical dataframe containing marker median expressions for each cluster of each sample                                                      | YES
-sample.names       | a character vector containing the sample names                                                                                                  | YES
-marker.names       | a character vector containing the markers names                                                                                                 | YES
-cluster.number     | a numeric specifying the number of clusters                                                                                                     | YES
-bounds             | **overriden** a numeric data frame containing the marker expression quantiles                                                                   | YES
-use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data                                                        | NO
-dictionary         | a two column data frame providing the correspondence between the original marker names (first column) and the real marker names (second column) | NO
-marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure                                                         | NO
-flowset            | a flowSet object (from flowCore package) containing the imported SPADE FCS file                                                                 | NO
-fcs.files          | a character vector containing the absolute path of the original FCS files                                                                       | NO
-graph              | an igraph object containing the SPADE tree                                                                                                      | NO
-graph.layout       | a numeric matrix containing the layout of the SPADE tree                                                                                        | NO
+cells.count        | a dataframe containing the number of cells for each cluster of each sample                                                                      | &#9745;
+marker.expressions | a numerical dataframe containing marker median expressions for each cluster of each sample                                                      | &#9745;
+sample.names       | a character vector containing the sample names                                                                                                  | &#9745;
+marker.names       | a character vector containing the markers names                                                                                                 | &#9745;
+cluster.number     | a numeric specifying the number of clusters                                                                                                     | &#9745;
+bounds             | **overriden** a numeric data frame containing the marker expression quantiles                                                                   | &#9745;
+use.raw.medians    | a logical specifying if the marker expressions correspond to the raw or transformed data                                                        | &#9744;
+dictionary         | a two column data frame providing the correspondence between the original marker names (first column) and the real marker names (second column) | &#9744;
+marker.clustering  | a logical vector specifying markers that have been used during the clustering procedure                                                         | &#9744;
+flowset            | a flowSet object (from flowCore package) containing the imported SPADE FCS file                                                                 | &#9744;
+fcs.files          | a character vector containing the absolute path of the original FCS files                                                                       | &#9744;
+graph              | an igraph object containing the SPADE tree                                                                                                      | &#9744;
+graph.layout       | a numeric matrix containing the layout of the SPADE tree                                                                                        | &#9744;
 
 ## <a name="object_structure_AC"/> 9.4 Abundant Clusters (AC object)
 The `AC` object is a S4 object containing the main information related to the abundant clusters, that is to say xxx, identify by the [`identifyAC()`](#stat_function_identifyAC) function.  

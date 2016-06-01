@@ -563,8 +563,8 @@ streamgraphViewer <- function(Results,
              ggplot2::geom_ribbon(ggplot2::aes_string(x = "sample", ymin = "ymin", ymax = "ymax", group = "cluster", fill = "cluster"), color = "grey40", size = 0.1) +
              ggplot2::geom_point(ggplot2::aes_string(x = "sample", y = "ymax", group = "cluster"), shape = 45) +
              ggplot2::geom_point(ggplot2::aes_string(x = "sample", y = "ybase", group = "cluster"), shape = 45) +
-    ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ymax", label = "label"), check_overlap = TRUE, angle = 360, hjust = 1.1, size = 3) +
-    ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ybase"), label = "0", check_overlap = TRUE, angle = 360, hjust = 1.1, size = 3) +
+             ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ymax", label = "label"), check_overlap = TRUE, angle = 360, hjust = 1.1, size = 3) +
+             ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ybase"), label = "0", check_overlap = TRUE, angle = 360, hjust = 1.1, size = 3) +
              ggplot2::theme_bw() +
              ggplot2::theme(legend.text      = ggplot2::element_text(size = 6),
                             axis.text.x      = ggplot2::element_text(angle = 90, hjust = 0),
