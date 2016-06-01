@@ -685,7 +685,7 @@ assignments <- data.frame(row.names   = c("CD20_PPD000_BB078", "CD20_PPD000_BB23
 #generateReport(results, PDFfile = "SPADEVizR-report.pdf", assignments = assignments, plot.names = c("heatmap", "tree", "disto", "MDSsamples", "MDSclusters", "kinetics_pheno"), stat.objects = c(resultsAC, resultsDAC, resultsCC, results_CCR_phenotypes), verbose = FALSE)
 ```
 
-The generated PDF file can be download here <a href="report.pdf"> report.pdf </a>
+The generated PDF file can be download here <a href="README.figures/SPADEVizR-report.pdf"> SPADEVizR-report.pdf </a>
 
 *Generating a big report can take a minute or more.*
 
