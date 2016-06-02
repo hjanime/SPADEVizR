@@ -146,7 +146,7 @@ head(dictionary, n = 5)
 
 Once a dictionary has been defined, SPADE clustering results can be loaded using in addition the `dictionary` parameter. 
 
-Specific markers can be excluded from the import procedure by providing their names to the `exclude.markers` parameter. 
+Specific markers can be excluded from the import procedure by providing their names to the `exclude.markers` parameter.
 By default four markers are excluded: "cell_length", "FileNum", "density", "time". The `quantile.approximation` parameter (set by default to `FALSE`) can be used to approximate the computation of maker range quantiles. 
 By this way, the importation will be more efficient in term of loading time and memory usage. 
 
@@ -172,21 +172,27 @@ SPADEVizR functionalities can be used from results obtained from any cell cluste
 
  * `cluster.abundances` is a dataframe containing the number of cells associated to each cluster for each sample. This dataframe must be formatted with the cluster names in rownames as bellow: 
 
-     X    | sample1 | sample2| ...
-----------|---------|--------|----
-cluster1  | 749     | 5421   | ...
-cluster2  | 450     | 412    | ...
-...       | ...     | ...    | ...
+          | sample1 | sample2 | sample3 | ...
+----------|---------|---------|---------|----
+cluster1  | 749     | 5421    |   8424  | ...
+cluster2  | 450     | 412     |   614   | ...
+cluster3  | 288     | 782     |   478   | ...
+...       | ...     | ...     |         | ...
 
  * `cluster.phenotypes` is a dataframe containing the marker median expressions for each cluster of each sample. This dataframe must be formated as bellow:
 
-sample   | cluster  | marker1  | marker2| ...
----------|----------|----------|--------|-----
-sample1  | cluster1 | 0.2      | 0.3    | ...
-sample1  | cluster2 | 0.1      | 0.3    | ...
-sample2  | cluster1 | 0.5      | 2.3    | ...
-sample2  | cluster2 | 1        | 1.3    | ...
-...      | ...      | ...      | ...    | ...
+sample   | cluster  | marker1  | marker2 | marker3 | ...
+---------|----------|----------|---------|---------|-----
+sample1  | cluster1 | 0.2      | 0.3     | 1.9     | ...
+sample1  | cluster2 | 0.1      | 0.3     | 0.4     | ...
+sample1  | cluster3 | 0.4      | 0.8     | 0.9     | ...
+sample2  | cluster1 | 0.5      | 2.3     | 3.4     | ...
+sample2  | cluster2 | 1        | 1.3     | -0.1    | ...
+sample2  | cluster3 | 1.4      | 1.7     | -0.1    | ...
+sample3  | cluster1 | 0.1      | 2.7     | 1.4     | ...
+sample3  | cluster2 | 1.4      | 1.7     | 0.1     | ...
+sample3  | cluster3 | 1.2      | 1.4     | 0.7     | ...
+...      | ...      | ...      | ...     | ...     | ...
 
 For instance, an import of cell clustering results obtained from a specific automatic gating algorithm can be done using the following command:
 
@@ -195,25 +201,29 @@ cluster.abundances <- read.delim("cells_count.txt", sep = "\t")
 cluster.phenotypes <- read.delim("marker_expressions.txt", sep = "\t")
 
 head(cluster.abundances)
-##          sample1 sample2
-## cluster1     749    5421
-## cluster2     450     412
+##          sample1 sample2 sample3
+## cluster1     749    5421    8424
+## cluster2     450     412     614
+## cluster3     288     782     478
+
 head(cluster.phenotypes)
-##    sample  cluster marker1 marker2
-## 1 sample1 cluster1     0.2     0.3
-## 2 sample1 cluster2     0.1     0.3
-## 3 sample2 cluster1     0.5     2.3
-## 4 sample2 cluster2     1.0     1.3
+##    sample  cluster marker1 marker2 marker3
+## 1 sample1 cluster1     0.2     0.3     1.9
+## 2 sample1 cluster2     0.1     0.3     0.4
+## 3 sample1 cluster3     0.4     0.8     0.9
+## 4 sample2 cluster1     0.5     2.3     3.4
+## 5 sample2 cluster2     1.0     1.3    -0.1
+## 6 sample2 cluster3     1.4     1.7    -0.1
 
 results_other <- importResults(cluster.abundances = cluster.abundances, cluster.phenotypes = cluster.phenotypes)
 ```
 
 `Results` objects can be used by all functions excepting by the `treeViewer()` and `biplotViewer()` which only accept a `SPADEResults` object.
 
-# <a name="stat_functions"/> 4. Statistical analyses
+# <a name="stat_functions"/> 4. Statistical methods
 
 ## <a name="stat_function_identifyAC"/> 4.1 Identification of Abundant Clusters
-The `identifyAC()` function identifies clusters having a number of associated cells statistically greater than a specific threshold in a biological condition. The `identifyAC()` function returns an `AC` object which can be ploted.
+The `identifyAC()` function identifies clusters having a number of associated cells statistically greater than a specific threshold in a biological condition. These clusters are identified using a one sample t-test. The `identifyAC()` function returns an `AC` object which can be ploted.
 
 The `identifyAC()` function takes as parameter a `Results` or `SPADEResults` object and a named logical vector `condition` specifying the samples to use in the statistical computation. 
 This named vector must contain thelogical values `TRUE`. 
@@ -253,10 +263,10 @@ plot(resultsAC)
 
 <img src="README.figures/AbundantClusters-1.png" style="display: block; margin: auto;" />
 
-*In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as abondant clusters, that is to say statistically greater than 2% of all clusters for the selected samples with a p-value < 0.01.*
+*In this representation, six clusters (20, 23, 7, 50, 31, 15) have been identified as Abondant Clusters, that is to say clusters having an abundance statistically greater than 2% for the selected samples (p-value < 0.01).*
 
 ## <a name="stat_function_identifyDAC"/> 4.2 Identification of Differentially Abundant Clusters
-The `identifyDAC()` function identifies clusters with a number of associated cells statistically different between two biological conditions. The `identifyDAC()` function returns a `DAC` object which can be plotted.
+The `identifyDAC()` function identifies clusters with a number of associated cells statistically different between two biological conditions. These clusters are identified using a two sample t-test. The `identifyDAC()` function returns a `DAC` object which can be plotted.
 
 The `identifyDAC()` function takes as parameter: a `Results` or `SPADEResults` object and a named numeric vector `conditions` specifying the samples to consider in the two conditions. This named vector must provide the correspondence between samples (in names) and conditions (`1` to specify the first biological condition, `2` to indicate the second biological condition and `NA` otherwise). Differentially abundant clusters are characterized by two thresholds: the p-value threshold (`th.pvalue` parameter, set by default to `0.05`) and the fold-change threshold (`th.fc` parameter, set by default to `1`).
 
@@ -313,7 +323,7 @@ plot(resultsDAC)
 *In this representation, six clusters (20, 23, 7, 50, 31, 15) has been identified as differentially abundant clusters, that is to say with a fold-change greater than 2 for the selected samples with a p-value < 0.05.*
 
 ## <a name="stat_function_identifyCC"/> 4.3 Identification of Correlated Clusters
-The `identifyCC()` function identifies clusters correlated with an additional phenotypical variable. The `identifyCC()` function returns a `CC` object which can be plotted.
+The `identifyCC()` function identifies clusters correlated with an additional phenotypical variable. These clusters are identified using a Pearson or Spearman correlation. The `identifyCC()` function returns a `CC` object which can be plotted.
 
 The `identifyCC()` function takes as parameter: a `Results` or `SPADEResults` object and a named numeric vector `variable` specifying the expression values of the external biological variable. 
 This named vector must provide the correspondence between samples (in names) and the expression values (`NA` to exclude this sample from analysis). 
@@ -363,7 +373,7 @@ plot(resultsCC)
 
 <img src="README.figures/CorrelatedClusters-1.png" style="display: block; margin: auto;" />
 
-*In this representation, 2 clusters (30) and (39) has been identified as statistically correlated with the provided numerical vector above a coefficient of correlation of 0.8 and with a p-value < 0.05.*
+*In this representation, 2 clusters (30 and 39) have been identified as correlated clusters. That is to say, clusters having an abundance statistically correlated above a coefficient of correlation of 0.8 with an additional phenotypic variable (p-value < 0.05).*
 
 ## <a name="stat_function_classify_clustering_results"/> 4.4 Classification of Clustering Results
 
@@ -437,15 +447,16 @@ For instance, the previously created `CCR` objects can be displayed using the fo
 plot(results_CCR_phenotypes)
 ```
 
-<img src="README.figures/ProfileViewer-1.png" style="display: block; margin: auto;" />
+<img src="README.figures/ClassificationViewer1-1.png" style="display: block; margin: auto;" />
+*Circle packaging representation showing clusters having similar phenotypes using k???kmeans method.*
 
 ```r
 plot(results_CCR_abundance)
 ```
 
-<img src="README.figures/ProfileViewer-2.png" style="display: block; margin: auto;" />
-
-# <a name="#viewer_functions"/> 6. Visual representations
+<img src="README.figures/ClassificationViewer2-1.png" style="display: block; margin: auto;" />
+*Circle packaging representation showing clusters having similar abundance using hierarchical clustering method.*
+# <a name="#viewer_functions"/> 6. Visualisation methods
 
 ## <a name="count_viewer_function"/> 6.1 Visualization of the number of cells associated to each cluster (Count Viewer)
 
@@ -464,6 +475,8 @@ countViewer(results, samples = samples)
 ```
 
 <img src="README.figures/CountViewer-1.png" style="display: block; margin: auto;" />
+*Jitter representation showing the number of cells associated to a set of selected cluster, for a set of samples.*
+
 It is to note that the function computes the sum of all samples by default but allows to select the samples (using `samples` parameter) which are used to calculate the number of cells in each cluster.
 
 ## <a name="tree_viewer_function"/> 6.2 Visualization of combined SPADE trees (Tree Viewer)
@@ -488,7 +501,7 @@ treeViewer(results, samples = samples, highlight = resultsDAC, marker = "HLADR")
 ```
 
 <img src="README.figures/TreeViewer-1.png" style="display: block; margin: auto;" />
-
+*Tree showing a combined SPADE tree using all samples of a given biological condition*
 ## <a name="heatmap_viewer_function"/> 6.3 Visualization of clusters phenotypes using categorical heatmap (Heatmap Viewer)
 
 The Heatmap Viewer aims to visualize an overview of all clusters phenotypes. 
@@ -506,6 +519,7 @@ heatmapViewer(results)
 ```
 
 <img src="README.figures/heatmapViewer-1.png" style="display: block; margin: auto;" />
+*Heatmap showing marker median relative expression for all clusters*
 It is to note that the markers used by SPADE as clustering markers are shown in bold.
 
 ## <a name="boxplot_viewer_function"/> 6.4 Visualization of clusters abundance in different biological conditions (Boxplot Viewer)
@@ -529,6 +543,7 @@ boxplotViewer(results, show.legend = TRUE, conditions = conditions, clusters = c
 ```
 
 <img src="README.figures/BoxplotViewer-1.png" style="display: block; margin: auto;" />
+*Boxplot showing the abundance of a specific cluster in each condition*
 
 ## <a name="kinetics_viewer_function"/> 6.5 Visualization of cell cluster abundance kinetics (Kinetics Viewer)
 
@@ -551,7 +566,7 @@ kineticsViewer(results, assignments = assignments, clusters = c("9", "10"))
 ```
 
 <img src="README.figures/KineticViewer-1.png" style="display: block; margin: auto;" />
-
+*Kinetics representation showing the abundance evolution of cell clusters for each individual*
 ## <a name="streamgraph_viewer_function"/> 6.6 Visualization of cell clusters dynamics as a streamgraph (Streamgraph Viewer)
 
 The Streamgraph Viewer aims to visualize both absolute and relative abundance of clusters across the samples.
@@ -570,14 +585,15 @@ streamgraphViewer(results, samples = samples, clusters = c("9","16","25","27","4
 ```
 
 <img src="README.figures/StreamgraphViewer_absolute-1.png" style="display: block; margin: auto;" />
+*Streamgraph showing absolute abundances for a set of specific clusters across all the samples*
 
 ```r
 # The same could be done in a relative manner using the `use.relative = TRUE` parameter
 streamgraphViewer(results, samples = samples, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"), use.relative = TRUE)
 ```
 
-<img src="README.figures/StreamgraphViewer_absolute-2.png" style="display: block; margin: auto;" />
-
+<img src="README.figures/StreamgraphViewer_relative-1.png" style="display: block; margin: auto;" />
+*Streamgraph showing relative abundances for a set of specific clusters across all the samples*
 ## <a name="pheno_viewer_function"/> 6.7 Visualization of cell clusters using parallels coordinates (Pheno Viewer)
 
 The Pheno Viewer aims to visualize the median expressions of each marker for each cluster.
@@ -623,13 +639,14 @@ MDSViewer(results, space = "clusters", clusters = c("9","16","25","27","48","62"
 ```
 
 <img src="README.figures/MDSViewer_clusters-1.png" style="display: block; margin: auto;" />
+*MDS representation showing the similarities between selected clusters*
 
 ```r
 MDSViewer(results, space = "samples", assignments = assignments, clusters = c("9","16","25","27","48","62","67","5","52","10","23","66","8","50"))
 ```
 
-<img src="README.figures/MDSViewer_clusters-2.png" style="display: block; margin: auto;" />
-
+<img src="README.figures/MDSViewer_samples-1.png" style="display: block; margin: auto;" />
+*MDS representation showing the similarities between selected samples*
 ## <a name="biplot_viewer_function"/> 6.9 Visualisation of marker co-expressions using a biplot representation (Biplot Viewer)
 
 The Biplot Viewer aims to visualize co-expressions between 2 markers using a biplot representation. 
@@ -652,7 +669,7 @@ biplotViewer(results, x.marker = "CD20", y.marker = "HLADR", samples = samples, 
 ```
 
 <img src="README.figures/biplot-1.png" style="display: block; margin: auto;" />
-
+*Biplot representations showing the co-expression between "HLDA-DR" and "CD20" for selected samples*
 ## <a name="distogram_viewer_function"/> 6.10 Visualisation of marker co-expressions using a distogram (Distogram Viewer)
 
 The Distogram Viewer aims to visualize the co-expressions of all markers using a distogram. 
@@ -670,9 +687,10 @@ distogramViewer(results, samples = samples, clusters = c("1","8","7","4","5","6"
 ```
 
 <img src="README.figures/DistogramViewer-1.png" style="display: block; margin: auto;" />
+*Distogram representation showing pairwise co-expressions between all cell markers*
 It is to note that the markers used by SPADE as clustering markers are shown in bold.
 
-# <a name="export"/> 7. Export 
+# <a name="export"/> 7. Export of SPADEVizR objects
 All SPADEVizR objects can be exported to tab separated file using the `export()` function.
 Then, those tab separated files can be open with Microsoft Excel© or with Libre Office Calc.
 
@@ -760,7 +778,7 @@ graph              | an igraph object containing the SPADE tree                 
 graph.layout       | a numeric matrix containing the layout of the SPADE tree                                                                                        | &#9744;
 
 ## <a name="object_structure_AC"/> 9.4 Abundant Clusters (AC object)
-The `AC` object is a S4 object containing the main information related to the abundant clusters, that is to say xxx, identify by the [`identifyAC()`](#stat_function_identifyAC) function.  
+The `AC` object is a S4 object containing the main information related to the abundant clusters, that is to say clusters having a number of associated cells statistically greater than a specific threshold in a biological condition, identified by the [`identifyAC()`](#stat_function_identifyAC) function.  
 
 Different slots are available for a given `AC` object:
 
@@ -776,7 +794,7 @@ th.pvalue          | a numeric value specifying the p-value threshold
 result             | a dataframe containing for each cluster (first column): the mean (second column) and the standard deviation (third column) of the biological condition, the associated p-value (fourth column) and a logical (fifth column) specifying if the cluster is significantly abundant.
 
 ## <a name="object_structure_DAC"/> 9.5 Differentially Abundant Clusters (DAC object)
-The `DAC` object is a S4 object containing the main information related to the differentially abundant clusters, that is to say xxx, identify by the [`identifyDAC()`](#stat_function_identifyDAC)  
+The `DAC` object is a S4 object containing the main information related to the differentially abundant clusters, that is to say clusters with a number of associated cells statistically different between two biological conditions, identified by the [`identifyDAC()`](#stat_function_identifyDAC)  
 
 Different slots are available for a given `DAC` object:
 
@@ -794,7 +812,7 @@ th.pvalue          | a numeric value specifying the p-value threshold
 result             | a dataframe containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially abundant.
 
 ## <a name="object_structure_CC"/> 9.6 Correlated Clusters (CC object)
-The `CC` object is a S4 object containing object containing the main information related to the correlated clusters, that is to say xxx, identify by the [`identifyCC()`](#stat_function_identifyCC)  
+The `CC` object is a S4 object containing object containing the main information related to the correlated clusters, that is to say clusters correlated with an additional phenotypical variable, identify by the [`identifyCC()`](#stat_function_identifyCC)  
 
 Different slots are available for a given `CC` object:
 
@@ -808,7 +826,7 @@ method             | a character containing the name of the statistical test use
 method.adjust      | a character containing the name of the multiple correction method used (if any)
 th.correlation     | a numeric value specifying the correlation threshold (R)
 th.pvalue          | a numeric value specifying the p-value threshold
-result             | a dataframe containing for each cluster (first column): the coefficiant of correlation R (second column) , the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.
+result             | a dataframe containing for each cluster (first column): the coefficiant of correlation R (second column), the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.
 
 ## <a name="object_structure_CCR"/> 9.7 Classification of Clustering Results (CCR object)
 The `CCR` object is a S4 object containing the information related of the cluster classification obtained by the [`classifyClusteringResults()`](#stat_function_classify_clustering_results) function.

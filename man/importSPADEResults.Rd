@@ -7,7 +7,7 @@
 importSPADEResults(path, dictionary = data.frame(),
   exclude.markers = c("cell_length", "FileNum", "density", "time"),
   probs = c(0.05, 0.95), use.raw.medians = FALSE,
-  quantile.approximation = FALSE, th.min_cells = 50)
+  quantile.approximation = FALSE, th.min_cells = 0)
 }
 \arguments{
 \item{path}{a character specify the path of SPADE results folder}

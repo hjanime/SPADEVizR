@@ -44,8 +44,8 @@ Available plots are :
 \item {"MDSclusters" (included by default):}{Display the cluster similarities using MDS}
 \item {"MDSsamples":}{Display the samples similarities using MDS}
 \item {"disto" (included by default):}{Display a distogram representation showing the marker co-expressions}
-\item {"kinetics_cluster":}{Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
-\item {"boxplot_cluster":}{Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
+\item {"kinetics_pheno":}{Display a kinetic representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
+\item {"boxplot_pheno":}{Display a boxplot representation and a parallel coordinate juxtaposed (are arranged one on the side of the other) for each cluster}
 \item {AC, DAC, CC and CCR objects}
 }
 }

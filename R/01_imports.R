@@ -86,7 +86,7 @@ importSPADEResults <- function(path,
                                probs                  = c(0.05,0.95),
                                use.raw.medians        = FALSE,
                                quantile.approximation = FALSE,
-                               th.min_cells           = 50) {
+                               th.min_cells           = 0) {
     
     message("[START] - extracting SPADE results")
     message(paste0(basename(path), "\n"))
