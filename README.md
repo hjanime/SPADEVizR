@@ -16,7 +16,7 @@ Guillaume Gautreau and Nicolas Tchitchek
 	2.  [Identification of Differentially Abundant Clusters](#stat_function_identifyDAC)
 	3.  [Identification of Correlated Clusters](#stat_function_identifyCC)
 	4.  [Classification of Clustering Results](#stat_function_classify_clustering_results)
-6.  [Visualisation methods](#viewer_functions)
+5.  [Visualisation methods](#viewer_functions)
 	1.  [Visualization of the number of cells associated to each cluster (Count Viewer)](#count_viewer_function)
 	2.  [Visualization of combined SPADE trees (Tree Viewer)](#tree_viewer_function)
 	3.  [Visualization of clusters phenotypes using categorical heatmap (Heatmap Viewer)](#heatmap_viewer_function)
@@ -351,7 +351,21 @@ resultsCC <- identifyCC(results, variable = variable, th.pvalue = 0.05, th.corre
 ##  CD20_PBD028_BC641
 ##  CD20_PBD028_BD619
 ##  CD20_PBD028_BD620
-## Phenotypic variables: 50; 50; 50; 50; 50; 32541; 16769; 16987; 11592; 7419; 14621; 7030; 1048; 3369; 3881
+## Phenotypic variables: 50
+##  50
+##  50
+##  50
+##  50
+##  32541
+##  16769
+##  16987
+##  11592
+##  7419
+##  14621
+##  7030
+##  1048
+##  3369
+##  3881
 ## Use matrix of percent: TRUE
 ## Number of identified clusters: 1
 ## Statistical test used is: pearson
@@ -456,9 +470,9 @@ plot(results_CCR_abundance)
 
 <img src="README.figures/ClassificationViewer2-1.png" style="display: block; margin: auto;" />
 *Circle packaging representation showing clusters having similar abundance using hierarchical clustering method.*
-# <a name="#viewer_functions"/> 6. Visualisation methods
+# <a name="#viewer_functions"/> 5. Visualisation methods
 
-## <a name="count_viewer_function"/> 6.1 Visualization of the number of cells associated to each cluster (Count Viewer)
+## <a name="count_viewer_function"/> 5.1 Visualization of the number of cells associated to each cluster (Count Viewer)
 
 The Count Viewer aims to visualize the number of cells in each cluster. 
 This representation displays the clusters (in X-axis) and the number of associated cells (in Y-axis) in a two dimensional visualization. 
@@ -479,7 +493,7 @@ countViewer(results, samples = samples)
 
 It is to note that the function computes the sum of all samples by default but allows to select the samples (using `samples` parameter) which are used to calculate the number of cells in each cluster.
 
-## <a name="tree_viewer_function"/> 6.2 Visualization of combined SPADE trees (Tree Viewer)
+## <a name="tree_viewer_function"/> 5.2 Visualization of combined SPADE trees (Tree Viewer)
 
 The Tree Viewer aims to visualize the SPADE tree representation. 
 This representation displays the identified cell clusters using a minimal spanning tree layout. 
@@ -502,7 +516,7 @@ treeViewer(results, samples = samples, highlight = resultsDAC, marker = "HLADR")
 
 <img src="README.figures/TreeViewer-1.png" style="display: block; margin: auto;" />
 *Tree showing a combined SPADE tree using all samples of a given biological condition*
-## <a name="heatmap_viewer_function"/> 6.3 Visualization of clusters phenotypes using categorical heatmap (Heatmap Viewer)
+## <a name="heatmap_viewer_function"/> 5.3 Visualization of clusters phenotypes using categorical heatmap (Heatmap Viewer)
 
 The Heatmap Viewer aims to visualize an overview of all clusters phenotypes. 
 This representation displays marker expressions of all clusters using a categorical heatmap. 
@@ -522,7 +536,7 @@ heatmapViewer(results)
 *Heatmap showing marker median relative expression for all clusters*
 It is to note that the markers used by SPADE as clustering markers are shown in bold.
 
-## <a name="boxplot_viewer_function"/> 6.4 Visualization of clusters abundance in different biological conditions (Boxplot Viewer)
+## <a name="boxplot_viewer_function"/> 5.4 Visualization of clusters abundance in different biological conditions (Boxplot Viewer)
 
 The Boxplot Viewer aims to visualize and compare the cell cluster abundances between several biological conditions.
 This representation displays cell cluster abundances using boxplots.
@@ -545,7 +559,7 @@ boxplotViewer(results, show.legend = TRUE, conditions = conditions, clusters = c
 <img src="README.figures/BoxplotViewer-1.png" style="display: block; margin: auto;" />
 *Boxplot showing the abundance of a specific cluster in each condition*
 
-## <a name="kinetics_viewer_function"/> 6.5 Visualization of cell cluster abundance kinetics (Kinetics Viewer)
+## <a name="kinetics_viewer_function"/> 5.5 Visualization of cell cluster abundance kinetics (Kinetics Viewer)
 
 The Kinetics Viewer aims to visualize the cell cluster abundances in a kinetics manner. 
 This representation displays the cell abundances over the time for each individual using colored lines. 
@@ -567,7 +581,7 @@ kineticsViewer(results, assignments = assignments, clusters = c("9", "10"))
 
 <img src="README.figures/KineticViewer-1.png" style="display: block; margin: auto;" />
 *Kinetics representation showing the abundance evolution of cell clusters for each individual*
-## <a name="streamgraph_viewer_function"/> 6.6 Visualization of cell clusters dynamics as a streamgraph (Streamgraph Viewer)
+## <a name="streamgraph_viewer_function"/> 5.6 Visualization of cell clusters dynamics as a streamgraph (Streamgraph Viewer)
 
 The Streamgraph Viewer aims to visualize both absolute and relative abundance of clusters across the samples.
 This representation displays cell abundance using a stacked area graph which is displaced around a central axis.
@@ -594,7 +608,7 @@ streamgraphViewer(results, samples = samples, clusters = c("9","16","25","27","4
 
 <img src="README.figures/StreamgraphViewer_relative-1.png" style="display: block; margin: auto;" />
 *Streamgraph showing relative abundances for a set of specific clusters across all the samples*
-## <a name="pheno_viewer_function"/> 6.7 Visualization of cell clusters using parallels coordinates (Pheno Viewer)
+## <a name="pheno_viewer_function"/> 5.7 Visualization of cell clusters using parallels coordinates (Pheno Viewer)
 
 The Pheno Viewer aims to visualize the median expressions of each marker for each cluster.
 This representation displays cell cluster phenotypes using parallels coordinates. 
@@ -613,7 +627,7 @@ phenoViewer(results,clusters = c("1","8"))
 <img src="README.figures/PhenoViewer-1.png" style="display: block; margin: auto;" />
 It is to note that the markers used by SPADE as clustering markers are shown in bold.
 
-## <a name="MDS_viewer_function"/> 6.8 Visualisation of sample or cluster similarities using Multidimensional Scaling (MDS Viewer)
+## <a name="MDS_viewer_function"/> 5.8 Visualisation of sample or cluster similarities using Multidimensional Scaling (MDS Viewer)
 
 Multidimensional Scaling (MDS) methods aim to represent the similarities and differences among high-dimensional objects into a space of a lower dimensions, generally in two or three dimensions for visualization purposes [5]. In MDS representations, the Kruskal Stress (KS) indicates the percentage of information lost during the dimensionality reduction process.
 
@@ -647,7 +661,7 @@ MDSViewer(results, space = "samples", assignments = assignments, clusters = c("9
 
 <img src="README.figures/MDSViewer_samples-1.png" style="display: block; margin: auto;" />
 *MDS representation showing the similarities between selected samples*
-## <a name="biplot_viewer_function"/> 6.9 Visualisation of marker co-expressions using a biplot representation (Biplot Viewer)
+## <a name="biplot_viewer_function"/> 5.9 Visualisation of marker co-expressions using a biplot representation (Biplot Viewer)
 
 The Biplot Viewer aims to visualize co-expressions between 2 markers using a biplot representation. 
 In such representation, each cell is represented by dots which are positioned in a two dimensional space where the 2 axis correspond to the marker expressions.
@@ -670,7 +684,7 @@ biplotViewer(results, x.marker = "CD20", y.marker = "HLADR", samples = samples, 
 
 <img src="README.figures/biplot-1.png" style="display: block; margin: auto;" />
 *Biplot representations showing the co-expression between "HLDA-DR" and "CD20" for selected samples*
-## <a name="distogram_viewer_function"/> 6.10 Visualisation of marker co-expressions using a distogram (Distogram Viewer)
+## <a name="distogram_viewer_function"/> 5.10 Visualisation of marker co-expressions using a distogram (Distogram Viewer)
 
 The Distogram Viewer aims to visualize the co-expressions of all markers using a distogram. 
 In such representation each tile of the distogram correspond to the co-expression between 2 markers.
@@ -690,7 +704,7 @@ distogramViewer(results, samples = samples, clusters = c("1","8","7","4","5","6"
 *Distogram representation showing pairwise co-expressions between all cell markers*
 It is to note that the markers used by SPADE as clustering markers are shown in bold.
 
-# <a name="export"/> 7. Export of SPADEVizR objects
+# <a name="export"/> 6. Export of SPADEVizR objects
 All SPADEVizR objects can be exported to tab separated file using the `export()` function.
 Then, those tab separated files can be open with Microsoft Excel© or with Libre Office Calc.
 
@@ -700,7 +714,7 @@ For instance, such export can be done using the following command:
 export(AC,filename = "export.txt")
 ```
 
-# <a name="report"/> 8. Generate report 
+# <a name="report"/> 7. Generate report 
 The `generateReport()` function allows to easily generate a PDF file containing all desired plots. A vector combining viewer names and stat objects ('AC', 'DAC', 'CC' and 'CCR) specifying the order of the desired plots can be provided to the `select.plots` parameter among: 
 
  * "[count](#count_viewer_function)" (included by default): Display an representation showing the number of cells for each cluster
@@ -730,9 +744,9 @@ The generated PDF file can be download here <a href="README.figures/SPADEVizR-re
 
 *Generating a big report can take a minute or more.*
 
-# <a name="object_structures"/> 9. SPADEVizR objects
+# <a name="object_structures"/> 8. SPADEVizR objects
 
-## <a name="object_structure_uml"/> 9.1 Overview of SPADEVizR objects
+## <a name="object_structure_uml"/> 8.1 Overview of SPADEVizR objects
 
 In SPADEVizR, six objects are available: `Results`, `SPADEResults`, `AC` (Abundant Cluster), `DAC` (Differentially Abundant Clusters), `CC` (Correlated Clusters) and `CCR` (Classification of Clustering Results).
 
@@ -742,7 +756,7 @@ The following UML diagram summarize the structure of those objects:
 
 The `print` and `show` functions are available for all objects of this package.
 
-## <a name="object_structure_results"/> 9.2 Results object 
+## <a name="object_structure_results"/> 8.2 Results object 
 The `Results` object is a S4 object containing the count matrix and the cluster phenotypes. It is to note that `Results` is a super class of the `SPADEResult` (defined in next subsection).
 
 Different slots are available for a given `Results` object:
@@ -756,7 +770,7 @@ marker.names       | a character vector containing the markers names
 cluster.number     | a numeric specifying the number of cell clusters
 bounds             | a numeric data frame containing the extreme bounds for each markers
 
-## <a name="object_structure_SPADE_results"/> 9.3 SPADEResults object 
+## <a name="object_structure_SPADE_results"/> 8.3 SPADEResults object 
 The `SPADEResults` object is a S4 object containing the clustering results from SPADE. It is to note that this object extend the `Results` object and contains additional slots related to SPADE data.
 
 Different slots are available for a given `SPADEResults` object:
@@ -777,7 +791,7 @@ fcs.files          | a character vector containing the absolute path of the orig
 graph              | an igraph object containing the SPADE tree                                                                                                      | &#9744;
 graph.layout       | a numeric matrix containing the layout of the SPADE tree                                                                                        | &#9744;
 
-## <a name="object_structure_AC"/> 9.4 Abundant Clusters (AC object)
+## <a name="object_structure_AC"/> 8.4 Abundant Clusters (AC object)
 The `AC` object is a S4 object containing the main information related to the abundant clusters, that is to say clusters having a number of associated cells statistically greater than a specific threshold in a biological condition, identified by the [`identifyAC()`](#stat_function_identifyAC) function.  
 
 Different slots are available for a given `AC` object:
@@ -793,7 +807,7 @@ th.mean            | a numeric value specifying the mean threshold
 th.pvalue          | a numeric value specifying the p-value threshold
 result             | a dataframe containing for each cluster (first column): the mean (second column) and the standard deviation (third column) of the biological condition, the associated p-value (fourth column) and a logical (fifth column) specifying if the cluster is significantly abundant.
 
-## <a name="object_structure_DAC"/> 9.5 Differentially Abundant Clusters (DAC object)
+## <a name="object_structure_DAC"/> 8.5 Differentially Abundant Clusters (DAC object)
 The `DAC` object is a S4 object containing the main information related to the differentially abundant clusters, that is to say clusters with a number of associated cells statistically different between two biological conditions, identified by the [`identifyDAC()`](#stat_function_identifyDAC)  
 
 Different slots are available for a given `DAC` object:
@@ -811,7 +825,7 @@ th.fc              | a numeric value specifying the fold-change threshold
 th.pvalue          | a numeric value specifying the p-value threshold
 result             | a dataframe containing for each cluster (first column): the fold-change (second column) and the standard deviation (third column) for the first biological condition, the fold-change (fourth column) and the standard deviation (fifth column) for the second biological condition, the associated p-value (sixth column) and a logical (seventh column) specifying if the cluster is significantly differentially abundant.
 
-## <a name="object_structure_CC"/> 9.6 Correlated Clusters (CC object)
+## <a name="object_structure_CC"/> 8.6 Correlated Clusters (CC object)
 The `CC` object is a S4 object containing object containing the main information related to the correlated clusters, that is to say clusters correlated with an additional phenotypical variable, identify by the [`identifyCC()`](#stat_function_identifyCC)  
 
 Different slots are available for a given `CC` object:
@@ -828,7 +842,7 @@ th.correlation     | a numeric value specifying the correlation threshold (R)
 th.pvalue          | a numeric value specifying the p-value threshold
 result             | a dataframe containing for each cluster (first column): the coefficiant of correlation R (second column), the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.
 
-## <a name="object_structure_CCR"/> 9.7 Classification of Clustering Results (CCR object)
+## <a name="object_structure_CCR"/> 8.7 Classification of Clustering Results (CCR object)
 The `CCR` object is a S4 object containing the information related of the cluster classification obtained by the [`classifyClusteringResults()`](#stat_function_classify_clustering_results) function.
 
 Different slots are available for a given `CCR` object:
@@ -842,10 +856,10 @@ method             | a character specifying the method used to classify cluster
 method.parameter   | a named list of parameters used by the classification method
 classes            | a two column dataframe with the cluster in first column and corresponding class in the second column
 
-# <a name="license"/> 11. License
+# <a name="license"/> 9. License
 SPADEVizR is freely distributed under the GLP-3 license.
 
-# <a name="references"/> 12. References 
+# <a name="references"/> 10. References 
 [1] - Bendall SC., Simonds EF., Qiu P., Amir E. D., Krutzik PO., Finck R. and Nolan GP. (2011). Single-cell mass cytometry of differential immune and drug responses across a human hematopoietic continuum. Science (New York, N.Y.), 332(6030), 687-96.
 
 [2] - Qiu P., Simonds EF., Bendall S. C., Gibbs KD., Bruggner RV, Linderman MD. and Plevritis SK. (2011). Extracting a cellular hierarchy from high-dimensional cytometry data with SPADE. Nature Biotechnology, 29(10), 886-91. 

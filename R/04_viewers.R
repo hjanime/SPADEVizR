@@ -547,9 +547,10 @@ streamgraphViewer <- function(Results,
     data <- cbind(cluster = rownames(data), data)
     melted.data           <- reshape2::melt(data, id = "cluster")
     colnames(melted.data) <- c("cluster", "sample", "value")
-    
-    melted.data         <- melted.data[order(melted.data$sample, decreasing = TRUE),]
-    melted.data$cluster <- factor(melted.data$cluster, levels = rev(clusters))
+
+    melted.data$cluster <- factor(melted.data$cluster, levels = clusters)
+    melted.data <- melted.data[order(melted.data$cluster, decreasing = TRUE),]
+    melted.data <- melted.data[order(melted.data$sample),]
 
     dt.melted.data <- data.table::setDT(melted.data)
     dt.melted.data[, ymax := cumsum(value) - (sum(value) / 2), by = sample]
@@ -567,7 +568,7 @@ streamgraphViewer <- function(Results,
              ggplot2::geom_text(ggplot2::aes_string(x = "sample", y = "ybase"), label = "0", check_overlap = TRUE, angle = 360, hjust = 1.1, size = 3) +
              ggplot2::theme_bw() +
              ggplot2::theme(legend.text      = ggplot2::element_text(size = 6),
-                            axis.text.x      = ggplot2::element_text(angle = 90, hjust = 0),
+                            axis.text.x      = ggplot2::element_text(angle = 90, hjust = 1),
                             axis.line        = ggplot2::element_blank(),
                             axis.text.y      = ggplot2::element_blank(),
                             axis.ticks       = ggplot2::element_blank(),

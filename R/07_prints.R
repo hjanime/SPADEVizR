@@ -108,7 +108,7 @@ setMethod("print","CC",
             cat(paste0(x@sample.names, collapse = "\n "))
             cat("\n")
             cat(paste0("Phenotypic variables: "))
-            cat(paste0(x@variable, collapse = "; "))
+            cat(paste0(x@variable, collapse = "\n "))
             cat("\n")
             cat(paste0("Use matrix of percent: ", x@use.percentages))
             cat("\n")
