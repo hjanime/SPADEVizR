@@ -134,13 +134,18 @@ volcanoViewer <- function(DAC                = NULL,
     if (!show.all_labels){
         data.text <- subset(DAC@result, DAC@result$significant)
     }
+
+    if (all(is.na(DAC@result$fold.change))) {
+        stop("Error, all cluster fold-changes are NA")
+    }
+
     x.min    <- floor(min(DAC@result$fold.change, na.rm = TRUE))
     x.max    <- ceiling(max(DAC@result$fold.change, na.rm = TRUE))
-    x.max    <- max(x.max, abs(x.min))
-    print(x.max)
+    x.max    <- max(x.max, abs(x.min), na.rm = TRUE)
+    
     x.breaks <- c(round(c( -th.fc, th.fc), 2), seq( -x.max, x.max, by = 1))
 
-    y.max    <- ceiling(max(-log10(DAC@th.pvalue), -log10(DAC@result$pvalue)))
+    y.max    <- ceiling(max( - log10(DAC@th.pvalue), - log10(DAC@result$pvalue), na.rm = TRUE))
     y.breaks <- c(seq(0, y.max, by = 1), round(-log10(DAC@th.pvalue), 2))
 
     title.details <- ifelse(DAC@use.percentages, "using % of cells", "using # of cells")
@@ -264,7 +269,7 @@ correlatedClustersViewer <- function(CC,
 
     x.breaks <- c( - CC@th.correlation, CC@th.correlation, seq(-1, 1, by = 0.1))
 
-    y.max    <- ceiling(max(-log10(CC@th.pvalue), -log10(CC@result$pvalue)))
+    y.max    <- ceiling(max(-log10(CC@th.pvalue), -log10(CC@result$pvalue), na.rm = TRUE))
     y.breaks <- c(seq(0, y.max, by = 1), round(-log10(CC@th.pvalue), 2))
     
     plot <- plot +  ggrepel::geom_text_repel(data          = data.text, 

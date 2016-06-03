@@ -130,7 +130,7 @@ importSPADEResults <- function(path,
         
         marker.expressions.sample <- SPADE.matrix[, grep("count|percenttotal", colnames(SPADE.matrix), invert = TRUE)]
 
-        marker.expressions.sample[cells.count.sample == 0,] <- rep(NA, ncol(marker.expressions.sample))
+        marker.expressions.sample[cells.count.sample == 0, 2:ncol(marker.expressions.sample)] <- rep(NA, ncol(marker.expressions.sample) - 1 )
 
         marker.expressions.sample <- cbind(name = rep(name, nrow(marker.expressions.sample)), marker.expressions.sample)
         marker.expressions        <- rbind(marker.expressions, marker.expressions.sample)
@@ -373,11 +373,11 @@ load.flowSet <- function(SPADEResult = NULL, fcs.files, dictionary, exclude.mark
         dictionary <- SPADEResult@dictionary
         fcs.files  <- SPADEResult@fcs.files
     }
-    
+    print(fcs.files)
     flowset                        <- flowCore::read.flowSet(fcs.files, emptyValue = TRUE)
     samples.names                  <- gsub(".fcs.density.fcs.cluster.fcs", "", basename(fcs.files))
     flowCore::sampleNames(flowset) <- samples.names
-        
+      
     if(nrow(dictionary)>0){
         flowset@colnames <- rename.markers(flowset@colnames, dictionary)
     }

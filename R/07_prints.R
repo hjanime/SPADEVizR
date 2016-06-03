@@ -15,8 +15,8 @@ NULL
 setMethod("print","Results",
         function(x){
             cat("Object class: Results\n")
-            cat(paste0("Markers : "))
-            cat(paste0(x@marker.names, collapse="; "))
+            cat(paste0("Markers : \n"))
+            cat(paste0(x@marker.names, collapse="\n "))
             cat("\n")
             cat(paste0("Samples : "))
             cat("\n")
@@ -34,7 +34,7 @@ setMethod("print","SPADEResults",
 	cat(paste0("Markers : "))
 	cat(paste0(x@marker.names, collapse="; "))
 	cat("\n")
-	cat(paste0("Clustering Markers : "))
+	cat(paste0("Clustering Markers : \n"))
 	cat(paste0(x@marker.names[x@marker.clustering], collapse="\n "))
 	cat("\n")
 	cat(paste0("Samples : "))
@@ -49,7 +49,7 @@ setMethod("print","SPADEResults",
 setMethod("print","AC",
         function(x){
             cat("Object class: Abundant Clusters (AC)\n")
-            cat(paste0("Samples: "))
+            cat(paste0("Samples: \n"))
             cat(paste0(x@sample.names, collapse = "\n "))
             cat("\n")
             cat(paste0("Use matrix of percent: ", x@use.percentages))
@@ -74,10 +74,10 @@ setMethod("print","AC",
 setMethod("print","DAC",
         function(x){
             cat("Object class: Differentially Abundant Clusters (DAC)\n")
-            cat(paste0("Sample of Condition 1: "))
+            cat(paste0("Sample of Condition 1: \n"))
             cat(paste0(x@sample.cond1, collapse = "\n "))
             cat("\n")
-            cat(paste0("Sample of Condition 2: "))
+            cat(paste0("Sample of Condition 2: \n"))
             cat(paste0(x@sample.cond2, collapse = "\n "))
             cat("\n")
             cat(paste0("Use matrix of percent: ", x@use.percentages))
@@ -104,11 +104,10 @@ setMethod("print","DAC",
 setMethod("print","CC",
         function(x){
             cat("Object class: Correlated Clusters (CC)\n")
-            cat(paste0("Samples: "))
-            cat(paste0(x@sample.names, collapse = "\n "))
-            cat("\n")
-            cat(paste0("Phenotypic variables: "))
-            cat(paste0(x@variable, collapse = "\n "))
+            cat(paste0("Samples = variables :  \n"))
+            for (sample in x@sample.names) {
+                cat(paste0(sample, " = ", x@variable[sample], "\n"))
+            }
             cat("\n")
             cat(paste0("Use matrix of percent: ", x@use.percentages))
             cat("\n")

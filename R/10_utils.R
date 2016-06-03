@@ -37,8 +37,6 @@ computePhenoTable <- function(SPADEResults, num = 5){
         means[i, "value"] <- which.min(abs(value - seq))
         
     }
-    
-    means <- means[gtools::mixedsort(colnames(means))]
 
     return(means)
     

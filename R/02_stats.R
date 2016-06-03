@@ -296,9 +296,9 @@ classifyClusteringResults <- function(Results,
     if(type == "phenotype"){
         table          <- computePhenoTable(Results)
         data           <- reshape2::dcast(table, cluster ~ marker)
+        clusters       <- data[, "cluster"]
         data           <- data[, colnames(data) != "cluster"]
-        rownames(data) <- rownames(Results@cells.count)
-        data           <- stats::na.omit(data) # NA values are removed, generate a warning ?
+        rownames(data) <- clusters
     }else if (type == "abundance"){
         data           <- Results@cells.count
     }else{

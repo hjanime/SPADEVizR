@@ -3,7 +3,7 @@ Guillaume Gautreau and Nicolas Tchitchek
 
 
 
-![](README.figures/logoSPADEVizR.png)
+![Logo SPADEVizR](README.figures/logoSPADEVizR.png)
 
 # Table of Contents
 1.  [Package overview](#package_overview)
@@ -161,6 +161,21 @@ results <- importSPADEResults("ImMemoryB-#00008_[MARKERSET10]_K070_P025",
 ## [START] - extracting SPADE results
 ## ImMemoryB-#00008_[MARKERSET10]_K070_P025
 ## FCS files loading:
+##  [1] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD008_BB078.fcs.density.fcs.cluster.fcs"
+##  [2] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD008_BB231.fcs.density.fcs.cluster.fcs"
+##  [3] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD008_BC641.fcs.density.fcs.cluster.fcs"
+##  [4] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD008_BD619.fcs.density.fcs.cluster.fcs"
+##  [5] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD008_BD620.fcs.density.fcs.cluster.fcs"
+##  [6] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD028_BB078.fcs.density.fcs.cluster.fcs"
+##  [7] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD028_BB231.fcs.density.fcs.cluster.fcs"
+##  [8] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD028_BC641.fcs.density.fcs.cluster.fcs"
+##  [9] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD028_BD619.fcs.density.fcs.cluster.fcs"
+## [10] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PBD028_BD620.fcs.density.fcs.cluster.fcs"
+## [11] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PPD000_BB078.fcs.density.fcs.cluster.fcs"
+## [12] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PPD000_BB231.fcs.density.fcs.cluster.fcs"
+## [13] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PPD000_BC641.fcs.density.fcs.cluster.fcs"
+## [14] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PPD000_BD619.fcs.density.fcs.cluster.fcs"
+## [15] "C:/Users/gg248485/Desktop/SPADEVizR.full/01_readme/ImMemoryB-#00008_[MARKERSET10]_K070_P025/CD20_PPD000_BD620.fcs.density.fcs.cluster.fcs"
 ## 	archsin transform...
 ## 	compute quantiles...
 ## 	reading SPADE results...
@@ -236,7 +251,8 @@ samples <- c("CD20_PBD008_BB078", "CD20_PBD008_BB231", "CD20_PBD008_BC641", "CD2
 resultsAC <- identifyAC(results, samples = samples, th.pvalue = 0.01, th.mean = 2)
 ## [START] - Identification of Abundant Clusters
 ## Object class: Abundant Clusters (AC)
-## Samples: CD20_PBD008_BB078
+## Samples: 
+## CD20_PBD008_BB078
 ##  CD20_PBD008_BB231
 ##  CD20_PBD008_BC641
 ##  CD20_PBD008_BD619
@@ -278,12 +294,14 @@ condition2 <- c("CD20_PBD028_BB078", "CD20_PBD028_BB231", "CD20_PBD028_BC641", "
 resultsDAC <- identifyDAC(results, condition1 = condition1, condition2 = condition2, th.pvalue = 0.05, th.fc = 2)
 ## [START] - Identification of Differentially Abundant Clusters
 ## Object class: Differentially Abundant Clusters (DAC)
-## Sample of Condition 1: CD20_PBD008_BB078
+## Sample of Condition 1: 
+## CD20_PBD008_BB078
 ##  CD20_PBD008_BB231
 ##  CD20_PBD008_BC641
 ##  CD20_PBD008_BD619
 ##  CD20_PBD008_BD620
-## Sample of Condition 2: CD20_PBD028_BB078
+## Sample of Condition 2: 
+## CD20_PBD028_BB078
 ##  CD20_PBD028_BB231
 ##  CD20_PBD028_BC641
 ##  CD20_PBD028_BD619
@@ -336,36 +354,23 @@ variable <- c(CD20_PPD000_BB078 = 50, CD20_PPD000_BB231 = 50, CD20_PPD000_BC641 
 resultsCC <- identifyCC(results, variable = variable, th.pvalue = 0.05, th.correlation = 0.8)
 ## [START] - Identification of Correlated Clusters
 ## Object class: Correlated Clusters (CC)
-## Samples: CD20_PPD000_BB078
-##  CD20_PPD000_BB231
-##  CD20_PPD000_BC641
-##  CD20_PPD000_BD619
-##  CD20_PPD000_BD620
-##  CD20_PBD008_BB078
-##  CD20_PBD008_BB231
-##  CD20_PBD008_BC641
-##  CD20_PBD008_BD619
-##  CD20_PBD008_BD620
-##  CD20_PBD028_BB078
-##  CD20_PBD028_BB231
-##  CD20_PBD028_BC641
-##  CD20_PBD028_BD619
-##  CD20_PBD028_BD620
-## Phenotypic variables: 50
-##  50
-##  50
-##  50
-##  50
-##  32541
-##  16769
-##  16987
-##  11592
-##  7419
-##  14621
-##  7030
-##  1048
-##  3369
-##  3881
+## Samples = variables :  
+## CD20_PPD000_BB078 = 50
+## CD20_PPD000_BB231 = 50
+## CD20_PPD000_BC641 = 50
+## CD20_PPD000_BD619 = 50
+## CD20_PPD000_BD620 = 50
+## CD20_PBD008_BB078 = 32541
+## CD20_PBD008_BB231 = 16769
+## CD20_PBD008_BC641 = 16987
+## CD20_PBD008_BD619 = 11592
+## CD20_PBD008_BD620 = 7419
+## CD20_PBD028_BB078 = 14621
+## CD20_PBD028_BB231 = 7030
+## CD20_PBD028_BC641 = 1048
+## CD20_PBD028_BD619 = 3369
+## CD20_PBD028_BD620 = 3881
+## 
 ## Use matrix of percent: TRUE
 ## Number of identified clusters: 1
 ## Statistical test used is: pearson
@@ -608,6 +613,7 @@ streamgraphViewer(results, samples = samples, clusters = c("9","16","25","27","4
 
 <img src="README.figures/StreamgraphViewer_relative-1.png" style="display: block; margin: auto;" />
 *Streamgraph showing relative abundances for a set of specific clusters across all the samples*
+
 ## <a name="pheno_viewer_function"/> 5.7 Visualization of cell clusters using parallels coordinates (Pheno Viewer)
 
 The Pheno Viewer aims to visualize the median expressions of each marker for each cluster.
@@ -684,6 +690,7 @@ biplotViewer(results, x.marker = "CD20", y.marker = "HLADR", samples = samples, 
 
 <img src="README.figures/biplot-1.png" style="display: block; margin: auto;" />
 *Biplot representations showing the co-expression between "HLDA-DR" and "CD20" for selected samples*
+
 ## <a name="distogram_viewer_function"/> 5.10 Visualisation of marker co-expressions using a distogram (Distogram Viewer)
 
 The Distogram Viewer aims to visualize the co-expressions of all markers using a distogram. 
@@ -860,18 +867,18 @@ classes            | a two column dataframe with the cluster in first column and
 SPADEVizR is freely distributed under the GLP-3 license.
 
 # <a name="references"/> 10. References 
-[1] - Bendall SC., Simonds EF., Qiu P., Amir E. D., Krutzik PO., Finck R. and Nolan GP. (2011). Single-cell mass cytometry of differential immune and drug responses across a human hematopoietic continuum. Science (New York, N.Y.), 332(6030), 687-96.
+[1] - Bendall, S. C. et al. Single-Cell Mass Cytometry of Differential. 332, 687-697 (2011).
 
-[2] - Qiu P., Simonds EF., Bendall S. C., Gibbs KD., Bruggner RV, Linderman MD. and Plevritis SK. (2011). Extracting a cellular hierarchy from high-dimensional cytometry data with SPADE. Nature Biotechnology, 29(10), 886-91. 
+[2] - Qiu, P. et al. Extracting a cellular hierarchy from high-dimensional cytometry data with SPADE. Nat. Biotechnol. 29, 886-891 (2011).
 
-[3] - viSNE Amir el-AD., Davis KL., Tadmor MD., Simonds EF., Levine JH., Bendall SC., Shenfeld DK., Krishnaswamy S., Nolan GP., Pe'er D. (2013). viSNE enables visualization of high dimensional single-cell data and reveals phenotypic heterogeneity of leukemia. Nature Biotechnology.  Jun;31(6):545-52
+[3] - Amir, E. D. et al. viSNE enables visualization of high dimensional single-cell data and reveals phenotypic heterogeneity of leukemia. Nat. Biotechnol. 31, 545-52 (2013).
 
-[4] - ACCENSE Shekhar K., Brodin P., Davis MM. and Chakraborty AK. (2013) Automatic Classification of Cellular Expression by Nonlinear Stochastic Embedding (ACCENSE). Proceedings of the National Academy of Sciences
+[4] - Shekhar, K., Brodin, P., Davis, M. M. & Chakraborty, A. K. Automatic Classification of Cellular Expression by Nonlinear Stochastic Embedding (ACCENSE). Proc. Natl. Acad. Sci. U. S. A. 111, 202-7 (2014).
 
 [5] - Grammar of Graphics library http://ggplot2.org/
 
 [6] - Ellis B., Haaland P., Hahne F., Meur NL., Gopalakrishnan N., Spidlen J. and Jiang M. flowCore: Basic structures for flow cytometry data. R package version 1.34.7.
 
-[7] - Cui X. and Churchill GA. (2003). Statistical tests for differential expression in cDNA microarray experiments. Genome Biol.
+[7] - Cui, X. et al. Statistical tests for differential expression in cDNA microarray experiments. Genome Biol. 4, 210 (2003).
 
-[8] - Kruskal JB. and Wish M. (1978). Multidimensional Scaling, Sage University Paper series on Quantitative Application in the Social Sciences, 07-011. Beverly Hills and London: Sage Publications.
+[8] - Kruskal, J. & Wish, M. Multidimensional scaling. 4, 1-5 (1978).

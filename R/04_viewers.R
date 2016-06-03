@@ -140,9 +140,12 @@ treeViewer <- function(SPADEResults,
         }else{
             expr   <- SPADEResults@marker.expressions
         }
-        
+
+        print(head(expr))
+
         expr           <- expr[,c("cluster", "sample", marker)]
-        expr           <- reshape2::dcast(expr, cluster ~ sample, value.var = marker)
+        expr <- reshape2::dcast(expr, cluster ~ sample, value.var = marker)
+        
         rownames(expr) <- expr$cluster
         expr           <- expr[, -1]
         mean.expr      <- apply(expr, 1, mean, na.rm = TRUE)
@@ -150,8 +153,8 @@ treeViewer <- function(SPADEResults,
         pos.vertex     <- cbind(pos.vertex, marker = mean.expr)
         colnames(pos.vertex)[ncol(pos.vertex)] <- marker
 
-        max.mean.expr <- max(mean.expr)
-        seq.mean.expr <- seq(from = -1, to = ceiling(max.mean.expr), by = 1)
+        max.mean.expr <- ceiling(max(mean.expr, na.rm = TRUE))
+        seq.mean.expr <- seq(from = -1, to = max.mean.expr, by = 1)
 
     }   
     
@@ -175,7 +178,7 @@ treeViewer <- function(SPADEResults,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size", fill = marker, colour = highlight.name),
                                                stroke = 2.5,
                                                shape = 21) +
-                           ggplot2::scale_fill_gradient(low = "#ECE822", high = "#EE302D", limits = c(-1, max(max.mean.expr)), breaks = seq.mean.expr)
+                           ggplot2::scale_fill_gradient(low = "#ECE822", high = "#EE302D", limits = c(-1, max.mean.expr), breaks = seq.mean.expr)
         }else{
             plot <- plot + ggplot2::geom_point(data   = pos.vertex,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size", colour = highlight.name),
@@ -189,7 +192,7 @@ treeViewer <- function(SPADEResults,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size", fill = marker),
                                                stroke = 2.5,
                                                shape = 21) +
-                           ggplot2::scale_fill_gradient(low = "#ECE822", high = "#EE302D", limits = c(-1, max(max.mean.expr)), breaks = seq.mean.expr) #low = yellow, high = red
+                           ggplot2::scale_fill_gradient(low = "#ECE822", high = "#EE302D", limits = c(-1, max.mean.expr), breaks = seq.mean.expr) #low = yellow, high = red
         }else{
             plot <- plot + ggplot2::geom_point(data   = pos.vertex,
                                                ggplot2::aes_string(x = "x", y = "y", size = "size"),
@@ -252,10 +255,13 @@ heatmapViewer <- function(Results,
     pheno.table <- computePhenoTable(Results, num)
     
     pheno.table <- reshape2::dcast(pheno.table, cluster ~ marker)
+    cluster     <- pheno.table$cluster
     pheno.table <- pheno.table[, 2:ncol(pheno.table)]
     pheno.table <- t(pheno.table)
     pheno.table <- as.matrix(pheno.table)
-    colnames(pheno.table) <- rownames(Results@cells.count)
+    
+    colnames(pheno.table) <- cluster
+    print(pheno.table)
 
     if(names(Results) == "SPADEResults"){
         clustering.markers <- Results@marker.names[Results@marker.clustering]
@@ -347,7 +353,7 @@ boxplotViewer <- function(Results,
         }
         data.temp <- data.melted[data.melted$cluster == current.cluster,]
 
-        max.value <- max(data.temp$value)
+        max.value <- max(data.temp$value, na.rm = TRUE)
         max.value <- max.value + 0.1*max.value + 1
         
         data.temp$cond <- as.factor(data.temp$cond)
@@ -718,14 +724,13 @@ phenoViewer <- function(Results,
                                    ggplot2::theme_bw()         
         
         if (names(Results) == "SPADEResults"){
-            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1, face = bold.markers),
-                                                      legend.text = ggplot2::element_text(size = 6))                 
+            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1, face = bold.markers))                 
         }else{
-            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1),
-                                                      legend.text = ggplot2::element_text(size = 6))
+            plots[[i]] <- plots[[i]] + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 1))
         }
         
-        
+        plots[[i]] <- plots[[i]] + ggplot2::theme(legend.text = ggplot2::element_text(size = 6)) +
+                                   ggplot2::ylab("MSI")
     }
 
     if (show.on_device) {
@@ -823,7 +828,7 @@ MDSViewer <- function(Results,
     if (space == "samples") {
 
         title    <- "MDS at the sample level"
-        subtitle <- paste0("Kruskal Stress : ", round(stress, 2))
+        subtitle <- paste0("Kruskal Stress : ", format(round(stress, 2), nsmall = 2))
         
         plot <- ggplot2::ggplot() +
                 ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), ""))))
@@ -870,7 +875,7 @@ MDSViewer <- function(Results,
         data_i$cluster <- as.factor(data_i$cluster)
 
         title    <- "MDS at the cluster level"
-        subtitle <- paste0("Kruskal Stress : ", round(stress, 2))
+        subtitle <- paste0("Kruskal Stress : ", signif(stress, 2))
 
         plot <- ggplot2::ggplot(data = data_i) +
                 ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
