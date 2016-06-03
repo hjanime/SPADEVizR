@@ -119,12 +119,12 @@ identifyDAC <- function(Results,
     if(!is.null(method.adjust)){
         pv <- p.adjust(pv, method = method.adjust)
     }
-    
+
     fc <- apply(data, 1, function(x){
                     fc <- mean(x[1:s1]) / mean(x[-(1:s1)])
                     if(!is.na(fc) && fc < 1){
                         fc <- (-1 / fc)
-                    } 
+                    }
                     if (is.infinite(fc)) {
                         fc <- NA
                         warning("Fold-change is infinite due to division by 0")
@@ -133,10 +133,10 @@ identifyDAC <- function(Results,
                })
 
     result <- data.frame(cluster     = rownames(Results@cells.count),
-                         mean.cond1  = apply(data.cond1, 1, mean),
-                         sd.cond1    = apply(data.cond1, 1, sd),
-                         mean.cond2  = apply(data.cond2, 1, mean),
-                         sd.cond2    = apply(data.cond2, 1, sd),
+                         mean.cond1  = apply(data[, condition1, drop = FALSE], 1, mean),
+                         sd.cond1    = apply(data[, condition1, drop = FALSE], 1, sd),
+                         mean.cond2  = apply(data[, condition2, drop = FALSE], 1, mean),
+                         sd.cond2    = apply(data[, condition2, drop = FALSE], 1, sd),
                          fold.change = fc,
                          pvalue      = pv)
     
