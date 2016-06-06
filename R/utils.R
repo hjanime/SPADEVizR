@@ -108,7 +108,7 @@ ggheatmap <- function(matrix, dendrogram.type = "rectangle", num = 5, clustering
     
 }
 
-#' @title Internal - Build a dendrograms plot
+#' @title Internal - Build a dendrogram plot
 #'
 #' @description 
 #' This function is used internally to generate a 'ggplot' dendrogram.
@@ -256,10 +256,11 @@ ggheatmap.plot <- function(list, col.width=0.15, row.width=0.15) {
 #' This function is used internally to generate a packed circles representation
 #'
 #' @param circles a 2 column dataframe the clusters to be displayed and theirs sizes
-#' @param class a numeric specifyng the class number to be displayed
+#' @param class a numeric specifying the class number to be displayed
 #' @param color a character specifying the color of the packed circles representation
-#' @param npoint a numeric specifying the levels of details of polygones
+#' @param npoint a numeric specifying the levels of details of polygons
 #' @param limits a numeric specifying the size of the coordinate system centered on (0,0)
+#' @param maxiter a numeric specifying the maximal number of iterations to perform
 #'
 #' @return a ggplot2 object
 #'
@@ -313,8 +314,8 @@ buildCircles <- function(circles,
 #' @description 
 #' This function is used internally to generate the legend of a packed circles representation
 #'
-#' @param circles a 3 colmuns data frame with the x, y coordinate of points and their raduis
-#' @param npoint a numeric specifying the levels of details of polygones
+#' @param circles a 3 columns data frame with the x, y coordinate of points and their radius
+#' @param npoint a numeric specifying the levels of details of polygons
 #' @param limits a numeric specifying the size of the coordinate system centered on (0,0)
 #' 
 #' @return a ggplot2 object

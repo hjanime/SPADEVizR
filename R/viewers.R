@@ -1,7 +1,7 @@
 #' @title Visualization of cluster sizes
 #'
 #' @description 
-#' Generate a two dimensional vizualisation showing the number of cells (sum of selected samples) of each cluster.
+#' Generate a two dimensional visualization showing the number of cells (sum of selected samples) of each cluster.
 #' 
 #' @param Results a SPADEResults or Results object
 #' @param samples a character vector providing the sample names to used (all samples by default)
@@ -9,7 +9,7 @@
 #' @param min.cells a numeric specifying the minimum number of cell (sum of all selected samples) to display a cluster
 #' @param sort a logical specifying if clusters will be to be sorted (descending) based on the sum of all selected samples for each cluster
 #' @param show.samples a logical specifying if the number of cells for all selected samples will be displayed
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a 'ggplot' object
 #' 
@@ -95,14 +95,14 @@ countViewer <- function(Results,
 #' 
 #' @details 
 #' The size of tree nodes are related to the number of cells in each cluster. 
-#' If the 'stat.object' parameter is provided node outlines are colored according to clusters signifiance.
+#' If the 'stat.object' parameter is provided node outlines are colored according to clusters significance.
 #' If the 'marker' parameter is provided, the nodes are colored according to mean expression for the selected marker using selected samples.
 #' 
 #' @param SPADEResults a SPADEResults object (Results object is not accepted)
 #' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param marker a character specifying the marker name to display
-#' @param highlight an AC, DAC or CC object to highligth identified significant clusters in the SPADE tree
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param highlight an AC, DAC or CC object to highlight identified significant clusters in the SPADE tree
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a list of 'ggplot' objects
 #'
@@ -241,7 +241,7 @@ treeViewer <- function(SPADEResults,
 #'
 #' @param Results a SPADEResults or Results object
 #' @param num a numeric value specifying the number of markers expression categories to use
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a list of 'ggplot' objects
 #'
@@ -295,7 +295,7 @@ heatmapViewer <- function(Results,
 #' @param use.percentages a logical specifying if the visualization must be performed on percentage
 #' @param show.legend a logical specifying if the legend must be displayed
 #' @param show.violin a logical specifying if the count distribution must be displayed
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #' @param verbose a logical specifying if the details of computation must be printed
 #'
 #' @return a 'ggplot' object
@@ -349,7 +349,7 @@ boxplotViewer <- function(Results,
     
     for (current.cluster in clusters) {
         if (verbose) {
-            message(paste0("\tCluster ", current.cluster, " on ", length(clusters)))
+            message(paste0("    Cluster ", current.cluster, " on ", length(clusters)))
         }
         data.temp <- data.melted[data.melted$cluster == current.cluster,]
 
@@ -404,7 +404,7 @@ boxplotViewer <- function(Results,
 #' @param assignments a 2 column data.frame with the sample names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment
 #' @param clusters a character vector containing the clusters names to be visualized (by default all clusters will be displayed)
 #' @param use.percentages a logical specifying if the visualization should be performed on percentage
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #' @param verbose a logical specifying if the details of computation must be printed
 #'
 #' @return a 'ggplot' object
@@ -459,7 +459,7 @@ kineticsViewer <- function(Results,
     plots <- list()
     for (current.cluster in clusters) {
         if (verbose) {
-            message(paste0("\tCluster ", current.cluster, " on ", length(clusters)))
+            message(paste0("    Cluster ", current.cluster, " on ", length(clusters)))
         }
         data.temp <- data.melted[data.melted$cluster == current.cluster,]
 
@@ -504,16 +504,16 @@ globalVariables(c("cluster", "sum.of.samples", "ymax", "ymin", "value", "ybase")
 #' The 'clusters' parameter is required.
 #'
 #' @details
-#' The order of samples in the 'samples' vector corespond to the order where the sample will be displayed
+#' The order of samples in the 'samples' vector correspond to the order where the sample will be displayed
 #'
 #' @param Results a SPADEResults or Results object
 #' @param samples a character vector providing the sample names to used (all samples by default)
-#' @param clusters a character vector containing the clusters names to be vizualised
+#' @param clusters a character vector containing the clusters names to be visualized
 #' @param use.relative a logical specifying if the visualization should be performed on relative abundance
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a 'ggplot' object
-#' 	
+#'     
 #' @import data.table reshape2 ggplot2
 #' 
 #' @export
@@ -599,7 +599,7 @@ streamgraphViewer <- function(Results,
 #' Generates a parallel coordinate plot representation showing for each cluster the marker median expressions.
 #' 
 #' @details 
-#' The ranges of value between marker bounds (using the 'bounds' slot) will be displayed using a grey ribbon.
+#' The ranges of value between marker bounds (using the 'bounds' slot) will be displayed using a gray ribbon.
 #' 
 #' The 'show.mean' parameter allows to visualize three kinds of information:
 #' \itemize{
@@ -615,7 +615,7 @@ streamgraphViewer <- function(Results,
 #' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param markers a character vector specifying the markers to be displayed 
 #' @param show.mean a character specifying if marker means expression should be displayed, possible value are among : "none", "only" or "both"
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #' @param verbose a logical specifying if the details of computation must be printed
 #'
 #' @return a list of 'ggplot' objects
@@ -679,7 +679,7 @@ phenoViewer <- function(Results,
     
     for(current.cluster in clusters){
         if (verbose) {
-            message(paste0("\tCluster ", current.cluster, " on ", length(clusters)))
+            message(paste0("    Cluster ", current.cluster, " on ", length(clusters)))
         }
         data.temp  <- data[data["cluster"] == current.cluster,]
         max.value <- max(c(data.temp$value, data.temp$upper.bound))
@@ -752,11 +752,11 @@ phenoViewer <- function(Results,
 #'
 #' @param Results a SPADEResults or Results object
 #' @param use.percentages a logical specifying if the visualization should be performed on percentage
-#' @param assignments a 2 column data.frame with the samples names in row names providing firstly the biologicial condition and secondly the individuals of the experiment
+#' @param assignments a 2 column data.frame with the samples names in row names providing firstly the biological condition and secondly the individuals of the experiment
 #' @param clusters a character vector containing the clusters names to be visualized (by default all clusters will be displayed)
 #' @param space a character specifying the space ("clusters" or "samples", "cluster" by default)
 #' @param dist.method a character string containing the name of the distance measure to use
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a list of 'ggplot' objects
 #' 
@@ -914,8 +914,8 @@ MDSViewer <- function(Results,
 #' Generates a biplot representation with two markers
 #'
 #' @details 
-#' In such representation, each dot corresponds to a cell profile and dots are ploted in a 2-dimentional space corresponding to the selected markers. 
-#' When too cells dots are displayed, it can require some seconds. In order to seep up the computation, it is possible to reduce the number of cells displayed (downsampling) using the `resample.ratio` parameter. 
+#' In such representation, each dot corresponds to a cell profile and dots are plotted in a 2-dimensional space corresponding to the selected markers. 
+#' When too cells dots are displayed, it can require some seconds. In order to seep up the computation, it is possible to reduce the number of cells displayed (down-sampling) using the `resample.ratio` parameter. 
 #'
 #' @param SPADEResults a SPADEResults object (Results object is not accepted)
 #' @param x.marker a character indicating the marker name of the first dimension
@@ -923,8 +923,8 @@ MDSViewer <- function(Results,
 #' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param clusters a character vector containing the clusters names to be visualized (by default all clusters will be used)
 #' @param sample.merge a logical specifying if the selected samples must be merged in a single biplot
-#' @param resample.ratio a numeric ratio (between 0 and 1) specifying the downsample ratio to show less dots (or NULL)
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param resample.ratio a numeric ratio (between 0 and 1) specifying the down-sampling ratio to show less dots (or NULL)
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a 'ggplot' object
 #'
@@ -1046,7 +1046,7 @@ biplotViewer <- function(SPADEResults,
 #' @param clusters a character vector containing the clusters names to be use (by default all clusters will be used)
 #' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param markers a character vector specifying the markers to be displayed 
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a list of 'ggplot' objects
 #' 

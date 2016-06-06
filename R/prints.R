@@ -29,19 +29,19 @@ setMethod("print","Results",
 #' @rdname print-methods
 #' @export
 setMethod("print","SPADEResults",
-	function(x){
-	cat("Object class: SPADEResults\n")
-	cat(paste0("Markers : "))
-	cat(paste0(x@marker.names, collapse="; "))
-	cat("\n")
-	cat(paste0("Clustering Markers : \n"))
-	cat(paste0(x@marker.names[x@marker.clustering], collapse="\n "))
-	cat("\n")
-	cat(paste0("Samples : "))
+    function(x){
+    cat("Object class: SPADEResults\n")
+    cat(paste0("Markers : "))
+    cat(paste0(x@marker.names, collapse="; "))
     cat("\n")
-	cat(paste0(" ", x@sample.names, collapse = "\n"))
-	cat("\n")
-	}
+    cat(paste0("Clustering Markers : \n"))
+    cat(paste0(x@marker.names[x@marker.clustering], collapse="\n "))
+    cat("\n")
+    cat(paste0("Samples : "))
+    cat("\n")
+    cat(paste0(" ", x@sample.names, collapse = "\n"))
+    cat("\n")
+    }
 )
 
 #' @rdname print-methods

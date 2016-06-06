@@ -4,25 +4,24 @@ Title: Visualization and statistical analyses of cell clustering results generat
 Version: 1.0-0
 Author: Guillaume GAUTREAU and Nicolas TCHITCHEK
 Maintainer: Nicolas TCHITCHEK <nicolas.tchitchek@gmail.com> and Guillaume GAUTREAU <guillaume.gautreau@free.fr>
-Description: Flow and mass cytometry are experimental techniques used for the characterization of cell phenotypes. Automatic gating algorithms can be used to automatically identified clusters of cells having similar phenotypes. The SPADE algorithm has been proposed as a new way to analysis and explore mass-cytometry data. This algorithm performs a density-based down-sampling combined with an agglomerative hierarchical clustering. XXX While SPADE offers new opportunities for identifying cell populations, complementary approaches are needed to improve the characterization of identified cell populations. SPADEVizR is an R package designed to better visualize and analyze SPADE clustering results. This package extends the original SPADE outputs with techniques such as parallel coordinates, heatmaps, multidimensional scaling, volcano plots or streamgraph representations. Moreover several statistical methods allow the identification of SPADE clusters with relevant biological behaviors.
+Description: The SPADE algorithm has been proposed as a new way to analysis high-dimensional cytometry data and to identified clusters of cells having similar phenotype. This algorithm performs a density-based down-sampling combined with an agglomerative hierarchical clustering. While SPADE offers unique opportunities for identifying cell populations, complementary approaches are needed to improve the characterization of identified cell populations. SPADEVizR is an R package designed to better visualize and analyze SPADE clustering results. This package extends the original SPADE outputs with techniques such as parallel coordinates, heatmaps, multidimensional scaling, volcano plots or streamgraph representations. Moreover several statistical methods allow the identification of SPADE clusters with relevant biological behaviors.
 License: GPL-3
 Imports:
     data.table,
     flowCore,
     ggdendro,
-    ggnetwork,
     ggplot2,
-	ggrepel,
-	grid,
+    ggrepel,
+    grid,
     gridExtra,
-	gtable,
+    gtable,
     gtools,
-	grDevices,
+    grDevices,
     igraph,
     MASS,
-	methods,
-	network,
-	packcircles,
+    methods,
+    network,
+    packcircles,
     plyr,
     reshape2
 LazyData: true
@@ -30,3 +29,4 @@ Suggests:
     knitr
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
+biocViews: FlowCytometry, Visualization, Clustering, StatisticalMethod, MultidimensionalScaling

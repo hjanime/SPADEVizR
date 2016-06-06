@@ -9,7 +9,7 @@
 #' @param AC an object of class AC (object returned by the 'computeAC()' function)
 #' @param show.cluster_sizes a logical specifying if dot sizes are proportional to cell counts
 #' @param show.all_labels a logical specifying if all cluster labels must be shown (or just significant clusters)
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a 'ggplot' object
 #' 
@@ -101,11 +101,11 @@ abundantClustersViewer <- function(AC,
 #' @details 
 #' By default, only significant differentially abundant clusters are labeled. Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE. 
 #'
-#' @param DEC an object of class 'DAC' (object returned by the 'computeDAC()' function)
+#' @param DAC an object of class 'DAC' (object returned by the 'computeDAC()' function)
 #' @param fc.log2 a logical specifying if fold-change or log2(fold-change) is use 
 #' @param show.cluster.sizes a logical specifying if dot sizes are proportional to cell counts
 #' @param show.all_labels a logical specifying if all cluster labels must be show or just significant cluster
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a 'ggplot' object
 #'  
@@ -214,7 +214,7 @@ volcanoViewer <- function(DAC                = NULL,
 #' @param CC an object of class 'CC' (object returned by the 'computeCC()' function)
 #' @param show.cluster.sizes a logical specifying if dot sizes are proportional to cell counts
 #' @param show.all_labels a logical specifying if all cluster label must be show or just significant cluster
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a 'ggplot' object
 #' 
@@ -299,10 +299,10 @@ correlatedClustersViewer <- function(CC,
 #' Generate a graph representation of classified clusters
 #' 
 #' @details 
-#' Clusters of the same classe are shown using a circular graph. Circular graphs are sorted by the number of cluster in each class. 
+#' Clusters of the same class are shown using a circular graph. Circular graphs are sorted by the number of cluster in each class. 
 #'
 #' @param CCR an object of class 'CCR' (object returned by the 'classifyclusteringResults()' function)
-#' @param show.on_device a logical specifying if the respresentation will be displayed on device 
+#' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a 'ggplot' object
 #' 
@@ -374,8 +374,8 @@ classificationViewer <- function(CCR,
 #' This function generates a graphical representation for 'AC', 'DAC', 'CC', 'CCR' and objects.
 #'
 #' @param x a 'AC', 'DAC', 'CC' and 'CCR' object
-#' @param y a supplementary parameter transmited respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions
-#' @param ... some supplementaries parameters transmited respectively to \code{\link[SPADEVizR]{abundantClustersViewer}}, \code{\link[SPADEVizR]{volcanoViewer}} or \code{\link[SPADEVizR]{correlatedClustersViewer}} functions
+#' @param y a supplementary parameter transmitted respectively to 'abundantClustersViewer()', 'volcanoViewer()' or 'correlatedClustersViewer()' functions
+#' @param ... some supplementaries parameters transmitted respectively to \code{\link[SPADEVizR]{abundantClustersViewer}}, \code{\link[SPADEVizR]{volcanoViewer}} or \code{\link[SPADEVizR]{correlatedClustersViewer}} functions
 #' 
 #' @return a 'ggplot' object
 #'  

@@ -1,7 +1,7 @@
-#' @title Generate a report including SPADEVizR plots.
+#' @title Generate a report including SPADEVizR plots
 #'
 #' @description 
-#' Generate a customizable PDF report based on SPADEVizR vizualisation features.
+#' Generate a customizable PDF report based on SPADEVizR visualization features.
 #' Available plots are :
 #' \itemize{
 #' \item {"count" (included by default):}{Display an representation showing the number of cells for each cluster}
@@ -27,12 +27,16 @@
 #' @param samples a character vector providing the sample names to used (all samples by default)
 #' @param assignments a 2 column data.frame with the samples names in row names providing firstly the time-points (numeric) and secondly the individuals (character) of the experiment
 #' @param conditions conditions a named vector providing the correspondence between a sample name (in row names) and the condition of this sample or NA to exclude
+#' @param stat.objects a list containing one or several AC, DEC, CC or CCR objects to plot in the report
 #' @param width a numeric specifying the plot width in centimeter
 #' @param height a numeric specifying the plot height in centimeter
+#' @param verbose a boolean specifying if some verbose messages must be displayed during the generation of the report
 #'
-#' @import gridExtra
-#' 
+#' @return none
+#'
 #' @export
+#' 
+#' @import gridExtra
 generateReport <- function(Results,
                            PDFfile         = "report.pdf",
                            select.plots    = c("count", "heatmap", "tree", "disto", "MDSclusters", "pheno"),
@@ -68,7 +72,7 @@ generateReport <- function(Results,
             current.name <- ifelse(typeof(select.plots[[i]]) == "character", select.plots[[i]], "object")
 
             if (verbose) {
-                message(paste0("\t Generate: ",
+                message(paste0("     Generate: ",
                                ifelse(current.name == "object", names(select.plots[[i]]), current.name),
                                ", ", i, " on ", nb.plot))
             }
@@ -94,7 +98,7 @@ generateReport <- function(Results,
 
                    for (j in 1:length(kinetics.plots)) {
                        if (verbose) {
-                           message(paste0("\tCluster ", j, " on ", length(kinetics.plots)))
+                           message(paste0("    Cluster ", j, " on ", length(kinetics.plots)))
                        }
                        plots <- c(plots, list(gridExtra::arrangeGrob(kinetics.plots[[j]], cluster.plots[[j]], ncol = 2)))
                    }
@@ -105,7 +109,7 @@ generateReport <- function(Results,
 
                    for (j in 1:length(boxplot.plots)) {
                        if (verbose) {
-                            message(paste0("\tCluster ", j, " on ", length(boxplot.plots)))
+                            message(paste0("    Cluster ", j, " on ", length(boxplot.plots)))
                        }
                        plots <- c(plots, list(gridExtra::arrangeGrob(boxplot.plots[[j]], cluster.plots[[j]], ncol = 2)))
                    }

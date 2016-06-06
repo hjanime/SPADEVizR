@@ -251,7 +251,7 @@ identifyCC <- function(Results,
 #' \itemize{
 #' \item "hierarchical_k" 
 #' This method first compute the Pearson correlation matrix and then use this matrix to performs a hierarchical classification. 
-#' The hierarchical classification is cutted in order to return the desired number of classes. 
+#' The hierarchical classification is cut in order to return the desired number of classes. 
 #' This number of classes must be provided as a numeric integer using the 'method.parameter' parameter.
 #' It is to note that negative correlations are considered as uncorrelated
 #' \item "hierarchical_h" (default method)
@@ -267,7 +267,7 @@ identifyCC <- function(Results,
 #' This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
 #' In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
 #' This correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the 'method.parameter' parameter.
-#' After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
+#' After building the graph, the method looking for the largest cliques which are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 #' }
 #' 
 #' @param Results a Results or SPADEResults object
@@ -399,7 +399,7 @@ computeHierarchicalClustering <- function (data,
 #' @title Internal - Kmeans classification
 #' 
 #' @description 
-#' This function is used internally to classify clusters abundance profilies or phenotype profiles using a k-means algorithm. 
+#' This function is used internally to classify clusters abundance profiles or phenotype profiles using a k-means algorithm. 
 #' 
 #' @details 
 #' This method works as described in the R stats documentation (?kmeans) using the 'k' parameter to specify the desired number of classes.
@@ -477,7 +477,7 @@ computeEigenCellClusters <- function(data,
 #' This method first compute the Pearson correlation matrix and then use this matrix to generate an undirected graph.
 #' In this graph, an edge is drawn between two nodes if the correlation coefficient in the adjacency matrix is above a specific threshold. 
 #' This correlation threshold (a numeric double between 0 and 1 included, default is 0.7) provided using the 'clique.correlation.th' parameter.
-#' After building the graph, the method looking for the largest cliques wich are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
+#' After building the graph, the method looking for the largest cliques which are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 #' 
 #' @param data a numeric matrix with all clusters in rownames
 #' @param clique.correlation.th a numeric value indicating the correlation coefficient threshold

@@ -14,7 +14,7 @@ setOldClass("igraph") # give access to igraph class
 #' 
 #' The 'marker.expressions' dataframe stores the marker median expressions for each cluster. This dataframe has in the first the sample names, in the second column the cluster names, and the maker median expressions in the others columns.
 #' 
-#' The 'bounds' dataframe stores extremum bounds (minimum and maximun) marker expressions for each marker
+#' The 'bounds' dataframe stores extrema bounds (minimum and maximum) marker expressions for each marker
 #'
 #' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'importX()' function.
@@ -24,7 +24,7 @@ setOldClass("igraph") # give access to igraph class
 #' @slot sample.names a character vector containing the sample names
 #' @slot marker.names a character vector containing the markers names
 #' @slot cluster.number a numeric specifying the number of cell clusters
-#' @slot bounds a numeric data.frame containing the extremum bounds for each markers
+#' @slot bounds a numeric data.frame containing the extrema bounds for each markers
 #'
 #' @name Results-class
 #' @rdname Results-class
@@ -40,7 +40,7 @@ Results <- setClass("Results",
                         if((length(object@marker.names) + 2) != ncol(object@marker.expressions)){
                             message(paste0("Object Results, Error : marker.names length (",
                                            length(object@marker.names),
-                                           " + 2 for cluster IDs and sample names) are inconsistents with marker.expressions size (number of colunms : ",
+                                           " + 2 for cluster IDs and sample names) are inconsistent with marker.expressions size (number of columns : ",
                                            ncol(object@marker.expressions),")"))
                             return (FALSE)
                         }
@@ -78,14 +78,14 @@ Results <- setClass("Results",
 #' In addition to the 'Result' object, the 'SPADEResults' object contains information about SPADE clustering results, such as the SPADE tree, the clustering makers and the FCS files.
 #' 
 #' @details 
-#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'importSPADEResult()' function. 
 #'
-#' The 'bounds' slot inihirited from 'Result' object is overriden by the 'SPADEResults' object. Indeed this slot contains in this case, the marker expression quantiles based on all cells in the place of extremun bounds.
+#' The 'bounds' slot inherited from 'Result' object is overridden by the 'SPADEResults' object. Indeed this slot contains in this case, the marker expression quantiles based on all cells in the place of extreme bounds.
 #'
 #' @slot use.raw.medians a logical specifying if the marker expressions correspond to the raw or transformed data
 #' @slot dictionary a two column data.frame providing the correspondence between the original marker names (first column) and the real marker names (second column)
-#' @slot marker.clustering a logical vector specifying marker that have been used during the clustering precedure
+#' @slot marker.clustering a logical vector specifying marker that have been used during the clustering procedure
 #' @slot flowset a flowSet object containing the imported SPADE FCS file
 #' @slot fcs.files a character vector containing the absolute path of the original FCS files
 #' @slot graph a igraph object containing the SPADE tree
@@ -98,13 +98,13 @@ Results <- setClass("Results",
 #' @exportClass SPADEResults
 SPADEResults <- setClass("SPADEResults",
                          contains = "Results",
-	                     slots=c(use.raw.medians    = "logical",#check the best name
+                         slots=c(use.raw.medians    = "logical",#check the best name
                                  dictionary         = "data.frame",
                                  marker.clustering  = "logical",
                                  flowset            = "ANY",
-                		         fcs.files          = "character",#TODO think about storing flowset rather than fcs.files
-                		         graph              = "igraph",
-                		         graph.layout       = "matrix"),
+                                 fcs.files          = "character",#TODO think about storing flowset rather than fcs.files
+                                 graph              = "igraph",
+                                 graph.layout       = "matrix"),
                          validity = function(object){
                              
                              if(!is.null(object@flowset) && (class(object@flowset)[1] != "flowSet")){
@@ -115,13 +115,13 @@ SPADEResults <- setClass("SPADEResults",
                                  message(paste0("Object SPADEResults, Error : sample.names length (",
                                                 length(object@sample.names),") and cluster.number ("
                                                 ,object@cluster.number,
-                                                ") are inconsistents with marker.expressions size (number of row : ",
+                                                ") are inconsistent with marker.expressions size (number of row : ",
                                                 nrow(object@marker.expressions),")"))
                                  return (FALSE)
                              }
                              if((length(object@marker.names) + 2) != ncol(object@marker.expressions)){
                                  message(paste0("Object SPADEResults, Error : marker.names length (",
-                                                length(object@marker.names)," + 2 for cluster IDs and sample names) are inconsistents with marker.expressions size (number of colunms : ",
+                                                length(object@marker.names)," + 2 for cluster IDs and sample names) are inconsistent with marker.expressions size (number of columns : ",
                                                 ncol(object@marker.expressions),")"))
                                  return (FALSE)
                              }
@@ -169,7 +169,7 @@ SPADEResults <- setClass("SPADEResults",
 #' @details 
 #' A cluster is considered as a significant abundant cluster if its associated p-value and mean are below the specific thresholds 'th.pvalue' and 'th.mean'.  
 #' 
-#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'identifyAC()' function. 
 #' 
 #' @slot sample.names a character vector containing the samples used to compute the abundant clusters
@@ -237,7 +237,7 @@ AC <- setClass("AC",
 #' @details 
 #' A cluster is considered as a differentially enriched cluster if its associated p-value and fold-change are below the specific thresholds 'th.pvalue' and 'th.fc'.  
 #' 
-#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'identifyDAC()' function. 
 #' 
 #' @slot sample.cond1 a character specifying the names of the samples of the first biological condition
@@ -297,8 +297,8 @@ DAC <- setClass("DAC",
             }
             if(!identical(colnames(object@result),c("cluster","mean.cond1","sd.cond1","mean.cond2","sd.cond2","fold.change","pvalue","significant"))){
                 print(colnames(object@result))
-                message("Object DAC, Error in result slot, result must have this colmuns : 'cluster','mean.cond1','sd.cond1','mean.cond2','sd.cond2','fold.change','pvalue','significant'")
-                message("Colmuns found are : ")
+                message("Object DAC, Error in result slot, result must have this columns : 'cluster','mean.cond1','sd.cond1','mean.cond2','sd.cond2','fold.change','pvalue','significant'")
+                message("Columns found are : ")
                 message(paste(colnames(object@result)))
                 return(FALSE)
             }
@@ -317,7 +317,7 @@ DAC <- setClass("DAC",
 #' @details
 #' A cluster is considered as a significant correlated cluster if its associated p-value and correlation threshold are below the specific thresholds 'th.pvalue' and 'th.correlation'.  
 #' 
-#' The 'print()' and 'show()' can be used to display a summury of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
+#' The 'print()' and 'show()' can be used to display a summary of this object. Moreover all information about this object could be saved as a tab separated file using the 'export()' method.
 #' This object is returned by the 'identifyCC()' function. 
 #' 
 #' @slot sample.names a character vector containing the samples used to compute correlated clusters
@@ -328,7 +328,7 @@ DAC <- setClass("DAC",
 #' @slot method.adjust a character containing the name of the multiple correction method used (if any)
 #' @slot th.correlation a numeric value specifying the correlation threshold (R)
 #' @slot th.pvalue a numeric value specifying the p-value threshold
-#' @slot result a data.frame containing for each cluster (first column): the coefficiant of correlation R (second column) , the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.
+#' @slot result a data.frame containing for each cluster (first column): the coefficient of correlation R (second column) , the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated.
 #' 
 #' @name CC-class
 #' @rdname CC-class
@@ -396,7 +396,7 @@ CC <- setClass("CC",
 #' 
 #' 
 #' This object contains all information about the classification method and parameters used.
-#' 	
+#'     
 #' @details 
 #' Five methods are available to classify cellular clusters: 'hierarchical_k', 'hierarchical_h', 'kmeans', 'eigencell' and 'clique'. Each method can parameterized using the 'method.parameter' parameter.
 #'  
@@ -408,7 +408,7 @@ CC <- setClass("CC",
 #' @slot cluster.size a numeric vector containing the number of cells for each cluster
 #' @slot method a character specifying the method used to classify cluster
 #' @slot method.parameter a named list of parameters used by the classification method
-#' @slot classes a two column dataframe with the cluster in first colunm and corresponding classe in the second colunm
+#' @slot classes a two column dataframe with the cluster in first column and corresponding class in the second column
 #' 
 #' @name CCR-class
 #' @rdname CCR-class
