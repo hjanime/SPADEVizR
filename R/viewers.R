@@ -432,7 +432,7 @@ kineticsViewer <- function(Results,
         legendy = "% of cells relative to parent"
     }else{
         legendy = "# of cells"
-    } 
+    }
     
     if(is.null(clusters)){
         clusters <- rownames(data)
@@ -454,7 +454,7 @@ kineticsViewer <- function(Results,
     
     data.melted$individuals <- assignments[data.melted$sample,'individuals']
     data.melted$timepoints  <- assignments[data.melted$sample,'timepoints']
-    data.melted$timepoints  <- factor(data.melted$timepoints, levels = gtools::mixedsort(unique(data.melted$timepoints)))
+    data.melted$timepoints  <- factor(data.melted$timepoints, levels = unique(data.melted$timepoints))
 
     plots <- list()
     for (current.cluster in clusters) {
